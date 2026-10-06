@@ -1,0 +1,11 @@
+C:\dip\mindhelp\MindHelp.Shared\bin\Debug\net10.0\MindHelp.Shared.deps.json
+C:\dip\mindhelp\MindHelp.Shared\bin\Debug\net10.0\MindHelp.Shared.dll
+C:\dip\mindhelp\MindHelp.Shared\bin\Debug\net10.0\MindHelp.Shared.pdb
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.AssemblyInfoInputs.cache
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.AssemblyInfo.cs
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.csproj.CoreCompileInputs.cache
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.dll
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\refint\MindHelp.Shared.dll
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.pdb
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\ref\MindHelp.Shared.dll

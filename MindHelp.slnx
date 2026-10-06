@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="MindHelp.Api/MindHelp.Api.csproj" />
+  <Project Path="MindHelp.Shared/MindHelp.Shared.csproj" />
+  <Project Path="MindHelp.Wasm/MindHelp.Wasm.csproj" />
+</Solution>
