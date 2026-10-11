@@ -9,3 +9,4 @@ C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.dll
 C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\refint\MindHelp.Shared.dll
 C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.pdb
 C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\ref\MindHelp.Shared.dll
+C:\dip\mindhelp\MindHelp.Shared\obj\Debug\net10.0\MindHelp.Shared.sourcelink.json

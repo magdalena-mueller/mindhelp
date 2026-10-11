@@ -31,10 +31,6 @@ C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.Vis
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.VisualBasic.Core.17wn27qal2.wasm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.Win32.Primitives.9d566sle9e.wasm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.Win32.Registry.52dy96yk8i.wasm
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.ea6omhgfym.wasm
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.rqqoezsjvn.pdb
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.nosvscxv8i.pdb
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.r42w0exrbz.wasm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.AppContext.jwujeh069z.wasm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Buffers.y0isk1x97h.wasm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Collections.Concurrent.x5koi7bzem.wasm
@@ -201,7 +197,6 @@ C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Xml.Xm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.gjriafnqmz.wasm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\WindowsBase.8zsce9qxfb.wasm
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\blazor.webassembly.w3qd1tpl0e.js
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\dotnet.fytgy8w855.js
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\dotnet.js.map
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\dotnet.native.b6l13xorvf.js
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\dotnet.native.rw4kynp763.wasm
@@ -288,7 +283,6 @@ C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Runtim
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\icudt_EFIGS.tptq2av103.dat.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Security.Principal.Windows.gpqua4rz29.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Net.NameResolution.q3gf18q13l.wasm.gz
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.ea6omhgfym.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.Win32.Primitives.9d566sle9e.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.IO.Pipes.AccessControl.qcancj8gj2.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Threading.Tasks.Dataflow.ytwttt7fzh.wasm.gz
@@ -301,7 +295,6 @@ C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.Ext
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Web.HttpUtility.itlvncjd96.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Memory.3jekerw0ga.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Net.Sockets.hzgzlvkc9l.wasm.gz
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.rqqoezsjvn.pdb.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.Extensions.Diagnostics.i4mi4tc4vw.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Text.RegularExpressions.2fhfmkk6vf.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Reflection.TypeExtensions.qouojzlnp9.wasm.gz
@@ -347,7 +340,6 @@ C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.IO.Fil
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.ComponentModel.Primitives.v7cajwpaqo.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Net.Primitives.i88i20r8sr.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Drawing.8gcjjqj0pu.wasm.gz
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\dotnet.fytgy8w855.js.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Net.Requests.hkjxlfe5f5.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Runtime.InteropServices.RuntimeInformation.my7qeqbhfh.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Threading.AccessControl.76zfdfy8go.wasm.gz
@@ -359,7 +351,6 @@ C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\Microsoft.Ext
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Security.Cryptography.Algorithms.8zijp1svfw.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Reflection.Emit.7liz9zln06.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Security.AccessControl.8yfnzmqzaq.wasm.gz
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.r42w0exrbz.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Security.Cryptography.d0quqk1iyr.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.IO.Compression.2z7vdt6tfb.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Runtime.InteropServices.JavaScript.9kq1vofond.wasm.gz
@@ -370,7 +361,6 @@ C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Net.Ht
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Net.w1hpj3bo6r.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Security.SecureString.x2y8tzci3c.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Xml.XPath.XDocument.138b12i1pm.wasm.gz
-C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.nosvscxv8i.pdb.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Transactions.ipwm3rsy66.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Net.ServicePoint.xbhxnytx4l.wasm.gz
 C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\System.Diagnostics.Process.8iffh49mew.wasm.gz
@@ -1124,15 +1114,7 @@ C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\6cachf1vjb-{0}-biiwgb
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\ifmgh1zgbc-{0}-tjcz0u77k5-tjcz0u77k5.gz
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\dah0we88j1-{0}-tptq2av103-tptq2av103.gz
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\wruo3bms5h-{0}-lfu7j35m59-lfu7j35m59.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\dvttmo2ze2-{0}-ea6omhgfym-ea6omhgfym.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\gl7n9gwhcj-{0}-rqqoezsjvn-rqqoezsjvn.gz
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\uuk04zgp4p-{0}-mboztfuody-mboztfuody.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\pi1wypbm13-{0}-r42w0exrbz-r42w0exrbz.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\r3h1stm5f2-{0}-nosvscxv8i-nosvscxv8i.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\nh4m0e5psf-{0}-fytgy8w855-fytgy8w855.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\zdgq6b41b7-{0}-g10j4yplgg-g10j4yplgg.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\mkhcruu0gq-{0}-3cavnligbo-3cavnligbo.gz
-C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\mea84t328v-{0}-tjwoo4m74d-tjwoo4m74d.gz
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\staticwebassets.build.json
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\staticwebassets.development.json
@@ -1143,3 +1125,22 @@ C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\MindHelp.Wasm.dll
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\refint\MindHelp.Wasm.dll
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\MindHelp.Wasm.pdb
 C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\ref\MindHelp.Wasm.dll
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.icpmzgk1x9.wasm
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.vol3xxyvnr.pdb
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.wavt9f9vve.wasm
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.wmez50wn3u.pdb
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\dotnet.677ye1ukkt.js
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.icpmzgk1x9.wasm.gz
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Shared.vol3xxyvnr.pdb.gz
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\dotnet.677ye1ukkt.js.gz
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.wavt9f9vve.wasm.gz
+C:\dip\mindhelp\MindHelp.Wasm\bin\Debug\net10.0\wwwroot\_framework\MindHelp.Wasm.wmez50wn3u.pdb.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\MindHelp.Wasm.sourcelink.json
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\dvttmo2ze2-{0}-icpmzgk1x9-icpmzgk1x9.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\gl7n9gwhcj-{0}-vol3xxyvnr-vol3xxyvnr.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\pi1wypbm13-{0}-wavt9f9vve-wavt9f9vve.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\r3h1stm5f2-{0}-wmez50wn3u-wmez50wn3u.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\nh4m0e5psf-{0}-677ye1ukkt-677ye1ukkt.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\zdgq6b41b7-{0}-avhc4djpfk-avhc4djpfk.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\mkhcruu0gq-{0}-voxme4wngc-voxme4wngc.gz
+C:\dip\mindhelp\MindHelp.Wasm\obj\Debug\net10.0\compressed\mea84t328v-{0}-pndagn879f-pndagn879f.gz
