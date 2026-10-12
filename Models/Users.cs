@@ -1,5 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MindHelp.Shared;
 
+[Table("users")]
 public class User
 {
     [Column("userID")]
@@ -28,4 +32,6 @@ public class User
 
     [Column("lastOnline")]
     public DateTime? LastOnlineUsers { get; set; }
+
+    public ICollection<Chat> Chats { get; set; } = [];
 }

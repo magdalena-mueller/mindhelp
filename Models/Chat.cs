@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MindHelp.Shared;
 
 [Table("chat")]
 public class Chat
 {
-    [PrimaryKey("chatID", false)]
+    [Column("chatID")]
     public int ChatId { get; set; }
 
     [Column("created_at")]
@@ -14,6 +17,10 @@ public class Chat
 
     [Column("FK_UserID")]
     public int UserId { get; set; }
+
+    public User User { get; set; } = null!;
+
+    public HelpingPersonal HelpingPersonal { get; set; } = null!;
 
     [Column("textMessage")]
     public string TextMessage { get; set; } = string.Empty;
