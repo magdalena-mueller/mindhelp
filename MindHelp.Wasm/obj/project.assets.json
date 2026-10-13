@@ -2,6 +2,15 @@
   "version": 4,
   "targets": {
     "net10.0": {
+      "BirdMessenger/4.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/BirdMessenger.dll": {}
+        },
+        "runtime": {
+          "lib/net10.0/BirdMessenger.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.App.Internal.Assets/10.0.12": {
         "type": "package",
         "build": {
@@ -369,6 +378,38 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
+      "Microsoft.Extensions.Localization/10.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.1",
+          "Microsoft.Extensions.Localization.Abstractions": "10.0.1",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.1",
+          "Microsoft.Extensions.Options": "10.0.1"
+        },
+        "compile": {
+          "lib/net10.0/Microsoft.Extensions.Localization.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Localization.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Extensions.Localization.Abstractions/10.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Microsoft.Extensions.Localization.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Localization.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Extensions.Logging/10.0.12": {
         "type": "package",
         "dependencies": {
@@ -485,6 +526,80 @@
           }
         }
       },
+      "Microsoft.IdentityModel.Abstractions/7.5.1": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.JsonWebTokens/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Logging/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Abstractions": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Tokens/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.JSInterop/10.0.12": {
         "type": "package",
         "compile": {
@@ -525,6 +640,214 @@
         "build": {
           "build/Microsoft.NET.Sdk.WebAssembly.Pack.props": {},
           "build/Microsoft.NET.Sdk.WebAssembly.Pack.targets": {}
+        }
+      },
+      "MimeMapping/4.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/MimeMapping.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/MimeMapping.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "MudBlazor/9.11.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "10.0.1",
+          "Microsoft.AspNetCore.Components.Web": "10.0.1",
+          "Microsoft.Extensions.Localization": "10.0.1"
+        },
+        "compile": {
+          "lib/net10.0/MudBlazor.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/MudBlazor.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/MudBlazor.targets": {},
+          "buildTransitive/MudBlazor.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/MudBlazor.props": {}
+        }
+      },
+      "Supabase/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1",
+          "Supabase.Functions": "8.3.1",
+          "Supabase.Gotrue": "8.3.1",
+          "Supabase.Postgrest": "8.3.1",
+          "Supabase.Realtime": "8.3.1",
+          "Supabase.Storage": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Core/8.3.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/Supabase.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Functions/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Functions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Functions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Gotrue/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1",
+          "System.IdentityModel.Tokens.Jwt": "7.5.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Gotrue.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Gotrue.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Postgrest/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Postgrest.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Postgrest.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Realtime/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1",
+          "Supabase.Postgrest": "8.3.1",
+          "Websocket.Client": "5.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Realtime.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Realtime.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Storage/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "BirdMessenger": "4.0.0",
+          "MimeMapping": "4.0.0",
+          "Supabase.Core": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Storage.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Storage.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.IdentityModel.Tokens.Jwt/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.JsonWebTokens": "7.5.1",
+          "Microsoft.IdentityModel.Tokens": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Reactive/6.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/System.Reactive.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/System.Reactive.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "Websocket.Client/5.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.8",
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "System.Reactive": "6.1.0"
+        },
+        "compile": {
+          "lib/net10.0/Websocket.Client.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Websocket.Client.dll": {
+            "related": ".xml"
+          }
         }
       },
       "MindHelp.Shared/1.0.0": {
@@ -539,6 +862,15 @@
       }
     },
     "net10.0/browser-wasm": {
+      "BirdMessenger/4.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/BirdMessenger.dll": {}
+        },
+        "runtime": {
+          "lib/net10.0/BirdMessenger.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.App.Internal.Assets/10.0.12": {
         "type": "package",
         "build": {
@@ -906,6 +1238,38 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
+      "Microsoft.Extensions.Localization/10.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.1",
+          "Microsoft.Extensions.Localization.Abstractions": "10.0.1",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.1",
+          "Microsoft.Extensions.Options": "10.0.1"
+        },
+        "compile": {
+          "lib/net10.0/Microsoft.Extensions.Localization.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Localization.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Extensions.Localization.Abstractions/10.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Microsoft.Extensions.Localization.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Localization.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Extensions.Logging/10.0.12": {
         "type": "package",
         "dependencies": {
@@ -1022,6 +1386,80 @@
           }
         }
       },
+      "Microsoft.IdentityModel.Abstractions/7.5.1": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.JsonWebTokens/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Logging/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Abstractions": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Tokens/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.JSInterop/10.0.12": {
         "type": "package",
         "compile": {
@@ -1062,6 +1500,214 @@
         "build": {
           "build/Microsoft.NET.Sdk.WebAssembly.Pack.props": {},
           "build/Microsoft.NET.Sdk.WebAssembly.Pack.targets": {}
+        }
+      },
+      "MimeMapping/4.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/MimeMapping.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/MimeMapping.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "MudBlazor/9.11.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "10.0.1",
+          "Microsoft.AspNetCore.Components.Web": "10.0.1",
+          "Microsoft.Extensions.Localization": "10.0.1"
+        },
+        "compile": {
+          "lib/net10.0/MudBlazor.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/MudBlazor.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/MudBlazor.targets": {},
+          "buildTransitive/MudBlazor.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/MudBlazor.props": {}
+        }
+      },
+      "Supabase/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1",
+          "Supabase.Functions": "8.3.1",
+          "Supabase.Gotrue": "8.3.1",
+          "Supabase.Postgrest": "8.3.1",
+          "Supabase.Realtime": "8.3.1",
+          "Supabase.Storage": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Core/8.3.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/Supabase.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Functions/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Functions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Functions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Gotrue/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1",
+          "System.IdentityModel.Tokens.Jwt": "7.5.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Gotrue.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Gotrue.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Postgrest/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Postgrest.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Postgrest.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Realtime/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "Supabase.Core": "8.3.1",
+          "Supabase.Postgrest": "8.3.1",
+          "Websocket.Client": "5.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Realtime.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Realtime.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Supabase.Storage/8.3.1": {
+        "type": "package",
+        "dependencies": {
+          "BirdMessenger": "4.0.0",
+          "MimeMapping": "4.0.0",
+          "Supabase.Core": "8.3.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Supabase.Storage.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Supabase.Storage.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.IdentityModel.Tokens.Jwt/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.JsonWebTokens": "7.5.1",
+          "Microsoft.IdentityModel.Tokens": "7.5.1"
+        },
+        "compile": {
+          "lib/net8.0/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Reactive/6.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/System.Reactive.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/System.Reactive.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "Websocket.Client/5.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.8",
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "System.Reactive": "6.1.0"
+        },
+        "compile": {
+          "lib/net10.0/Websocket.Client.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Websocket.Client.dll": {
+            "related": ".xml"
+          }
         }
       },
       "MindHelp.Shared/1.0.0": {
@@ -1077,6 +1723,25 @@
     }
   },
   "libraries": {
+    "BirdMessenger/4.0.0": {
+      "sha512": "K92hTkTn8fkZOjoMi0j0ZhxJ/Ey8ra5nSxuwEc3gZJzT8gdRh6JSSUS6CV4+fyNcjdw1M37/nckubzyMvudvJw==",
+      "type": "package",
+      "path": "birdmessenger/4.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "birdmessenger.4.0.0.nupkg.sha512",
+        "birdmessenger.nuspec",
+        "lib/net10.0/BirdMessenger.dll",
+        "lib/net5.0/BirdMessenger.dll",
+        "lib/net6.0/BirdMessenger.dll",
+        "lib/net7.0/BirdMessenger.dll",
+        "lib/net8.0/BirdMessenger.dll",
+        "lib/netstandard2.0/BirdMessenger.dll",
+        "logo.png"
+      ]
+    },
     "Microsoft.AspNetCore.App.Internal.Assets/10.0.12": {
       "sha512": "+sIBo9AMBZH46qHWHQdfzcGMt+RuBaPYrUMOAM9VjA7MQ9QtIez3lq1C3E05+Yroa94KKt3DSWaxmCI4H28a9Q==",
       "type": "package",
@@ -1751,6 +2416,44 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Microsoft.Extensions.Localization/10.0.1": {
+      "sha512": "yJBI3IRm9uTRu7cPc7i90/8+CuiiJJ5M4khj6iWQcYnq6VrG+H2U5GzpRLtkVCsgxc1LjtkNMEbSDatfBA+z5g==",
+      "type": "package",
+      "path": "microsoft.extensions.localization/10.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net10.0/Microsoft.Extensions.Localization.dll",
+        "lib/net10.0/Microsoft.Extensions.Localization.xml",
+        "lib/net462/Microsoft.Extensions.Localization.dll",
+        "lib/net462/Microsoft.Extensions.Localization.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Localization.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Localization.xml",
+        "microsoft.extensions.localization.10.0.1.nupkg.sha512",
+        "microsoft.extensions.localization.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.Localization.Abstractions/10.0.1": {
+      "sha512": "TQSQWF+iZdtGNgPiu7gKUqrTEeRD/mhk7KeYiuEwmTUPbawsYfPSNzSvOOeueJ0nU1697X8HZ2vCp2ByHNHkZg==",
+      "type": "package",
+      "path": "microsoft.extensions.localization.abstractions/10.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net10.0/Microsoft.Extensions.Localization.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.Localization.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.Localization.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Localization.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Localization.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Localization.Abstractions.xml",
+        "microsoft.extensions.localization.abstractions.10.0.1.nupkg.sha512",
+        "microsoft.extensions.localization.abstractions.nuspec"
+      ]
+    },
     "Microsoft.Extensions.Logging/10.0.12": {
       "sha512": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
       "type": "package",
@@ -1974,6 +2677,116 @@
         "microsoft.extensions.validation.nuspec"
       ]
     },
+    "Microsoft.IdentityModel.Abstractions/7.5.1": {
+      "sha512": "PT16ZFbPIiMsYv07oy3zOjqUOJ7xutGBkJTOX0+IbNyU6+O6X7aIxjq9EaSSRLWbekRgamgtmfg8Xjw6A6Ua9g==",
+      "type": "package",
+      "path": "microsoft.identitymodel.abstractions/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net461/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net462/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net462/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net472/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net472/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.xml",
+        "microsoft.identitymodel.abstractions.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.abstractions.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.JsonWebTokens/7.5.1": {
+      "sha512": "93CGSa8RPdZU8zfvA3nf9NGKUqEnQrE12VzYlMqKh72ddhzusosqLNEUgH/YhFWBLRFOnY1RCgHMV7pR+sAx2w==",
+      "type": "package",
+      "path": "microsoft.identitymodel.jsonwebtokens/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net461/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net462/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net462/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net472/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net472/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "microsoft.identitymodel.jsonwebtokens.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.jsonwebtokens.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Logging/7.5.1": {
+      "sha512": "PnpAQX20BAiDIPYmWUyQSlEaWD8BLXzHpiDGTCT568Cs0ReOeyzNe401LzCeiv6ilug/KefVeV1CeqtCHTo8dw==",
+      "type": "package",
+      "path": "microsoft.identitymodel.logging/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.Logging.dll",
+        "lib/net461/Microsoft.IdentityModel.Logging.xml",
+        "lib/net462/Microsoft.IdentityModel.Logging.dll",
+        "lib/net462/Microsoft.IdentityModel.Logging.xml",
+        "lib/net472/Microsoft.IdentityModel.Logging.dll",
+        "lib/net472/Microsoft.IdentityModel.Logging.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Logging.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Logging.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Logging.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Logging.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Logging.xml",
+        "microsoft.identitymodel.logging.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.logging.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Tokens/7.5.1": {
+      "sha512": "Q3DKpyFViP84IUlTFKH/zIkswIrmSh2Vd/eFDo4wlOHy4DYxoweZEEw4kDEiKt9VCX6o7SddK3HK2xDYyFpexA==",
+      "type": "package",
+      "path": "microsoft.identitymodel.tokens/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net461/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net462/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net462/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net472/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net472/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Tokens.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.xml",
+        "microsoft.identitymodel.tokens.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.tokens.nuspec"
+      ]
+    },
+    "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+      "sha512": "s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g==",
+      "type": "package",
+      "path": "microsoft.io.recyclablememorystream/3.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll",
+        "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.xml",
+        "lib/netstandard2.0/Microsoft.IO.RecyclableMemoryStream.dll",
+        "lib/netstandard2.0/Microsoft.IO.RecyclableMemoryStream.xml",
+        "lib/netstandard2.1/Microsoft.IO.RecyclableMemoryStream.dll",
+        "lib/netstandard2.1/Microsoft.IO.RecyclableMemoryStream.xml",
+        "microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512",
+        "microsoft.io.recyclablememorystream.nuspec"
+      ]
+    },
     "Microsoft.JSInterop/10.0.12": {
       "sha512": "bLgqhSs2YS3i2sOe8Mo11JzgdktB+/VADJXx2oSCE1crpg3RbFESn1mEBfiO4MjX9icW+An1zdGBFucIwIYwmA==",
       "type": "package",
@@ -2095,6 +2908,236 @@
         "tools/net472/Microsoft.NET.WebAssembly.Webcil.dll"
       ]
     },
+    "MimeMapping/4.0.0": {
+      "sha512": "5WK3+mjdCeCKg3znVr+sm/sikVnya7UOHWxt4vJeW+Tbp2GgdLiBLRFBJ91oDyL/NcDVd1sEelQ7ixIN68s33g==",
+      "type": "package",
+      "path": "mimemapping/4.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net462/MimeMapping.dll",
+        "lib/net462/MimeMapping.xml",
+        "lib/netstandard2.0/MimeMapping.dll",
+        "lib/netstandard2.0/MimeMapping.xml",
+        "mimemapping.4.0.0.nupkg.sha512",
+        "mimemapping.nuspec"
+      ]
+    },
+    "MudBlazor/9.11.0": {
+      "sha512": "hboxF5cQuMYjB0w6+tScmNt0ACuoCu35TGPsCmCq8OeQgvtPtzQ1s9auAOrINj/J6I/ZyBB1rmUzrcMKj14RFA==",
+      "type": "package",
+      "path": "mudblazor/9.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "Nuget.png",
+        "README.md",
+        "analyzers/dotnet/cs/MudBlazor.Analyzers.CodeFixes.dll",
+        "analyzers/dotnet/cs/MudBlazor.Analyzers.dll",
+        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "build/MudBlazor.props",
+        "build/MudBlazor.targets",
+        "buildMultiTargeting/MudBlazor.props",
+        "buildTransitive/MudBlazor.props",
+        "lib/net10.0/MudBlazor.dll",
+        "lib/net10.0/MudBlazor.xml",
+        "lib/net8.0/MudBlazor.dll",
+        "lib/net8.0/MudBlazor.xml",
+        "lib/net9.0/MudBlazor.dll",
+        "lib/net9.0/MudBlazor.xml",
+        "mudblazor.9.11.0.nupkg.sha512",
+        "mudblazor.nuspec",
+        "staticwebassets/MudBlazor.min.css",
+        "staticwebassets/MudBlazor.min.js",
+        "staticwebassets/MudBlazor.min.js.map"
+      ]
+    },
+    "Supabase/8.3.1": {
+      "sha512": "srYDKe5sWl2V6nTa8yzrQRi+UGi8mflSlEZR0WI8WxRA3GtzFAqZp5fv2o0V0DiQYporDeyCtjTw2efQKzg1lA==",
+      "type": "package",
+      "path": "supabase/8.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/netstandard2.1/Supabase.dll",
+        "lib/netstandard2.1/Supabase.xml",
+        "supabase.8.3.1.nupkg.sha512",
+        "supabase.nuspec"
+      ]
+    },
+    "Supabase.Core/8.3.1": {
+      "sha512": "XnKQeNp01c3rlC7lUpK9R41G7u8RaKZtHscHhLUGyAG3TDc/ntvDlEoqvJLNcoRswk4mG240n2sA/KOODg+J0Q==",
+      "type": "package",
+      "path": "supabase.core/8.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/netstandard2.1/Supabase.Core.dll",
+        "lib/netstandard2.1/Supabase.Core.xml",
+        "supabase.core.8.3.1.nupkg.sha512",
+        "supabase.core.nuspec"
+      ]
+    },
+    "Supabase.Functions/8.3.1": {
+      "sha512": "YNcXXVaG6bumgAc01phCGlRRNa3/EFyJcPKO2zed1Uh68Z8WFhObwVz05lrhiP80mjoCsaZDHfaYOpkbnSLiOA==",
+      "type": "package",
+      "path": "supabase.functions/8.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/netstandard2.1/Supabase.Functions.dll",
+        "lib/netstandard2.1/Supabase.Functions.xml",
+        "supabase.functions.8.3.1.nupkg.sha512",
+        "supabase.functions.nuspec"
+      ]
+    },
+    "Supabase.Gotrue/8.3.1": {
+      "sha512": "hT4Z32DtYmVeEmy29s7cqzHRODLGppD4JAjMdr5r6fGwY5dgo0nOBNhIDQJgUX2RDi6Wh1bh/K7NOp8R9vr0bg==",
+      "type": "package",
+      "path": "supabase.gotrue/8.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/netstandard2.1/Supabase.Gotrue.dll",
+        "lib/netstandard2.1/Supabase.Gotrue.xml",
+        "supabase.gotrue.8.3.1.nupkg.sha512",
+        "supabase.gotrue.nuspec"
+      ]
+    },
+    "Supabase.Postgrest/8.3.1": {
+      "sha512": "d9WxMTPARLn2bHveWYV/qMMiDmb9mbDceTl807UZJ+O9easq2gF90pxX6nhOHvTHBp5rGdNRT1lxN+A/JpTFRQ==",
+      "type": "package",
+      "path": "supabase.postgrest/8.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/netstandard2.1/Supabase.Postgrest.dll",
+        "lib/netstandard2.1/Supabase.Postgrest.xml",
+        "supabase.postgrest.8.3.1.nupkg.sha512",
+        "supabase.postgrest.nuspec"
+      ]
+    },
+    "Supabase.Realtime/8.3.1": {
+      "sha512": "iEXFmFatYeag6mRXgpsIR9/ahUCiIqNq3I0GuSxGZgHLF0yvma5khzE9lA2L6YXnuJEZ5b5knrlpt4ffV+eKAQ==",
+      "type": "package",
+      "path": "supabase.realtime/8.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/netstandard2.1/Supabase.Realtime.dll",
+        "lib/netstandard2.1/Supabase.Realtime.xml",
+        "supabase.realtime.8.3.1.nupkg.sha512",
+        "supabase.realtime.nuspec"
+      ]
+    },
+    "Supabase.Storage/8.3.1": {
+      "sha512": "Sw8fcVSWCGKrd0mBSqTO3ErADQpzXqFuBfo71d2ONuRStFA0chh5b9QkRMT4jyRVZSNQYZlpT88ZEu8vcBIZoQ==",
+      "type": "package",
+      "path": "supabase.storage/8.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/netstandard2.1/Supabase.Storage.dll",
+        "lib/netstandard2.1/Supabase.Storage.xml",
+        "supabase.storage.8.3.1.nupkg.sha512",
+        "supabase.storage.nuspec"
+      ]
+    },
+    "System.IdentityModel.Tokens.Jwt/7.5.1": {
+      "sha512": "UUw+E0R73lZLlXgneYIJQxNs1kfbcxjVzw64JQyiwjqCd4HMpAbjn+xRo86QZT84uHq8/MkqvfH82tgjgPzpuw==",
+      "type": "package",
+      "path": "system.identitymodel.tokens.jwt/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net461/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net462/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net462/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net472/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net472/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net6.0/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net8.0/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net8.0/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.xml",
+        "system.identitymodel.tokens.jwt.7.5.1.nupkg.sha512",
+        "system.identitymodel.tokens.jwt.nuspec"
+      ]
+    },
+    "System.Reactive/6.1.0": {
+      "sha512": "M5cCC1ZMkZr9jbSQGTHnVkb5TDN67qWCV7AP8TAHdGkvDlu0puT5NzemESNn9+HkYIDpWpocP68/i+/ame2/2w==",
+      "type": "package",
+      "path": "system.reactive/6.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/net6.0-windows10.0.19041/_._",
+        "build/net6.0/_._",
+        "buildTransitive/net6.0-windows10.0.19041/_._",
+        "buildTransitive/net6.0/_._",
+        "icon.png",
+        "lib/net472/System.Reactive.dll",
+        "lib/net472/System.Reactive.xml",
+        "lib/net6.0-windows10.0.19041/System.Reactive.dll",
+        "lib/net6.0-windows10.0.19041/System.Reactive.xml",
+        "lib/net6.0/System.Reactive.dll",
+        "lib/net6.0/System.Reactive.xml",
+        "lib/netstandard2.0/System.Reactive.dll",
+        "lib/netstandard2.0/System.Reactive.xml",
+        "lib/uap10.0.18362/System.Reactive.dll",
+        "lib/uap10.0.18362/System.Reactive.xml",
+        "readme.md",
+        "system.reactive.6.1.0.nupkg.sha512",
+        "system.reactive.nuspec"
+      ]
+    },
+    "Websocket.Client/5.5.0": {
+      "sha512": "xJ5pTXiNSfwOzJVFcrUF1JROo63zjETJgIA4+ik/JxOJdNEv15e3NZ6bgpNQkyWhapcedP5HCa96hn9YCXwenw==",
+      "type": "package",
+      "path": "websocket.client/5.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon-modern.png",
+        "icon.png",
+        "lib/net10.0/Websocket.Client.dll",
+        "lib/net10.0/Websocket.Client.xml",
+        "lib/net6.0/Websocket.Client.dll",
+        "lib/net6.0/Websocket.Client.xml",
+        "lib/net7.0/Websocket.Client.dll",
+        "lib/net7.0/Websocket.Client.xml",
+        "lib/net8.0/Websocket.Client.dll",
+        "lib/net8.0/Websocket.Client.xml",
+        "lib/net9.0/Websocket.Client.dll",
+        "lib/net9.0/Websocket.Client.xml",
+        "lib/netstandard2.0/Websocket.Client.dll",
+        "lib/netstandard2.0/Websocket.Client.xml",
+        "lib/netstandard2.1/Websocket.Client.dll",
+        "lib/netstandard2.1/Websocket.Client.xml",
+        "websocket.client.5.5.0.nupkg.sha512",
+        "websocket.client.nuspec"
+      ]
+    },
     "MindHelp.Shared/1.0.0": {
       "type": "project",
       "path": "../MindHelp.Shared/MindHelp.Shared.csproj",
@@ -2104,11 +3147,13 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.12",
-      "Microsoft.AspNetCore.Components.WebAssembly >= 10.0.12",
-      "Microsoft.AspNetCore.Components.WebAssembly.DevServer >= 10.0.12",
+      "Microsoft.AspNetCore.Components.WebAssembly >= 10.*",
+      "Microsoft.AspNetCore.Components.WebAssembly.DevServer >= 10.*",
       "Microsoft.NET.ILLink.Tasks >= 10.0.12",
       "Microsoft.NET.Sdk.WebAssembly.Pack >= 10.0.12",
-      "MindHelp.Shared >= 1.0.0"
+      "MindHelp.Shared >= 1.0.0",
+      "MudBlazor >= 9.*",
+      "supabase >= 8.3.1"
     ]
   },
   "packageFolders": {
@@ -2176,12 +3221,12 @@
           },
           "Microsoft.AspNetCore.Components.WebAssembly": {
             "target": "Package",
-            "version": "[10.0.12, )"
+            "version": "[10.*, )"
           },
           "Microsoft.AspNetCore.Components.WebAssembly.DevServer": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[10.0.12, )"
+            "version": "[10.*, )"
           },
           "Microsoft.NET.ILLink.Tasks": {
             "suppressParent": "All",
@@ -2194,6 +3239,14 @@
             "target": "Package",
             "version": "[10.0.12, )",
             "autoReferenced": true
+          },
+          "MudBlazor": {
+            "target": "Package",
+            "version": "[9.*, )"
+          },
+          "supabase": {
+            "target": "Package",
+            "version": "[8.3.1, )"
           }
         },
         "imports": [

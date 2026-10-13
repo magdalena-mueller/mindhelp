@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Models\Chat.cs" Link="Models\Chat.cs" />
-    <Compile Include="..\Models\HelpingPersonal.cs" Link="Models\HelpingPersonal.cs" />
-    <Compile Include="..\Models\Users.cs" Link="Models\Users.cs" />
+    <Compile Include=".\Models\Chat.cs" Link="Models\Chat.cs" />
+    <Compile Include=".\Models\HelpingPersonal.cs" Link="Models\HelpingPersonal.cs" />
+    <Compile Include=".\Models\Users.cs" Link="Models\Users.cs" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MindHelp.Wasm.Services;
+using MudBlazor.Services;
 
 namespace MindHelp.Wasm;
 
@@ -11,7 +13,11 @@ public class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
+        builder.Services.AddMudServices();
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+        // SupabaseService
+        builder.Services.AddScoped<SupaBaseService>();
 
         await builder.Build().RunAsync();
     }

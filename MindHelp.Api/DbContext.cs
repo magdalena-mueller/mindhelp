@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using MindHelp.Shared;
+using MindHelp.Shared.Models;
+//using Supabase.Postgrest.Attributes;
 
 namespace MindHelp.Api;
 //alles KI, vorher wars leer
