@@ -1,0 +1,24 @@
+@page "/User"
+
+<PageTitle>Benutzer</PageTitle>
+
+
+@* <MudAlert Severity="Severity.Normal" ContentAlignment="HorizontalAlignment.Start">
+    You can find documentation and examples on our website here:
+    <MudLink Href="https://mudblazor.com" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
+        <b>www.mudblazor.com</b>
+    </MudLink>
+</MudAlert> *@
+
+@inject SupaBaseService SupabaseService
+@inject HttpClient Http
+
+@code {
+    @* protected override async Task OnInitializedAsync()
+    {
+         await SupabaseService.InitializeAsync();
+
+         await SupabaseService.RegisterUserAsync("test@test.at", "test1234");
+
+    } *@
+}

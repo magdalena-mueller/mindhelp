@@ -6,21 +6,21 @@
 <MudText Class="mb-8">Welcome to your new app, powered by MudBlazor and the .NET 10 Template!</MudText>
 
 
-<MudAlert Severity="Severity.Normal" ContentAlignment="HorizontalAlignment.Start">
+@* <MudAlert Severity="Severity.Normal" ContentAlignment="HorizontalAlignment.Start">
     You can find documentation and examples on our website here:
     <MudLink Href="https://mudblazor.com" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
         <b>www.mudblazor.com</b>
     </MudLink>
-</MudAlert>
+</MudAlert> *@
 
 @inject SupaBaseService SupabaseService
 
 @code {
-    protected override async Task OnInitializedAsync()
+    @* protected override async Task OnInitializedAsync()
     {
          await SupabaseService.InitializeAsync();
 
          await SupabaseService.RegisterUserAsync("test@test.at", "test1234");
 
-    }
+    } *@
 }

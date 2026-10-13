@@ -1,0 +1,56 @@
+@page "/Register"
+@page "/messagebox2"
+
+<PageTitle>Registrieren</PageTitle>
+
+@inject IDialogService DialogService
+@inject SupaBaseService SupabaseService
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+
+<MudButton Variant="Variant.Filled"
+           Color="Color.Primary"
+           OnClick="ShowMessageBox">
+    MessageBox anzeigen
+</MudButton> 
+
+<MudText Class="mt-4">Ergebnis: @_result</MudText>
+
+@code {
+
+    private string _result = string.Empty;
+    protected override async Task OnAfterRenderAsync(bool firstRender)      //MessageBox zum Auswählen was man ist
+    {
+        if (firstRender)
+        {
+            await ShowMessageBox();
+        }
+    }
+
+    private async Task ShowMessageBox()         //MessageBox Results glaub ich
+    {
+        bool? result = await DialogService.ShowMessageBoxAsync(
+            "Achtung",
+            "Sind Sie Hilfesuchend oder bieten Sie psychologische Hilfe an?",
+            yesText: "Hilfeskraft",
+            noText: "Hilfesuchend",
+            cancelText: "Abbrechen");
+
+        _result = result switch
+        {
+            true  => "Ja",
+            false => "Nein",
+            null  => "Abbrechen"
+        };
+
+        if (_result == "Ja")
+        {
+            NavigationManager.NavigateTo("/PHelp");
+        }
+        else if (_result == "Nein")
+        {
+            NavigationManager.NavigateTo("/User");
+        }
+    }
+}
