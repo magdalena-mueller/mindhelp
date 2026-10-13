@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\dip\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj": {}
+    "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj": {}
   },
   "projects": {
-    "C:\\dip\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj": {
+    "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\dip\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
+        "projectUniqueName": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
         "projectName": "MindHelp.Shared",
-        "projectPath": "C:\\dip\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
-        "packagesPath": "C:\\Users\\magda\\.nuget\\packages\\",
-        "outputPath": "C:\\dip\\mindhelp\\MindHelp.Shared\\obj\\",
+        "projectPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\magda\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -31,7 +31,6 @@
         },
         "frameworks": {
           "net10.0": {
-            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -46,11 +45,10 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.400"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "imports": [
             "net461",
@@ -68,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

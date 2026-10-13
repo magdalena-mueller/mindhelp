@@ -1,6 +1,10 @@
 @page "/PHelp"
 <PageTitle>Physologische Hilfe</PageTitle>
 
+// Die drei Zeilen von Mathias
+@page "/user"
+@inject SupaBaseService SupabaseService
+@inject NavigationManager Nav
 
 @inject SupaBaseService SupabaseService
 @inject HttpClient Http
@@ -103,5 +107,17 @@
 }
 
 @code {
-      private string _dense;
+    private string _dense;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SupabaseService.InitializeAsync();
+
+            if (!SupabaseService.IsLoggedIn)
+            {
+                Nav.NavigateTo("/login");
+                return;
+            }
+    }
+
 }

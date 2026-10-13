@@ -4,7 +4,7 @@ using MindHelp.Shared.Models;
 
 namespace MindHelp.Api;
 //alles KI, vorher wars leer
-public sealed class MindHelpDbContext(DbContextOptions<MindHelpDbContext> options)
+/*public sealed class MindHelpDbContext(DbContextOptions<MindHelpDbContext> options)
     : DbContext(options)
 {
     public DbSet<Chat> Chats => Set<Chat>();
@@ -33,7 +33,7 @@ public sealed class MindHelpDbContext(DbContextOptions<MindHelpDbContext> option
 
         modelBuilder.Entity<HelpingPersonal>(entity =>
         {
-            entity.ToTable("psychologischesPersonal", "public");
+            entity.ToTable("psychologischesPersonal", "public"); 
             entity.HasKey(help => help.HelpingPersonalId);
         });
 
@@ -42,5 +42,5 @@ public sealed class MindHelpDbContext(DbContextOptions<MindHelpDbContext> option
             entity.ToTable("users", "public");
             entity.HasKey(user => user.UserId);
         });
-    }
+    }*/
 }
