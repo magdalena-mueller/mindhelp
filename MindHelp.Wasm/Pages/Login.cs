@@ -1,4 +1,4 @@
-@page "/login"
+/*@page "/login"
 @inject SupaBaseService SupabaseService
 @inject NavigationManager Nav
 
@@ -21,4 +21,4 @@
         else
             _error = "E-Mail oder Passwort falsch.";
     }
-}
+}*/

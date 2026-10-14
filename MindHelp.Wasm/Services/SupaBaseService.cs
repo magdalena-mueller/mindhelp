@@ -1,4 +1,4 @@
-using Micosoft.JSInterop;
+//using Micosoft.JSInterop;
 
 namespace MindHelp.Wasm.Services;
 
@@ -7,12 +7,12 @@ public class SupaBaseService
     private string SupabaseUrl = "https://btluoessffljxbznjabe.supabase.co";
     private string SupabaseKey = "sb_publishable_0EFTKf2BiAp8_YNgVuBnyg_iWe2WgcN";
 
-    private readonly IJSRuntime _js;
+    /*private readonly IJSRuntime _js;
 
     public SupaBaseService(IJSRuntime js)
     {
         _js = js;
-    }
+    }*/
 
     private Supabase.Client _client;
 
@@ -33,7 +33,7 @@ public class SupaBaseService
         };
 
         var client = new Supabase.Client(SupabaseUrl, SupabaseKey, options);
-        clint.Auth.SetSessionPersistence(new BrowserSessionPersistence(_js)); // Setzt die Session Persistence auf die BrowserSessionPersistence
+        //clint.Auth.SetSessionPersistence(new BrowserSessionPersistence(_js)); // Setzt die Session Persistence auf die BrowserSessionPersistence
         await _client.InitializeAsync();
 
         _client = client; // Speichert den initialisierten Client für zukünftige Aufrufe (Mathias)
@@ -81,7 +81,7 @@ public class SupaBaseService
     }
 
     // Meldet einen User an. Supabase liefert dabei das JWT (AccessToken).
-    public async Task<bool> LoginAsync(string email, string password)
+    /*public async Task<bool> LoginAsync(string email, string password)
     {
         var client = await InitializeAsync();
 
@@ -96,21 +96,21 @@ public class SupaBaseService
             Console.WriteLine($"Login fehlgeschlagen: {ex.Message}");
             return false;
         }
-    }
+    }*/
 
     /// <summary>
     /// Meldet den aktuellen Benutzer ab.
     /// </summary>
-    public async Task LogoutAsync()
+    /*public async Task LogoutAsync()
     {
         var client = await InitializeAsync();
         await client.Auth.SignOut();
-    }
+    }*/
 
     /// <summary>
     /// Prüft, ob ein Benutzer eingeloggt ist.
     /// </summary>
-    public bool IsLoggedIn => _client?.Auth.CurrentSession != null;
+    //public bool IsLoggedIn => _client?.Auth.CurrentSession != null;
 
     
 }
