@@ -7,12 +7,13 @@ public class SupaBaseService
     private string SupabaseUrl = "https://btluoessffljxbznjabe.supabase.co";
     private string SupabaseKey = "sb_publishable_0EFTKf2BiAp8_YNgVuBnyg_iWe2WgcN";
 
-    /*private readonly IJSRuntime _js;
+    //Wieder einkommentiert
+    private readonly IJSRuntime _js;
 
     public SupaBaseService(IJSRuntime js)
     {
         _js = js;
-    }*/
+    }
 
     private Supabase.Client _client;
 
@@ -80,8 +81,9 @@ public class SupaBaseService
         }*/
     }
 
+    //Wieder einkommentiert
     // Meldet einen User an. Supabase liefert dabei das JWT (AccessToken).
-    /*public async Task<bool> LoginAsync(string email, string password)
+    public async Task<bool> LoginAsync(string email, string password)
     {
         var client = await InitializeAsync();
 
@@ -96,21 +98,23 @@ public class SupaBaseService
             Console.WriteLine($"Login fehlgeschlagen: {ex.Message}");
             return false;
         }
-    }*/
+    }
 
     /// <summary>
     /// Meldet den aktuellen Benutzer ab.
     /// </summary>
-    /*public async Task LogoutAsync()
+    /// wieder einkommentiert
+    public async Task LogoutAsync()
     {
         var client = await InitializeAsync();
         await client.Auth.SignOut();
-    }*/
+    }
 
     /// <summary>
     /// Prüft, ob ein Benutzer eingeloggt ist.
     /// </summary>
-    //public bool IsLoggedIn => _client?.Auth.CurrentSession != null;
+    //Wieder einkommentiert 
+    public bool IsLoggedIn => _client?.Auth.CurrentSession != null;
 
     
 }
