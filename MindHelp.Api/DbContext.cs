@@ -42,5 +42,5 @@ namespace MindHelp.Api;
             entity.ToTable("users", "public");
             entity.HasKey(user => user.UserId);
         });
-    }*/
-}
+    }
+}*/
