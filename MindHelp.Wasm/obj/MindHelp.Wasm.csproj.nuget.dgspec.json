@@ -431,6 +431,10 @@
               "target": "Package",
               "version": "[9.*, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.4, )"
+            },
             "Supabase": {
               "target": "Package",
               "version": "[8.3.1, )"

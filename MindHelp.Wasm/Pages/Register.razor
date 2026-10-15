@@ -2,16 +2,16 @@
 @page "/messagebox2"
 
 // Die drei Zeilen von Mathias
-@page "/user"
+ @*page "/user"
 @inject SupaBaseService SupabaseService
-@inject NavigationManager Nav
+@inject NavigationManager Nav*@
 
 <PageTitle>Registrieren</PageTitle>
 
 @inject IDialogService DialogService
 @inject SupaBaseService SupabaseService
 @inject HttpClient Http
-@inject NavigationManager NavigationManager
+@inject NavigationManager Nav
 
 
 <MudButton Variant="Variant.Filled"
@@ -64,11 +64,11 @@
 
         if (_result == "Ja")
         {
-            NavigationManager.NavigateTo("/PHelp");
+            Nav.NavigateTo("/PHelp");
         }
         else if (_result == "Nein")
         {
-            NavigationManager.NavigateTo("/User");
+            Nav.NavigateTo("/User");
         }
     }
 }

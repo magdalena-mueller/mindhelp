@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "2uXFEfpUoHw=",
+  "dgSpecHash": "qFNS47R1s04=",
   "success": true,
   "projectFilePath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj",
   "expectedPackageFiles": [
@@ -46,6 +46,7 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.net.sdk.webassembly.pack\\10.0.8\\microsoft.net.sdk.webassembly.pack.10.0.8.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\mimemapping\\4.0.0\\mimemapping.4.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\mudblazor\\9.11.0\\mudblazor.9.11.0.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\supabase\\8.3.1\\supabase.8.3.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\supabase.core\\8.3.1\\supabase.core.8.3.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\supabase.functions\\8.3.1\\supabase.functions.8.3.1.nupkg.sha512",

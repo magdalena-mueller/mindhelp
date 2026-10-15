@@ -1,4 +1,4 @@
-//using Micosoft.JSInterop;
+using Microsoft.JSInterop;
 
 namespace MindHelp.Wasm.Services;
 
@@ -15,7 +15,7 @@ public class SupaBaseService
         _js = js;
     }
 
-    private Supabase.Client _client;
+    private Supabase.Client? _client;
 
     /// <summary>
     /// Erstellt den Client beim ersten Aufruf und verbindet mit Supabase.
@@ -34,7 +34,7 @@ public class SupaBaseService
         };
 
         var client = new Supabase.Client(SupabaseUrl, SupabaseKey, options);
-        //clint.Auth.SetSessionPersistence(new BrowserSessionPersistence(_js)); // Setzt die Session Persistence auf die BrowserSessionPersistence
+        client.Auth.SetPersistence(new BrowserSessionPersistence(_js)); // Setzt die Session Persistence auf die BrowserSessionPersistence //Davor SetSessionPersistence
         await _client.InitializeAsync();
 
         _client = client; // Speichert den initialisierten Client für zukünftige Aufrufe (Mathias)
