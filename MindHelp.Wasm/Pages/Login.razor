@@ -20,7 +20,7 @@
         var ok = await SupabaseService.LoginAsync(_email, _password);
 
         if (ok)
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/anmeldungyes");
         else
             _error = "E-Mail oder Passwort falsch.";
     }

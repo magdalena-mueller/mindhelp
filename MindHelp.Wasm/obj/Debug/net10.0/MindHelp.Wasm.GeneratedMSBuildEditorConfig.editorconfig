@@ -40,6 +40,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/dip/mindhelp/MindHelp.Wasm/Pages/Anmeldungerfolgreich.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQW5tZWxkdW5nZXJmb2xncmVpY2gucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/dip/mindhelp/MindHelp.Wasm/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

@@ -109,7 +109,7 @@
         var ok = await SupabaseService.RegisterUserAsync(_email, _password, _vorname, _nachname, _birthday!.Value, _specification);   //_specification gehört da eigentlich dazu aber Prototype egal
 
         if (ok)
-            Nav.NavigateTo("/login");
+            Nav.NavigateTo("/anmeldungyes");
         else
             _errors = ["Registrierung fehlgeschlagen."];
 
