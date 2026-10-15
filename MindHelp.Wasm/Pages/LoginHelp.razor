@@ -48,7 +48,7 @@
                               Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
                               Validation="@(new Func<string, string>(PasswordMatch))"/>
                 <MudTextField T="DateTime?" Format="yyyy-MM-dd" Required="true" Label="Birthday" @bind-Value="@_birthday" InputType="InputType.Date"/>
-                <MudTextField T="string" Label="Specifikation (Optional)" @bind-Value="@_specification" Required="false" /> @* @binding.Value="@_specification"*@
+                @* <MudTextField T="string" Label="Specifikation (Optional)" @bind-Value="@_specification" Required="false" /> @binding.Value="@_specification" *@
 
                 @* <div class="d-flex">
                     <MudRadioGroup T="string" Required="true" RequiredError="Account type is required!">
@@ -106,7 +106,7 @@
             return;
         }
 
-        var ok = await SupabaseService.RegisterUserAsync(_email, _password, _vorname, _nachname, _birthday!.Value, _specification);   //_specification gehört da eigentlich dazu aber Prototype egal
+        var ok = await SupabaseService.RegisterUserAsync(_email, _password, _vorname, _nachname, _birthday!.Value, _specification);   //_specification gibts jetzt im Ptototype nicht aber sowieso optional 
 
         if (ok)
             Nav.NavigateTo("/anmeldungyes");
