@@ -21,7 +21,7 @@ public class SupaBaseService
     /// Erstellt den Client beim ersten Aufruf und verbindet mit Supabase.
     /// Weitere Aufrufe liefern denselben Client zurück.
     /// </summary>
-    public async Task<Supabase.Client> InitializeAsync()
+    /*public async Task<Supabase.Client> InitializeAsync()
     {
         if (_client != null)
         {
@@ -39,7 +39,27 @@ public class SupaBaseService
 
         _client = client; // Speichert den initialisierten Client für zukünftige Aufrufe (Mathias)
         return _client;    //(Mathias)
-    } 
+    } */
+
+
+    public async Task<Supabase.Client> InitializeAsync()
+    {
+        if (_client == null)
+        {
+            var options = new Supabase.SupabaseOptions
+            {
+            AutoRefreshToken = true,
+            AutoConnectRealtime = true
+            };
+
+
+            var client = new Supabase.Client(SupabaseUrl, SupabaseKey, options);
+            client.Auth.SetPersistence(new BrowserSessionPersistence(_js));
+            await client.InitializeAsync();
+            _client = client;
+        }
+        return _client;
+    }
    
     // Methode zum Registrieren eines neuen Benutzers
     public async Task RegisterUserAsync(string email, string password)
