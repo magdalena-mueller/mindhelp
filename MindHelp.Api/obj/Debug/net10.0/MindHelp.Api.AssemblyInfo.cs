@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MindHelp.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d514d02ebc97a7e04dae02de89dcc8286f9a6c55")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7422be0a33699c8cae8b92371ca2c953e5fe10ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("MindHelp.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MindHelp.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

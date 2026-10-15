@@ -1,10 +1,7 @@
 @page "/Register"
 @page "/messagebox2"
 
-// Die drei Zeilen von Mathias
- @*page "/user"
-@inject SupaBaseService SupabaseService
-@inject NavigationManager Nav*@
+
 
 <PageTitle>Registrieren</PageTitle>
 
@@ -17,15 +14,15 @@
 <MudButton Variant="Variant.Filled"
            Color="Color.Primary"
            OnClick="ShowMessageBox">
-    MessageBox anzeigen
+    Anzeigen zum Registrieren
 </MudButton> 
 
 <MudText Class="mt-4">Ergebnis: @_result</MudText>
 
 @code {
 
-    // wieder einkommentiert
-    protected override async Task OnInitializedAsync()
+    // wieder einkommentiert    magda hats auskommentiert
+    @* protected override async Task OnInitializedAsync()
     {
         await SupabaseService.InitializeAsync();
 
@@ -35,15 +32,15 @@
             return;
         }
 
-    } 
+    }  *@
     
     private string _result = string.Empty;
     protected override async Task OnAfterRenderAsync(bool firstRender)      //MessageBox zum Auswählen was man ist
     {
-        if (firstRender)
-        {
+        @* if (firstRender)
+        { *@
             await ShowMessageBox();
-        }
+        //}
     }
 
     private async Task ShowMessageBox()         //MessageBox Results glaub ich
@@ -64,7 +61,7 @@
 
         if (_result == "Ja")
         {
-            Nav.NavigateTo("/PHelp");
+            Nav.NavigateTo("/LoginPHelp");
         }
         else if (_result == "Nein")
         {

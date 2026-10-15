@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {}
   },
@@ -8,23 +8,23 @@
     "net10.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Lenovo\\.nuget\\packages\\": {},
+    "C:\\Users\\magda\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
+      "projectUniqueName": "C:\\dip\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
       "projectName": "MindHelp.Shared",
-      "projectPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
-      "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\obj\\",
+      "projectPath": "C:\\dip\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj",
+      "packagesPath": "C:\\Users\\magda\\.nuget\\packages\\",
+      "outputPath": "C:\\dip\\mindhelp\\MindHelp.Shared\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\magda\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -38,6 +38,7 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -52,10 +53,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.400"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "imports": [
           "net461",
@@ -73,7 +75,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

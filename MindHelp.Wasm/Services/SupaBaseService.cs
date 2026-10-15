@@ -62,7 +62,23 @@ public class SupaBaseService
     }
    
     // Methode zum Registrieren eines neuen Benutzers
-    public async Task RegisterUserAsync(string email, string password)
+    public Task<bool> RegisterUserAsync(string email, string password)
+    {
+        return RegisterUserAsyncCore(email, password);
+    }
+
+    public Task<bool> RegisterUserAsync(
+        string email,
+        string password,
+        string firstName,
+        string lastName,
+        DateTime birthday,
+        string specification)
+    {
+        return RegisterUserAsyncCore(email, password);
+    }
+
+    private async Task<bool> RegisterUserAsyncCore(string email, string password)
     {
         var client = await InitializeAsync(); // Stellt sicher, dass der Client initialisiert ist (Mathias)
         
@@ -77,6 +93,7 @@ public class SupaBaseService
             if (response?.User != null)
             {
                 Console.WriteLine($"User registered: {response.User.Email}");
+                return true;
             }
             else
             {
@@ -88,17 +105,7 @@ public class SupaBaseService
             Console.WriteLine($"Error registering user: {ex.Message}");
         }
 
-        
-        /*var response = await _client.Auth.SignUp(email, password); // Legt einen neuen User an
-        if (response?.User != null)
-        {
-            Console.WriteLine($"User registered: {response.User.Email}");
-        }
-        else
-        {
-            Console.WriteLine("Signup lieferte keinen User zurück.");
-            //Console.WriteLine($"Error registering user: {response.Error.Message}");
-        }*/
+        return false;
     }
 
     //Wieder einkommentiert

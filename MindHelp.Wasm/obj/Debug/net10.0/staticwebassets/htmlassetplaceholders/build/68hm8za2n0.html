@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MindHelp.Wasm</title>
+    <base href="/" />
+    <link href="_framework/dotnet.1l6xfr50lc.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-a1VIhmzsoZ+Twik5VpO5uiqzecHHjNNOKm3HY66vwdQ=" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="MindHelp.Wasm.styles.css" rel="stylesheet" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    <script type="importmap">{
+  "imports": {
+    "./_content/MudBlazor/MudBlazor.min.js": "./_content/MudBlazor/MudBlazor.min.iqa03rp1wd.js",
+    "./_framework/Microsoft.DotNet.HotReload.WebAssembly.Browser.lib.module.js": "./_framework/Microsoft.DotNet.HotReload.WebAssembly.Browser.0ql05aqe1d.lib.module.js",
+    "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.w3qd1tpl0e.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.1l6xfr50lc.js",
+    "./_framework/dotnet.native.js": "./_framework/dotnet.native.q38003gvqi.js",
+    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.azrfhwb804.js",
+    "./service-worker.js": "./service-worker.p98v8wk21i.js",
+    "./service-worker.published.js": "./service-worker.published.otz68gb9ru.js"
+  },
+  "scopes": {},
+  "integrity": {
+    "./_content/MudBlazor/MudBlazor.min.iqa03rp1wd.js": "sha256-psoYxTLGef6sxGExymUln5UQPWgGsZythiWeQMqFu8k=",
+    "./_content/MudBlazor/MudBlazor.min.js": "sha256-psoYxTLGef6sxGExymUln5UQPWgGsZythiWeQMqFu8k=",
+    "./_framework/Microsoft.DotNet.HotReload.WebAssembly.Browser.0ql05aqe1d.lib.module.js": "sha256-COWwzg73Z3/o08f86sS51xhS4Ya6UXTEzWvXeOnbv00=",
+    "./_framework/Microsoft.DotNet.HotReload.WebAssembly.Browser.lib.module.js": "sha256-COWwzg73Z3/o08f86sS51xhS4Ya6UXTEzWvXeOnbv00=",
+    "./_framework/blazor.webassembly.js": "sha256-lDXsDYFgm62F+YUvxES7IOTCXYpiHpU3uR45YdC6mq4=",
+    "./_framework/blazor.webassembly.w3qd1tpl0e.js": "sha256-lDXsDYFgm62F+YUvxES7IOTCXYpiHpU3uR45YdC6mq4=",
+    "./_framework/dotnet.1l6xfr50lc.js": "sha256-a1VIhmzsoZ+Twik5VpO5uiqzecHHjNNOKm3HY66vwdQ=",
+    "./_framework/dotnet.js": "sha256-a1VIhmzsoZ+Twik5VpO5uiqzecHHjNNOKm3HY66vwdQ=",
+    "./_framework/dotnet.native.js": "sha256-BtUMevCTTpUK4I5d68LtBZlJdGIQC7fk+oNnjyzuFR4=",
+    "./_framework/dotnet.native.q38003gvqi.js": "sha256-BtUMevCTTpUK4I5d68LtBZlJdGIQC7fk+oNnjyzuFR4=",
+    "./_framework/dotnet.runtime.azrfhwb804.js": "sha256-muN076HgyOCoAaid7zD7a2/GN7aQ7tmK/BzdnKgw78g=",
+    "./_framework/dotnet.runtime.js": "sha256-muN076HgyOCoAaid7zD7a2/GN7aQ7tmK/BzdnKgw78g=",
+    "./service-worker.js": "sha256-nYPaEVcq2mY3PmL/5mIxOczOsCPDhI3m6gdnTIBR6Bw=",
+    "./service-worker.p98v8wk21i.js": "sha256-nYPaEVcq2mY3PmL/5mIxOczOsCPDhI3m6gdnTIBR6Bw=",
+    "./service-worker.published.js": "sha256-JM16jbL7m4i1oHk3Zfems+LsjD1o08CxPwDb6Rnsq38=",
+    "./service-worker.published.otz68gb9ru.js": "sha256-JM16jbL7m4i1oHk3Zfems+LsjD1o08CxPwDb6Rnsq38="
+  }
+}</script>
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_framework/blazor.webassembly.w3qd1tpl0e.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });</script>
+</body>
+
+</html>
