@@ -1,4 +1,25 @@
 @page "/anmeldungyes"
 
+@inject NavigationManager Nav
+
+@inject SupaBaseService SupabaseService
+@inject HttpClient Http
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
 <PageTitle>JA DU BIST ANGEMELDET</PageTitle>
-<p>aber JWT-Token hastdu nicht glaub ich</p>
+<h3>Anmeldung erfolgreich wuhu</h3>
+<p>aber JWT-Token gibts nicht glaub ich</p>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await SupabaseService.InitializeAsync();
+
+            if (!SupabaseService.IsLoggedIn)
+            {
+                Nav.NavigateTo("/login");
+                return;
+            }
+    }
+}
