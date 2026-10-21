@@ -56,10 +56,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/dip/mindhelp/MindHelp.Wasm/Pages/LoginHelp.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5IZWxwLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/dip/mindhelp/MindHelp.Wasm/Pages/NotFound.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTm90Rm91bmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -70,6 +66,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/dip/mindhelp/MindHelp.Wasm/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/dip/mindhelp/MindHelp.Wasm/Pages/RegisterHelper.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXJIZWxwZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/dip/mindhelp/MindHelp.Wasm/Pages/RegisterUser.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXJVc2VyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/dip/mindhelp/MindHelp.Wasm/Pages/User.razor]

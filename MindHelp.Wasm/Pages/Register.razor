@@ -59,13 +59,13 @@
             null  => "Abbrechen"
         };
 
-        if (_result == "Ja")
+        if (_result == "Nein")
         {
-            Nav.NavigateTo("/LoginPHelp");
+            Nav.NavigateTo("/RegisterUser");
         }
-        else if (_result == "Nein")
+        else if (_result == "Ja")
         {
-            Nav.NavigateTo("/User");
+            Nav.NavigateTo("/RegisterHelper");
         }
     }
 }

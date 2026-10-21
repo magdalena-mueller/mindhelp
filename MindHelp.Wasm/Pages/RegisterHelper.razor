@@ -1,0 +1,158 @@
+@page "/RegisterHelper"
+<PageTitle>Anmeldung Hilfskraft</PageTitle>
+
+
+@inject NavigationManager Nav
+@inject SupaBaseService SupabaseService
+@inject HttpClient Http
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+@page "/RegisterUser"
+<PageTitle>Anmeldung</PageTitle>
+
+@* Die drei Zeilen von Mathias*@
+ @*page "/user"
+@inject SupaBaseService SupabaseService*@
+@inject NavigationManager Nav
+
+@inject SupaBaseService SupabaseService
+@inject HttpClient Http
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+<!-- #region anderes Layout -->
+@* <MudTextField @bind-Value="_dense" Label="Vorname" Variant="Variant.Outlined" Margin="Margin.Dense" />
+<MudTextField @bind-Value="_dense" Label="Nachname" Variant="Variant.Outlined" Margin="Margin.Dense" />
+<MudTextField @bind-Value="_dense" Label="E-Mail" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+
+<MudTextField @bind-Value="_dense" Label="Password" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+
+
+<MudTextField T="DateTime?" Format="tt.mm.yyyy" Label="Birthday"  InputType="InputType.Date"/>
+
+<MudTextField @bind-Value="_dense" Label="Specifikation (Optional)" Variant="Variant.Outlined" Margin="Margin.Dense" /> *@
+<!-- #endregion-->
+
+
+
+
+<MudGrid>
+    <MudItem xs="12" sm="7">
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" OnEnterPressed="@(() => _form.ValidateAsync())">
+                <MudTextField T="string" Label="Vorname" @bind-Value="@_vorname" Required="true" RequiredError="Vorname wird benötigt!" />
+                <MudTextField  T="string" Label="Nachname" @bind-Value="@_nachname" Required="true" RequiredError="Nachname wird benötigt!" />
+                <MudTextField T="string" Label="Email" @bind-Value="@_email" Required="true" RequiredError="Email is required!"
+                              Validation="@(new EmailAddressAttribute { ErrorMessage = @"The email address is invalid" })" />
+                <MudTextField T="string"
+                              @bind-Value="@_password"
+                              Label="Password" 
+                              HelperText="Choose a strong password"
+                              InputType="InputType.Password"
+                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                              RequiredError="Password is required!"/>
+                <MudTextField T="string"
+                              Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
+                              Validation="@(new Func<string, string>(PasswordMatch))"/>
+                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Required="true" Label="Birthday" @bind-Value="@_birthday" InputType="InputType.Date"/>
+                <MudTextField T="string" Label="Specifikation (Optional)" @bind-Value="@_specification" Required="false" />
+
+                @* <div class="d-flex">
+                    <MudRadioGroup T="string" Required="true" RequiredError="Account type is required!">
+                        <MudRadio Value="@("Personal")">Personal</MudRadio>
+                        <MudRadio Value="@("Professional")">Professional</MudRadio>
+                    </MudRadioGroup>
+                </div> *@
+                <div class="d-flex align-center justify-space-between">
+                    <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!"  />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                    Disabled="@(!_success)" Class="ml-auto"
+                    OnClick="Register">Register</MudButton>
+                </div>
+            </MudForm>
+        </MudPaper>
+        @* <MudPaper Class="pa-4 mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => _form.ValidateAsync())">Validate</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => _form.ResetAsync())" Class="mx-2">Reset</MudButton>
+            <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(() => _form.ResetValidationAsync())">Reset Validation</MudButton>
+        </MudPaper> *@
+    </MudItem>
+    <MudItem xs="12" sm="5">
+        <MudPaper Class="pa-4 mud-height-full">
+            <MudText Typo="Typo.subtitle2">@($"Errors ({_errors.Length})")</MudText>
+            @foreach (var error in _errors)
+            {
+                <MudText Color="@Color.Error">@error</MudText>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    private bool _success;
+    private MudForm _form;
+    private string _password;
+    private string _vorname;
+    private string _nachname;
+    private string _email;
+    private DateTime? _birthday;
+    private string _specification = string.Empty;
+
+    private string[] _errors = [];
+
+
+    private async Task Register()       //Button Click zum Speichern
+    {
+        await _form.ValidateAsync();
+        if (!_form.IsValid) return;
+
+        if (!_birthday.HasValue)
+        {
+            _errors = ["Birthday is required."];
+            return;
+        }
+
+        var ok = await SupabaseService.RegisterUserAsync(_email, _password, _vorname, _nachname, _birthday!.Value, _specification);   //_specification gibts jetzt im Ptototype nicht aber sowieso optional 
+
+        if (ok)
+            Nav.NavigateTo("/anmeldungyes");
+        else
+            _errors = ["Registrierung fehlgeschlagen."];
+
+        
+    }
+
+    @* protected override async Task OnInitializedAsync()
+    {
+            await SupabaseService.InitializeAsync();
+
+            await SupabaseService.RegisterUserAsync();
+
+    } *@
+
+    private static IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+
+    private string PasswordMatch(string arg) => _password != arg ? "Passwords don't match" : null;
+}
+
+
+} 
