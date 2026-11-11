@@ -423,7 +423,7 @@
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.13, )",
+              "version": "[10.0.15, )",
               "autoReferenced": true
             },
             "MudBlazor": {
@@ -453,7 +453,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[10.0.13, 10.0.13]"
+              "version": "[10.0.15, 10.0.15]"
             }
           ],
           "frameworkReferences": {
