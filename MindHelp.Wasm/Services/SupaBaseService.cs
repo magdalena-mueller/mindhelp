@@ -75,10 +75,18 @@ public class SupaBaseService
         DateTime birthday,
         string specification)
     {
-        return RegisterUserAsyncCore(email, password);
+        // Hier kann man die zusätzlichen Daten in einem Dictionary oder einem benutzerdefinierten Objekt speichern, um sie später zu verwenden. (mathias)
+        var data = new Dictionary<string, object>
+        {
+            { "first_name", firstName },
+            { "last_name", lastName },
+            { "birthday", birthday.ToString("yyyy-MM-dd") },
+            { "specification", specification }
+        };
+        return RegisterUserAsyncCore(email, password,data);
     }
 
-    private async Task<bool> RegisterUserAsyncCore(string email, string password)
+    private async Task<bool> RegisterUserAsyncCore(string email, string password, Dictionary<string, object>? data)
     {
         var client = await InitializeAsync(); // Stellt sicher, dass der Client initialisiert ist (Mathias)
         
@@ -88,7 +96,11 @@ public class SupaBaseService
         }*/
         try
         {
-            var response = await _client.Auth.SignUp(email, password); // Legt einen neuen User an
+            var options = new Supabase.Gotrue.SignUpOptions
+            {
+                Data = data // Hier werden die zusätzlichen Daten übergeben (Mathias)
+            };
+            var response = await _client.Auth.SignUp(email, password, options); // Legt einen neuen User an
             
             if (response?.User != null)
             {

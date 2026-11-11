@@ -37,10 +37,10 @@
     private string _result = string.Empty;
     protected override async Task OnAfterRenderAsync(bool firstRender)      //MessageBox zum Auswählen was man ist
     {
-        @* if (firstRender)
-        { *@
+        if (firstRender)
+        { 
             await ShowMessageBox();
-        //}
+        }
     }
 
     private async Task ShowMessageBox()         //MessageBox Results glaub ich
