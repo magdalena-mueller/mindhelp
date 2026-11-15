@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj": {}
+    "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Wasm\\MindHelp.Wasm.csproj": {}
   },
   "projects": {
     "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Shared\\MindHelp.Shared.csproj": {
@@ -344,14 +344,14 @@
         }
       }
     },
-    "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj": {
+    "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Wasm\\MindHelp.Wasm.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj",
+        "projectUniqueName": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Wasm\\MindHelp.Wasm.csproj",
         "projectName": "MindHelp.Wasm",
-        "projectPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj",
+        "projectPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Wasm\\MindHelp.Wasm.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\obj\\",
+        "outputPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Wasm\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

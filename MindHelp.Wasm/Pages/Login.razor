@@ -2,27 +2,57 @@
 @inject SupaBaseService SupabaseService
 @inject NavigationManager Nav
 
-<MudTextField @bind-Value="_email" Label="E-Mail" />
-<MudTextField @bind-Value="_password" Label="Passwort" InputType="InputType.Password" />  <!---->
-<MudButton OnClick="DoLogin">Anmelden</MudButton>
-<MudText Color="Color.Error">@_error</MudText>
+<PageTitle>Anmelden</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-12">
+    <MudPaper Elevation="3" Class="pa-8">
+        <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Primary" GutterBottom="true">mindhelp</MudText>
+        <MudText Typo="Typo.body2" Align="Align.Center" Class="mb-6">Schön, dass du da bist. Bitte melde dich an.</MudText>
+
+        <MudTextField @bind-Value="_email" Label="E-Mail" Variant="Variant.Outlined" Class="mb-4" />
+        <MudTextField @bind-Value="_password" Label="Passwort" Variant="Variant.Outlined" InputType="InputType.Password"
+                      OnKeyDown="OnKeyDown" Class="mb-4" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Size="Size.Large"
+                   Disabled="_loading" OnClick="DoLogin">
+            @(_loading ? "Wird angemeldet …" : "Anmelden")
+        </MudButton>
+
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4">@_error</MudAlert>
+        }
+
+        <MudText Typo="Typo.body2" Align="Align.Center" Class="mt-6">
+            Noch kein Konto? <MudLink Href="Register">Jetzt registrieren</MudLink>
+        </MudText>
+    </MudPaper>
+</MudContainer>
 
 @code {
     private string _email = "";
     private string _password = "";
     private string _error = "";
-
+    private bool _loading;
 
     private async Task DoLogin()
     {
+        _loading = true;
+        _error = "";
 
-        
         var ok = await SupabaseService.LoginAsync(_email, _password);
 
+        _loading = false;
+
         if (ok)
-            Nav.NavigateTo("/anmeldungyes");
+            Nav.NavigateTo("/");   // nach dem Login direkt zur Startseite mit dem Chat
         else
             _error = "E-Mail oder Passwort falsch.";
     }
 
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await DoLogin();
+    }
 }

@@ -1,0 +1,261 @@
+@page "/profil"
+@using MindHelp.Wasm.Models
+@inject SupaBaseService SupabaseService
+@inject ChatService Chat
+@inject ProfilService ProfilDienst
+@inject NavigationManager Nav
+@inject ISnackbar Snackbar
+
+<PageTitle>Mein Profil</PageTitle>
+
+<MudText Typo="Typo.h5" Class="mb-4">Mein Profil</MudText>
+
+@if (!_bereit)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else if (_profil == null)
+{
+    <MudAlert Severity="Severity.Warning">
+        Zu deinem Konto wurde kein Profil gefunden. Bitte melde dich ab und wieder an oder wende dich an das MindHelp-Team.
+    </MudAlert>
+}
+else
+{
+    <MudGrid>
+        @* Profilbild *@
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="2" Class="pa-4 d-flex flex-column align-center">
+                @if (!string.IsNullOrEmpty(_profil.AvatarUrl))
+                {
+                    <MudAvatar Style="width: 140px; height: 140px;">
+                        <MudImage Src="@_profil.AvatarUrl" Alt="Profilbild" ObjectFit="ObjectFit.Cover" />
+                    </MudAvatar>
+                }
+                else
+                {
+                    <MudAvatar Color="Color.Primary" Style="width: 140px; height: 140px; font-size: 3rem;">@Anfangsbuchstabe</MudAvatar>
+                }
+
+                <MudText Typo="Typo.h6" Class="mt-3">@(_profil.VollerName is { Length: > 0 } n ? n : "Ohne Namen")</MudText>
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined" Size="Size.Small">
+                    @(_profil.IstHilfskraft ? "Hilfskraft" : "Hilfesuchend")
+                </MudChip>
+
+                <MudFileUpload T="IBrowserFile" Accept="image/*" FilesChanged="ProfilbildGewaehlt" Class="mt-3">
+                    <CustomContent Context="upload">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.PhotoCamera"
+                                   Disabled="_bildLaedt" OnClick="@upload.OpenFilePickerAsync">
+                            @(_bildLaedt ? "Wird hochgeladen …" : "Profilbild ändern")
+                        </MudButton>
+                    </CustomContent>
+                </MudFileUpload>
+                <MudText Typo="Typo.caption" Class="mt-1">JPG oder PNG, maximal 5 MB</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="8">
+            @* Persönliche Daten *@
+            <MudPaper Elevation="2" Class="pa-4 mb-4">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Persönliche Daten</MudText>
+                <MudTextField @bind-Value="_profil.FirstName" Label="Vorname" Variant="Variant.Outlined" Class="mb-3" />
+                <MudTextField @bind-Value="_profil.LastName" Label="Nachname" Variant="Variant.Outlined" Class="mb-3" />
+                <MudDatePicker @bind-Date="_profil.Birthday" Label="Geburtsdatum" Variant="Variant.Outlined"
+                               DateFormat="dd.MM.yyyy" MaxDate="DateTime.Today" Class="mb-3" />
+                <MudTextField Value="_email" Label="E-Mail" Variant="Variant.Outlined" ReadOnly="true" Disabled="true"
+                              HelperText="Die E-Mail-Adresse kann hier nicht geändert werden." Class="mb-3" />
+
+                @if (_hilfskraft != null)
+                {
+                    <MudTextField @bind-Value="_hilfskraft.Specification" Label="Fachgebiet" Variant="Variant.Outlined"
+                                  HelperText="z. B. Angststörungen, Stress, Depression" Class="mb-3" />
+                }
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_speichert" OnClick="Speichern">
+                    @(_speichert ? "Wird gespeichert …" : "Änderungen speichern")
+                </MudButton>
+            </MudPaper>
+
+            @* Nur für Hilfskräfte: Berufsnachweis und Verifizierung *@
+            @if (_hilfskraft != null)
+            {
+                <MudPaper Elevation="2" Class="pa-4 mb-4">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">Berufsnachweis</MudText>
+
+                    @if (_hilfskraft.Verified)
+                    {
+                        <MudAlert Severity="Severity.Success" Dense="true" Class="mb-3">Dein Profil ist verifiziert.</MudAlert>
+                    }
+                    else if (!string.IsNullOrEmpty(_hilfskraft.ProofUrl))
+                    {
+                        <MudAlert Severity="Severity.Info" Dense="true" Class="mb-3">Nachweis hochgeladen – die Prüfung durch das MindHelp-Team läuft.</MudAlert>
+                    }
+                    else
+                    {
+                        <MudAlert Severity="Severity.Warning" Dense="true" Class="mb-3">Bitte lade einen Nachweis deiner Berufsausbildung hoch, damit dein Profil verifiziert werden kann.</MudAlert>
+                    }
+
+                    <MudFileUpload T="IBrowserFile" Accept=".pdf,image/*" FilesChanged="NachweisGewaehlt">
+                        <CustomContent Context="upload">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.UploadFile"
+                                       Disabled="_nachweisLaedt" OnClick="@upload.OpenFilePickerAsync">
+                                @(_nachweisLaedt ? "Wird hochgeladen …" : "Nachweis hochladen")
+                            </MudButton>
+                        </CustomContent>
+                    </MudFileUpload>
+                    <MudText Typo="Typo.caption">PDF oder Bild, maximal 10 MB. Nur du und das MindHelp-Team können die Datei sehen.</MudText>
+                </MudPaper>
+            }
+
+            @* Passwort ändern *@
+            <MudPaper Elevation="2" Class="pa-4 mb-4">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Passwort ändern</MudText>
+                <MudTextField @bind-Value="_neuesPasswort" Label="Neues Passwort" InputType="InputType.Password" Variant="Variant.Outlined"
+                              HelperText="Mindestens 8 Zeichen, Groß- und Kleinbuchstaben und eine Zahl" Class="mb-3" />
+                <MudTextField @bind-Value="_passwortWiederholen" Label="Neues Passwort wiederholen" InputType="InputType.Password"
+                              Variant="Variant.Outlined" Class="mb-3" />
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Disabled="_passwortLaeuft" OnClick="PasswortAendern">
+                    Passwort ändern
+                </MudButton>
+            </MudPaper>
+
+            @* Abmelden *@
+            <MudButton Variant="Variant.Text" Color="Color.Error" StartIcon="@Icons.Material.Filled.Logout" OnClick="Abmelden">
+                Abmelden
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    private bool _bereit;
+    private bool _speichert;
+    private bool _bildLaedt;
+    private bool _nachweisLaedt;
+    private bool _passwortLaeuft;
+
+    private Profile? _profil;
+    private HelperDetails? _hilfskraft;
+    private string? _email;
+    private string _neuesPasswort = "";
+    private string _passwortWiederholen = "";
+
+    private string Anfangsbuchstabe =>
+        string.IsNullOrWhiteSpace(_profil?.FirstName) ? "?" : _profil.FirstName[..1].ToUpper();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SupabaseService.InitializeAsync();
+
+        if (!SupabaseService.IsLoggedIn)
+        {
+            Nav.NavigateTo("/login");
+            return;
+        }
+
+        try
+        {
+            _profil = await Chat.GetMeinProfilAsync();
+            _email = await ProfilDienst.GetMeineEmailAsync();
+
+            if (_profil?.IstHilfskraft == true)
+                _hilfskraft = await ProfilDienst.GetMeineHilfskraftDatenAsync(_profil.Id);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Profil konnte nicht geladen werden: " + ex.Message, Severity.Error);
+        }
+
+        _bereit = true;
+    }
+
+    private async Task Speichern()
+    {
+        if (_profil == null) return;
+
+        _speichert = true;
+        try
+        {
+            await ProfilDienst.SpeichereProfilAsync(_profil);
+            if (_hilfskraft != null)
+                await ProfilDienst.SpeichereHilfskraftDatenAsync(_hilfskraft);
+
+            Snackbar.Add("Dein Profil wurde gespeichert.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Speichern fehlgeschlagen: " + ex.Message, Severity.Error);
+        }
+        _speichert = false;
+    }
+
+    private async Task ProfilbildGewaehlt(IBrowserFile? datei)
+    {
+        if (datei == null || _profil == null) return;
+
+        _bildLaedt = true;
+        try
+        {
+            _profil.AvatarUrl = await ProfilDienst.LadeProfilbildHochAsync(_profil.Id, datei);
+            await ProfilDienst.SpeichereProfilAsync(_profil);
+            Snackbar.Add("Profilbild wurde aktualisiert.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Profilbild konnte nicht hochgeladen werden: " + ex.Message, Severity.Error);
+        }
+        _bildLaedt = false;
+    }
+
+    private async Task NachweisGewaehlt(IBrowserFile? datei)
+    {
+        if (datei == null || _hilfskraft == null) return;
+
+        _nachweisLaedt = true;
+        try
+        {
+            _hilfskraft.ProofUrl = await ProfilDienst.LadeNachweisHochAsync(_hilfskraft.Id, datei);
+            await ProfilDienst.SpeichereHilfskraftDatenAsync(_hilfskraft);
+            Snackbar.Add("Nachweis wurde hochgeladen.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Nachweis konnte nicht hochgeladen werden: " + ex.Message, Severity.Error);
+        }
+        _nachweisLaedt = false;
+    }
+
+    private async Task PasswortAendern()
+    {
+        if (_neuesPasswort.Length < 8 || !_neuesPasswort.Any(char.IsUpper) || !_neuesPasswort.Any(char.IsLower) || !_neuesPasswort.Any(char.IsDigit))
+        {
+            Snackbar.Add("Das Passwort braucht mindestens 8 Zeichen, Groß- und Kleinbuchstaben und eine Zahl.", Severity.Warning);
+            return;
+        }
+        if (_neuesPasswort != _passwortWiederholen)
+        {
+            Snackbar.Add("Die Passwörter stimmen nicht überein.", Severity.Warning);
+            return;
+        }
+
+        _passwortLaeuft = true;
+        try
+        {
+            await ProfilDienst.AenderePasswortAsync(_neuesPasswort);
+            _neuesPasswort = _passwortWiederholen = "";
+            Snackbar.Add("Dein Passwort wurde geändert.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Passwort konnte nicht geändert werden: " + ex.Message, Severity.Error);
+        }
+        _passwortLaeuft = false;
+    }
+
+    private async Task Abmelden()
+    {
+        Chat.StoppeLiveEmpfang();
+        await SupabaseService.LogoutAsync();
+        Nav.NavigateTo("/login");
+    }
+}

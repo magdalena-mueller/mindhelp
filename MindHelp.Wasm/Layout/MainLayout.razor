@@ -1,6 +1,6 @@
 @inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@_theme IsDarkMode="_isDarkMode" />
+<MudThemeProvider Theme="@_theme" @bind-IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -28,8 +28,10 @@
 
 @code {
     private bool _drawerOpen = true;
-    private bool _isDarkMode = true;
+    private bool _isDarkMode = false; //Standardmäßig auf hellen Modus setzen, kann später geändert werden
     private MudTheme? _theme;
+
+    
 
     protected override void OnInitialized()
     {
@@ -39,7 +41,9 @@
         {
             PaletteLight = _lightPalette,
             PaletteDark = _darkPalette,
-            LayoutProperties = new LayoutProperties()
+            LayoutProperties = new LayoutProperties(){
+                DefaultBorderRadius = "12px" // runde Ecken
+            }
         };
     }
 
@@ -55,12 +59,20 @@
 
     private readonly PaletteLight _lightPalette = new()
     {
-        Black = "#110e2d",
-        AppbarText = "#424242",
-        AppbarBackground = "rgba(255,255,255,0.8)",
-        DrawerBackground = "#ffffff",
-        GrayLight = "#e8e8e8",
-        GrayLighter = "#f9f9f9",
+        Primary = "#7E6FD8",
+        Secondary = "#A9C4EB",
+        Tertiary = "#C9B8F0",
+        Background = "#F7F5FC",
+        Surface = "#FFFFFF",
+        AppbarBackground = "#FFFFFF",
+        AppbarText = "#4B4470",
+        DrawerBackground = "#FFFFFF",
+        DrawerText = "#4B4470",
+        DrawerIcon = "#7E6FD8",
+        TextPrimary = "#2E2A47",
+        TextSecondary = "#6E6A85",
+        GrayLight = "#ECE9F6",
+        GrayLighter = "#F7F5FC",
     };
 
     private readonly PaletteDark _darkPalette = new()

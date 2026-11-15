@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "MJiSE5qp",
+  "version": "3MgMCHIL",
   "assets": [
     {
       "hash": "sha256-iikya50Xh5P74j14o0MENCEG1/S4E69s1ticU6JBjV4=",
@@ -186,20 +186,20 @@ self.assetsManifest = {
       "url": "_framework/MimeMapping.6whtkinlcq.wasm"
     },
     {
-      "hash": "sha256-QdezfoGYgi+DrWRvPGH0DrgfIHyiry5poPKEi8lBL5M=",
-      "url": "_framework/MindHelp.Shared.3fq81c65rc.wasm"
+      "hash": "sha256-0RMkbi9KyCFDcOdM8d6pM6gSHrm34yVtYouYE2bOJto=",
+      "url": "_framework/MindHelp.Shared.lrb1ycl7sw.wasm"
     },
     {
-      "hash": "sha256-Vy1JwiwCr2GsZQxo02cGzoRpM/fDYf4Ah6joUQJCku0=",
-      "url": "_framework/MindHelp.Shared.xmzpaepe3j.pdb"
+      "hash": "sha256-Noasr9SmvpPFuznO2h7hZRYX+MAcJTb8vlwq+EkNtmU=",
+      "url": "_framework/MindHelp.Shared.u3o7447mm5.pdb"
     },
     {
-      "hash": "sha256-kpatbsJiemUh2a1CePyJ/UnusEYi1u8xj4+4Hl+nyOY=",
-      "url": "_framework/MindHelp.Wasm.2wtdqpqrfu.wasm"
+      "hash": "sha256-/2fI2XS39Mn5lcwbZGedg3F6U8FAN+HlEzMhPqE0hPM=",
+      "url": "_framework/MindHelp.Wasm.lred4uhdvg.pdb"
     },
     {
-      "hash": "sha256-iymzaJA0BFsZF4HTHBGdWGcSGs4W0kpVP7KSPNxIZgE=",
-      "url": "_framework/MindHelp.Wasm.b04hfv3alj.pdb"
+      "hash": "sha256-/WYDgMq50FkwSOtBd+bIQWLx7cIu7GbkxDdRodfM6m0=",
+      "url": "_framework/MindHelp.Wasm.xn69xjjb2u.wasm"
     },
     {
       "hash": "sha256-izyRSqhg8TRSvcJxaeqHAWVUDtwGU2qFjC0HdaZvHJk=",
@@ -914,10 +914,6 @@ self.assetsManifest = {
       "url": "_framework/blazor.webassembly.w3qd1tpl0e.js"
     },
     {
-      "hash": "sha256-2aTrdw32NO3I1cTreZiATkvuTK9wiN+UFZCrk+QDV+o=",
-      "url": "_framework/dotnet.3hcshz5vft.js"
-    },
-    {
       "hash": "sha256-xYr/HlMZGXgJvScnd/qGRDPSQW1K/B0XMpS+GD6y5EM=",
       "url": "_framework/dotnet.js.map"
     },
@@ -936,6 +932,10 @@ self.assetsManifest = {
     {
       "hash": "sha256-YyudibIWETMKrLb+nAZdJ+xDY7HY6BWf6s32UAdcvCU=",
       "url": "_framework/dotnet.runtime.r2kbxkuujc.js"
+    },
+    {
+      "hash": "sha256-yLkXQeQOBro2pqskINmekQQOy3L9rqoOrsMvVjZ1oSI=",
+      "url": "_framework/dotnet.s7zewco3ta.js"
     },
     {
       "hash": "sha256-SZLtQnRc0JkwqHab0VUVP7T3uBPSeYzxzDnpxPpUnHk=",
@@ -958,7 +958,7 @@ self.assetsManifest = {
       "url": "_framework/netstandard.hsgbwlytoc.wasm"
     },
     {
-      "hash": "sha256-A84Jpfoi+WX9scoIMUexgOvo4LOaJGtuE0+7IrUroaA=",
+      "hash": "sha256-zfKcVuszbgCeuA30n4HGukHlILga+dATZlfsP0FXBK4=",
       "url": "css/app.css"
     },
     {
@@ -974,7 +974,11 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-AK/LSUeotFQOVG9TMb6QPQpTORuE506YrIcVHoHV/yo=",
+      "hash": "sha256-8rfGny/YkfwF67jAd5M5iouzldVPIBt4AgHimEcP7Yo=",
+      "url": "images/mindhelp-logo-fertig.gif"
+    },
+    {
+      "hash": "sha256-XHogQxdkLPjHrT+kt0izHW6o+9UGbpYc2fX60D0uOAM=",
       "url": "index.html"
     },
     {

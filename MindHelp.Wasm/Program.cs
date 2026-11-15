@@ -17,8 +17,10 @@ public class Program
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-        // SupabaseService
+        // SupabaseLogin und Chat
         builder.Services.AddScoped<SupaBaseService>();
+        builder.Services.AddScoped<ChatService>();
+        builder.Services.AddScoped<ProfilService>();
 
         await builder.Build().RunAsync();
     }

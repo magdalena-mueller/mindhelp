@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qFNS47R1s04=",
+  "dgSpecHash": "6ImaWkQviyI=",
   "success": true,
-  "projectFilePath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj",
+  "projectFilePath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\MindHelp.Wasm\\MindHelp.Wasm.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\birdmessenger\\4.0.0\\birdmessenger.4.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.6\\microsoft.aspnetcore.app.internal.assets.10.0.6.nupkg.sha512",

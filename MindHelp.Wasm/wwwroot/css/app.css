@@ -108,3 +108,41 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+/* Startbildschirm mit animiertem Logo (GIF) – nur mit CSS, ohne Skript */
+#splash {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFFFFF;
+    /* nach 6,3 Sekunden (Länge des GIFs) in 0,6 Sekunden ausblenden */
+    animation: splash-weg 0.6s ease 6.3s forwards;
+}
+
+    #splash img {
+        width: min(440px, 85vw);
+    }
+
+@keyframes splash-weg {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* Die App wird danach weich eingeblendet
+   (nur Deckkraft, kein transform – sonst wird das Seitenmenü abgeschnitten) */
+#app {
+    animation: app-rein 0.8s ease 6.4s backwards;
+}
+
+@keyframes app-rein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
