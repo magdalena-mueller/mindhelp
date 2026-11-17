@@ -1,71 +1,21 @@
 @page "/Register"
 @page "/messagebox2"
-
-
-
-<PageTitle>Registrieren</PageTitle>
-
 @inject IDialogService DialogService
-@inject SupaBaseService SupabaseService
-@inject HttpClient Http
 @inject NavigationManager Nav
 
-
-<MudButton Variant="Variant.Filled"
-           Color="Color.Primary"
-           OnClick="ShowMessageBox">
-    Anzeigen zum Registrieren
-</MudButton> 
-
-<MudText Class="mt-4">Ergebnis: @_result</MudText>
+@* Alte Registrierungs-Seite: öffnet jetzt einfach das neue Registrierungs-Fenster *@
+<PageTitle>Registrieren</PageTitle>
 
 @code {
-
-    // wieder einkommentiert    magda hats auskommentiert
-    @* protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await SupabaseService.InitializeAsync();
+        if (!firstRender) return;
 
-        if (!SupabaseService.IsLoggedIn)
-        {
-            Nav.NavigateTo("/login");
-            return;
-        }
+        var optionen = new DialogOptions { BackdropClick = false, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var fenster = await DialogService.ShowAsync<MindHelp.Wasm.Layout.RegisterDialog>(string.Empty, optionen);
+        await fenster.Result;
 
-    }  *@
-    
-    private string _result = string.Empty;
-    protected override async Task OnAfterRenderAsync(bool firstRender)      //MessageBox zum Auswählen was man ist
-    {
-        if (firstRender)
-        { 
-            await ShowMessageBox();
-        }
-    }
-
-    private async Task ShowMessageBox()         //MessageBox Results glaub ich
-    {
-        bool? result = await DialogService.ShowMessageBoxAsync(
-            "Achtung",
-            "Sind Sie Hilfesuchend oder bieten Sie psychologische Hilfe an?",
-            yesText: "Hilfeskraft",
-            noText: "Hilfesuchend",
-            cancelText: "Abbrechen");
-
-        _result = result switch
-        {
-            true  => "Ja",
-            false => "Nein",
-            null  => "Abbrechen"
-        };
-
-        if (_result == "Nein")
-        {
-            Nav.NavigateTo("/RegisterUser");
-        }
-        else if (_result == "Ja")
-        {
-            Nav.NavigateTo("/RegisterHelper");
-        }
+        // Nach dem Schließen zurück zur Startseite
+        Nav.NavigateTo("/");
     }
 }

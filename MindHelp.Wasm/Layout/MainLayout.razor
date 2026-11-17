@@ -5,6 +5,9 @@
 @inject NavigationManager Nav
 
 <MudThemeProvider Theme="@_theme" @bind-IsDarkMode="_isDarkMode" />
+
+@* "mh-dunkel" schaltet die eigenen Farben (app.css) in den dunklen Modus – auch für Fenster und Menüs *@
+<div class="@(_isDarkMode ? "mh-dunkel" : "")">
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -28,7 +31,7 @@
         else
         {
             <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="ZeigeLoginFenster" Class="ml-2">Anmelden</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="Register" Class="ml-2">Registrieren</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ZeigeRegistrierung" Class="ml-2">Registrieren</MudButton>
         }
     </MudAppBar>
 
@@ -40,6 +43,7 @@
         @Body
     </MudMainContent>
 </MudLayout>
+</div>
 
 @code {
     private bool _drawerOpen = true;
@@ -102,6 +106,13 @@
         _fensterOffen = false;
     }
 
+        private async Task ZeigeRegistrierung()
+    {
+        var optionen = new DialogOptions { BackdropClick = false, MaxWidth = MaxWidth.Small, FullWidth = true };
+        await DialogService.ShowAsync<RegisterDialog>(string.Empty, optionen);
+    }
+
+
     private async Task Abmelden()
     {
         await SupabaseService.LogoutAsync();
@@ -157,8 +168,8 @@
         Background = "#1a1a27",
         BackgroundGray = "#151521",
         AppbarText = "#92929f",
-        AppbarBackground = "rgba(26,26,39,0.8)",
-        DrawerBackground = "#1a1a27",
+        AppbarBackground = "rgba(255,255,255,0.65)",
+        DrawerBackground = "rgba(26,26,39,0.7)",
         ActionDefault = "#74718e",
         ActionDisabled = "#9999994d",
         ActionDisabledBackground = "#605f6d4d",

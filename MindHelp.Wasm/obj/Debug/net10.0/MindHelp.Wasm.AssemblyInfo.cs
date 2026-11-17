@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MindHelp.Wasm")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f656b110b7246efb558e21da28d9a5d0a5db068b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+692b9c4e8f95e7b58701df7e7cffa627a6ddef62")]
 [assembly: System.Reflection.AssemblyProductAttribute("MindHelp.Wasm")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MindHelp.Wasm")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -17,7 +17,7 @@ public class Program
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-        // SupabaseLogin und Chat
+        // SupabaseLogin und Chat und ProfilService registrieren, damit sie in den Komponenten per [Inject] verwendet werden können
         builder.Services.AddScoped<SupaBaseService>();
         builder.Services.AddScoped<ChatService>();
         builder.Services.AddScoped<ProfilService>();

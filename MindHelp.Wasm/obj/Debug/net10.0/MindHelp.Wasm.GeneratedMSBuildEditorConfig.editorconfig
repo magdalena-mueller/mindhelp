@@ -43,28 +43,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Anmeldungerfolgreich.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQW5tZWxkdW5nZXJmb2xncmVpY2gucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/RegisterDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFJlZ2lzdGVyRGlhbG9nLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Login.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/NotFound.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTm90Rm91bmQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/PHelp.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUEhlbHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Profil.razor]
@@ -73,22 +61,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/RegisterHelper.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXJIZWxwZXIucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/RegisterUser.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXJVc2VyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/User.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/_Imports.razor]

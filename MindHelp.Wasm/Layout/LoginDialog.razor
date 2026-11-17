@@ -1,4 +1,5 @@
 @inject SupaBaseService SupabaseService
+@inject IDialogService DialogService
 @inject NavigationManager Nav
 
 @* Anmelde-Fenster, das nach dem Logo aufpoppt, solange niemand angemeldet ist *@
@@ -64,10 +65,11 @@
 
     private void Schliessen() => Dialog.Cancel();
 
-    private void Registrieren()
+        private async Task Registrieren()
     {
-        Dialog.Close();
-        Nav.NavigateTo("/Register");
+        Dialog.Cancel();
+        var optionen = new DialogOptions { BackdropClick = false, MaxWidth = MaxWidth.Small, FullWidth = true };
+        await DialogService.ShowAsync<RegisterDialog>(string.Empty, optionen);
     }
 
     private async Task OnKeyDown(KeyboardEventArgs e)

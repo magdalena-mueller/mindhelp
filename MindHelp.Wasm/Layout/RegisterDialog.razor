@@ -1,0 +1,263 @@
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@inject SupaBaseService SupabaseService
+@inject ProfilService ProfilDienst
+@inject IDialogService DialogService
+@inject NavigationManager Nav
+
+@* Registrierungs-Fenster: Hilfesuchend oder Hilfskraft, Hilfskräfte laden zusätzlich ihren Nachweis hoch *@
+<MudDialog>
+    <TitleContent>
+        <div class="d-flex align-center">
+            <MudText Typo="Typo.h5" Color="Color.Primary" Class="flex-grow-1" Align="Align.Center" Style="padding-left: 40px;">Konto erstellen</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" aria-label="Schließen" OnClick="Schliessen" Disabled="_laeuft" />
+        </div>
+    </TitleContent>
+
+    <DialogContent>
+        @if (_fertig)
+        {
+            @* ---------- Erfolgsmeldung ---------- *@
+            <div class="d-flex flex-column align-center text-center py-6">
+                @if (_rolle == "helper")
+                {
+                    <div class="mh-sanduhr mb-4"><MudIcon Icon="@Icons.Material.Filled.HourglassTop" Style="font-size: 44px;" /></div>
+                    <MudText Typo="Typo.h6" Class="mb-2">Nachweis erhalten – wir prüfen ihn</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #6E6A85; max-width: 360px;">
+                        @(_nachweisHochgeladen
+                            ? "Unser Team prüft deinen Berufsnachweis. Sobald er bestätigt ist, wirst du für Hilfesuchende als verifiziert angezeigt."
+                            : "Bitte bestätige zuerst deine E-Mail-Adresse und lade den Nachweis danach unter „Mein Profil“ hoch.")
+                    </MudText>
+                }
+                else
+                {
+                    <div class="mh-haken mb-4"><MudIcon Icon="@Icons.Material.Filled.Check" Style="font-size: 44px;" /></div>
+                    <MudText Typo="Typo.h6" Class="mb-2">Willkommen bei mindhelp!</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #6E6A85; max-width: 360px;">
+                        Dein Konto wurde erstellt. Falls du eine Bestätigungs-Mail bekommen hast, klicke bitte zuerst auf den Link darin.
+                    </MudText>
+                }
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-6 rounded-pill px-6" OnClick="Fertig">Los geht's</MudButton>
+            </div>
+        }
+        else
+        {
+            @* ---------- 1. Wer bist du? ---------- *@
+            <MudText Typo="Typo.subtitle2" Class="mb-2">Ich möchte mich registrieren als …</MudText>
+            <MudGrid Spacing="2" Class="mb-4">
+                <MudItem xs="6">
+                    <MudPaper Outlined="true" Class="@RollenKlasse("user")" @onclick='() => _rolle = "user"'>
+                        <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" Color="Color.Primary" />
+                        <MudText Typo="Typo.subtitle2">Hilfesuchend</MudText>
+                        <MudText Typo="Typo.caption" Style="color: #6E6A85;">Ich suche Unterstützung</MudText>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudPaper Outlined="true" Class="@RollenKlasse("helper")" @onclick='() => _rolle = "helper"'>
+                        <MudIcon Icon="@Icons.Material.Filled.Psychology" Color="Color.Primary" />
+                        <MudText Typo="Typo.subtitle2">Hilfskraft</MudText>
+                        <MudText Typo="Typo.caption" Style="color: #6E6A85;">Ich biete Hilfe an</MudText>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+
+            @* ---------- 2. Daten ---------- *@
+            <MudForm @ref="_form" @bind-IsValid="_gueltig">
+                <MudGrid Spacing="2">
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="_vorname" Label="Vorname" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                      Required="true" RequiredError="Bitte Vornamen eingeben" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="_nachname" Label="Nachname" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                      Required="true" RequiredError="Bitte Nachnamen eingeben" />
+                    </MudItem>
+                </MudGrid>
+
+                <MudTextField @bind-Value="_email" Label="E-Mail" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2"
+                              Required="true" RequiredError="Bitte E-Mail eingeben"
+                              Validation="@(new EmailAddressAttribute { ErrorMessage = "Die E-Mail-Adresse ist ungültig" })" />
+
+                <MudTextField @bind-Value="_passwort" Label="Passwort" InputType="InputType.Password" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2"
+                              HelperText="Mindestens 8 Zeichen, Groß- und Kleinbuchstaben und eine Zahl"
+                              Required="true" RequiredError="Bitte Passwort eingeben"
+                              Validation="@(new Func<string, IEnumerable<string>>(PasswortPruefen))" />
+
+                <MudTextField T="string" Label="Passwort wiederholen" InputType="InputType.Password" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2"
+                              Validation="@(new Func<string?, string?>(PasswortGleich))" />
+
+                <MudDatePicker @bind-Date="_geburtstag" Label="Geburtsdatum" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2"
+                               DateFormat="dd.MM.yyyy" MaxDate="DateTime.Today" Required="true" RequiredError="Bitte Geburtsdatum wählen" />
+
+                @* ---------- 3. Nur für Hilfskräfte ---------- *@
+                @if (_rolle == "helper")
+                {
+                    <MudTextField @bind-Value="_fachgebiet" Label="Fachgebiet" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-2"
+                                  HelperText="z. B. Angststörungen, Stress, Depression" />
+
+                    <MudPaper Outlined="true" Class="pa-3 mt-3 rounded-lg" Style="border-style: dashed; border-color: #B9A8FF;">
+                        <MudText Typo="Typo.subtitle2">Berufsnachweis <span style="color: #ff3f5f;">*</span></MudText>
+                        <MudText Typo="Typo.caption" Style="color: #6E6A85;">
+                            Lade deinen Nachweis hoch (z. B. Urkunde, Eintrag in der Berufsliste). PDF oder Bild, max. 10 MB.
+                            Nur das mindhelp-Team kann die Datei sehen.
+                        </MudText>
+                        <div class="d-flex align-center flex-wrap gap-2 mt-2">
+                            <MudFileUpload T="IBrowserFile" Accept=".pdf,image/*" FilesChanged="NachweisGewaehlt">
+                                <CustomContent Context="upload">
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small"
+                                               StartIcon="@Icons.Material.Filled.AttachFile" OnClick="@upload.OpenFilePickerAsync">
+                                        Datei auswählen
+                                    </MudButton>
+                                </CustomContent>
+                            </MudFileUpload>
+                            @if (_nachweis != null)
+                            {
+                                <MudChip T="string" Color="Color.Success" Variant="Variant.Text" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircle">
+                                    @_nachweis.Name
+                                </MudChip>
+                            }
+                        </div>
+                    </MudPaper>
+                }
+
+                <MudCheckBox @bind-Value="_zustimmung" Color="Color.Primary" Class="mt-3" Required="true" RequiredError="Bitte zustimmen"
+                             Label="Ich stimme den Nutzungsbedingungen und der Datenschutzerklärung zu" />
+            </MudForm>
+
+            @if (!string.IsNullOrEmpty(_fehler))
+            {
+                <MudAlert Severity="Severity.Error" Class="mt-2">@_fehler</MudAlert>
+            }
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Size="Size.Large" Class="mt-3 rounded-pill"
+                       Disabled="@(_laeuft)" OnClick="Registrieren">
+                @if (_laeuft)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" Style="color: white;" />
+                    <span>Konto wird erstellt …</span>
+                }
+                else
+                {
+                    <span>Registrieren</span>
+                }
+            </MudButton>
+
+            <MudText Typo="Typo.body2" Align="Align.Center" Class="mt-4 mb-2">
+                Schon ein Konto? <MudLink OnClick="ZurAnmeldung">Anmelden</MudLink>
+            </MudText>
+        }
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance Dialog { get; set; } = null!;
+
+    // Von außen vorauswählen, z. B. "helper"
+    [Parameter] public string StartRolle { get; set; } = "user";
+
+    private MudForm _form = null!;
+    private bool _gueltig;
+    private bool _laeuft;
+    private bool _fertig;
+    private bool _nachweisHochgeladen;
+    private string _fehler = "";
+
+    private string _rolle = "user";   // "user" = hilfesuchend, "helper" = Hilfskraft
+    private string _vorname = "";
+    private string _nachname = "";
+    private string _email = "";
+    private string _passwort = "";
+    private DateTime? _geburtstag;
+    private string _fachgebiet = "";
+    private bool _zustimmung;
+    private IBrowserFile? _nachweis;
+
+    protected override void OnInitialized() => _rolle = StartRolle;
+
+    // Auswahl-Karte hervorheben, wenn sie gewählt ist
+    private string RollenKlasse(string rolle) =>
+        "mh-rolle d-flex flex-column align-center pa-3 rounded-lg " + (_rolle == rolle ? "mh-rolle-aktiv" : "");
+
+    private void NachweisGewaehlt(IBrowserFile? datei) => _nachweis = datei;
+
+    private async Task Registrieren()
+    {
+        _fehler = "";
+        await _form.ValidateAsync();
+        if (!_gueltig || !_geburtstag.HasValue) return;
+
+        if (_rolle == "helper" && _nachweis == null)
+        {
+            _fehler = "Bitte lade deinen Berufsnachweis hoch.";
+            return;
+        }
+
+        _laeuft = true;
+        var ok = await SupabaseService.RegisterUserAsync(_email, _passwort, _vorname, _nachname, _geburtstag.Value, _fachgebiet, _rolle);
+
+        if (!ok)
+        {
+            _fehler = SupabaseService.LetzterFehler ?? "Registrierung fehlgeschlagen.";
+            _laeuft = false;
+            return;
+        }
+
+        // Hilfskraft: Nachweis gleich hochladen – geht nur, wenn man nach der Registrierung schon angemeldet ist
+        // (ist in Supabase "E-Mail bestätigen" eingeschaltet, passiert das später unter "Mein Profil")
+        if (_rolle == "helper" && _nachweis != null && SupabaseService.IsLoggedIn)
+        {
+            try
+            {
+                var client = await SupabaseService.InitializeAsync();
+                if (Guid.TryParse(client.Auth.CurrentUser?.Id, out var id))
+                {
+                    var details = await ProfilDienst.GetMeineHilfskraftDatenAsync(id);
+                    if (details != null)
+                    {
+                        details.ProofUrl = await ProfilDienst.LadeNachweisHochAsync(id, _nachweis);
+                        await ProfilDienst.SpeichereHilfskraftDatenAsync(details);
+                        _nachweisHochgeladen = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Nachweis konnte nicht hochgeladen werden: " + ex.Message);
+            }
+        }
+
+        _laeuft = false;
+        _fertig = true;
+    }
+
+    private static IEnumerable<string> PasswortPruefen(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw)) yield break;
+        if (pw.Length < 8) yield return "Mindestens 8 Zeichen";
+        if (!Regex.IsMatch(pw, "[A-Z]")) yield return "Mindestens ein Großbuchstabe";
+        if (!Regex.IsMatch(pw, "[a-z]")) yield return "Mindestens ein Kleinbuchstabe";
+        if (!Regex.IsMatch(pw, "[0-9]")) yield return "Mindestens eine Zahl";
+    }
+
+    private string? PasswortGleich(string? wiederholung)
+    {
+        if (string.IsNullOrEmpty(wiederholung)) return "Bitte Passwort wiederholen";
+        return wiederholung != _passwort ? "Die Passwörter stimmen nicht überein" : null;
+    }
+
+    private void Fertig()
+    {
+        Dialog.Close();
+        Nav.NavigateTo("/");
+    }
+
+    private void Schliessen() => Dialog.Cancel();
+
+    private async Task ZurAnmeldung()
+    {
+        Dialog.Cancel();
+        var optionen = new DialogOptions { BackdropClick = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        await DialogService.ShowAsync<LoginDialog>(string.Empty, optionen);
+    }
+}

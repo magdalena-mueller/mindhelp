@@ -4,6 +4,7 @@
 @inject SupaBaseService SupabaseService
 @inject ChatService Chat
 @inject NavigationManager Nav
+@inject IDialogService DialogService
 
 <PageTitle>Startseite</PageTitle>
 
@@ -11,19 +12,104 @@
 {
     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
 }
-else if (_gast)
+
+    else if (_gast)
 {
-    @* Noch nicht angemeldet: kurze Begrüßung, das Anmelde-Fenster kommt vom Layout *@
-    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-12 text-center">
-        <MudText Typo="Typo.h4" Color="Color.Primary" GutterBottom="true">Willkommen bei mindhelp</MudText>
-        <MudText Typo="Typo.body1" Class="mb-6">
-            Hier findest du schnell und vertraulich Unterstützung durch geprüfte Hilfskräfte.
-            Melde dich an oder registriere dich, um zu chatten.
+    @* ===== Willkommensseite für Gäste – MudBlazor-Bausteine + Effekte aus app.css (mh-…) ===== *@
+
+    @* Schwebende Farbwolken im Hintergrund *@
+    <div class="mh-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mh-inhalt pb-10">
+
+        @* ---------- 1. Hero-Bereich ---------- *@
+        <MudPaper Elevation="0" Class="mh-glas mh-einblenden pa-6 pa-md-12 rounded-xl">
+            <MudGrid Spacing="6" AlignItems="Center">
+                <MudItem xs="12" md="7">
+                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Text" Size="Size.Medium"
+                             Icon="@Icons.Material.Filled.AutoAwesome">
+                        Vertraulich · Kostenlos · Sofort
+                    </MudChip>
+
+                    <MudText Typo="Typo.h2" Class="mh-schimmer mt-4 mb-3">
+                        Du bist nicht allein.
+                    </MudText>
+
+                    <MudText Typo="Typo.h6" Class="mh-text mb-8" Style="font-weight: 400; max-width: 520px;">
+                        mindhelp verbindet dich mit geprüften Hilfskräften – anonym, sicher und genau dann, wenn du jemanden zum Reden brauchst.
+                    </MudText>
+
+                    <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="3">
+                        <MudButton Variant="Variant.Filled" Size="Size.Large" OnClick="ZeigeRegistrierung"
+                                   StartIcon="@Icons.Material.Filled.FavoriteBorder" Class="rounded-pill px-6"
+                                   Style="text-transform: none; font-weight: 600; color: white; background: linear-gradient(90deg, #7E6FD8, #B48FE0); box-shadow: 0 10px 25px rgba(126,111,216,.4);">
+                            Jetzt kostenlos starten
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" OnClick="ZeigeAnmeldung"
+                                   Class="mh-knopf-hell rounded-pill px-6" Style="text-transform: none; font-weight: 600;">
+                            Ich habe schon ein Konto
+                        </MudButton>
+                    </MudStack>
+                </MudItem>
+
+                <MudItem xs="12" md="5" Class="d-flex justify-center">
+                    <div class="mh-logo-buehne">
+                        <MudImage Src="images/logo_frei.png" Alt="mindhelp Logo" Width="300" Class="mh-schweben" Style="max-width: 85%; height: auto;" />
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        @* ---------- 2. Drei Vorteile ---------- *@
+        <MudGrid Spacing="4" Class="mt-6">
+            @for (var i = 0; i < Vorteile.Length; i++)
+            {
+                var (icon, titel, text) = Vorteile[i];
+                var verzoegerung = $"mh-verzoegerung-{i + 1}";
+                <MudItem xs="12" md="4">
+                    <MudCard Elevation="0" Class="@($"mh-glas mh-karte mh-einblenden {verzoegerung} rounded-xl pa-2")" Style="height: 100%;">
+                        <MudCardContent>
+                            <MudAvatar Rounded="true" Size="Size.Large" Class="mb-4"
+                                       Style="background: linear-gradient(135deg, #7E6FD8, #B48FE0); color: white; border-radius: 16px; box-shadow: 0 8px 20px rgba(126,111,216,.35);">
+                                <MudIcon Icon="@icon" />
+                            </MudAvatar>
+                            <MudText Typo="Typo.h6" Class="mb-2">@titel</MudText>
+                            <MudText Typo="Typo.body2" Class="mh-text-leise">@text</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+
+        @* ---------- 3. So funktioniert's ---------- *@
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="mh-text mh-einblenden mh-verzoegerung-3 mt-10 mb-5" Style="font-weight: 700;">
+            So funktioniert's
         </MudText>
-        <MudText Typo="Typo.body2" Color="Color.Secondary">„Anmelden“ und „Registrieren“ findest du oben rechts.</MudText>
+        <MudGrid Spacing="3" Justify="Justify.Center">
+            @for (var i = 0; i < Schritte.Length; i++)
+            {
+                // Werte in eigene Variablen kopieren – sonst sieht Blazor beim Anzeigen nur das letzte i
+                var nummer = i + 1;
+                var schritt = Schritte[i];
+                <MudItem xs="12" sm="4">
+                    <MudPaper Elevation="0" Class="mh-glas mh-karte mh-einblenden mh-verzoegerung-4 d-flex align-center gap-3 pa-4 rounded-xl">
+                        <MudAvatar Size="Size.Medium" Style="background: linear-gradient(135deg, #7E6FD8, #B48FE0); color: white; font-weight: 700;">@nummer</MudAvatar>
+                        <MudText Typo="Typo.body1" Style="font-weight: 500;">@schritt</MudText>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+
+        @* ---------- 4. Notfall-Hinweis ---------- *@
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Phone"
+                  Class="mh-notfall mh-einblenden mh-verzoegerung-4 mt-10 rounded-lg">
+            <b>In einer akuten Krise?</b> Ruf sofort an: Telefonseelsorge <b>142</b> · Rat auf Draht <b>147</b> ·
+            Notruf <b>144</b> – rund um die Uhr und kostenlos.
+        </MudAlert>
     </MudContainer>
 }
-else
+
+    else
 {
     <MudText Typo="Typo.h5" Class="mb-4">Hallo@(string.IsNullOrEmpty(_vorname) ? "" : " " + _vorname)! Wie geht es dir heute?</MudText>
 
@@ -225,6 +311,36 @@ else
         }
 
         _bereit = true;
+    }
+
+        // Inhalte der Willkommensseite (so muss man den Aufbau oben nur einmal schreiben)
+    private static readonly (string Icon, string Titel, string Text)[] Vorteile =
+    [
+        (Icons.Material.Filled.Lock, "Anonym & vertraulich", "Deine Gespräche sieht nur die Hilfskraft, mit der du schreibst. Niemand sonst."),
+        (Icons.Material.Filled.Verified, "Geprüfte Hilfskräfte", "Alle Hilfskräfte weisen ihre Ausbildung nach und werden von uns überprüft."),
+        (Icons.Material.Filled.ChatBubbleOutline, "Einfach schreiben", "Kein Termin, kein Telefonat – du schreibst einfach los, wann es für dich passt.")
+    ];
+
+    private static readonly string[] Schritte =
+    [
+        "Registriere dich in einer Minute",
+        "Wähle eine Hilfskraft, die zu dir passt",
+        "Schreib einfach los – wir hören zu"
+    ];
+
+        // Registrierungs-Fenster öffnen (Knopf "Jetzt kostenlos starten")
+    private async Task ZeigeRegistrierung()
+    {
+        var optionen = new DialogOptions { BackdropClick = false, MaxWidth = MaxWidth.Small, FullWidth = true };
+        await DialogService.ShowAsync<MindHelp.Wasm.Layout.RegisterDialog>(string.Empty, optionen);
+    }
+
+
+    // Anmelde-Fenster öffnen (Knopf "Ich habe schon ein Konto")
+    private async Task ZeigeAnmeldung()
+    {
+        var optionen = new DialogOptions { BackdropClick = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        await DialogService.ShowAsync<MindHelp.Wasm.Layout.LoginDialog>(string.Empty, optionen);
     }
 
     private void BeiAnmeldungGeaendert()
