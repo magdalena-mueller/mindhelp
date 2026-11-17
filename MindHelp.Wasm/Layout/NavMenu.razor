@@ -1,13 +1,27 @@
 <MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    @* <MudNavLink Href="PHelp" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Help">Physologische Hilfe</MudNavLink> *@
-    @* <MudNavLink Href="User" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Benutzer</MudNavLink> *@
-    <MudNavLink Href="Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PersonAdd">Registrieren</MudNavLink> 
-    <MudNavLink Href="login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Anmelden</MudNavLink>
+@implements IDisposable
+@inject SupaBaseService SupabaseService
+
+<MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Startseite</MudNavLink>
+
+    @if (SupabaseService.IsLoggedIn)
+    {
+        @* Nur für angemeldete Personen *@
         <MudNavLink Href="profil" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ManageAccounts">Mein Profil</MudNavLink>
-    <MudNavLink Href="RegisterUser" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Registrieren</MudNavLink>
-    <MudNavLink Href="RegisterHelper" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PersonAdd">Registrieren</MudNavLink> 
-    <MudNavLink Href="anmeldungyes" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Anmeldung erfolgreich Page</MudNavLink>
-    
-    
+    }
 </MudNavMenu>
+
+@code {
+    protected override void OnInitialized()
+    {
+        SupabaseService.AnmeldungGeaendert += Aktualisieren;
+    }
+
+    private void Aktualisieren() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        SupabaseService.AnmeldungGeaendert -= Aktualisieren;
+    }
+}

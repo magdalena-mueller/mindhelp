@@ -1,0 +1,78 @@
+@inject SupaBaseService SupabaseService
+@inject NavigationManager Nav
+
+@* Anmelde-Fenster, das nach dem Logo aufpoppt, solange niemand angemeldet ist *@
+<MudDialog>
+    <TitleContent>
+        <div class="d-flex align-center">
+            <MudText Typo="Typo.h5" Color="Color.Primary" Class="flex-grow-1" Align="Align.Center" Style="padding-left: 40px;">mindhelp</MudText>
+            @* Mit dem X kann man das Fenster wegdrücken – Anmelden/Registrieren stehen dann oben rechts *@
+            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" aria-label="Schließen" OnClick="Schliessen" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.body2" Align="Align.Center" Class="mb-4">Schön, dass du da bist. Bitte melde dich an.</MudText>
+
+        <MudTextField @bind-Value="_email" Label="E-Mail" Variant="Variant.Outlined" Class="mb-3" />
+        <MudTextField @bind-Value="_password" Label="Passwort" Variant="Variant.Outlined" InputType="InputType.Password"
+                      OnKeyDown="OnKeyDown" Class="mb-3" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Size="Size.Large"
+                   Disabled="_loading" OnClick="Anmelden">
+            @(_loading ? "Wird angemeldet …" : "Anmelden")
+        </MudButton>
+
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-3">@_error</MudAlert>
+        }
+
+        <MudText Typo="Typo.body2" Align="Align.Center" Class="mt-4 mb-2">
+            Noch kein Konto? <MudLink OnClick="Registrieren">Jetzt registrieren</MudLink>
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance Dialog { get; set; } = null!;
+
+    private string _email = "";
+    private string _password = "";
+    private string _error = "";
+    private bool _loading;
+
+    private async Task Anmelden()
+    {
+        _loading = true;
+        _error = "";
+
+        var ok = await SupabaseService.LoginAsync(_email, _password);
+
+        _loading = false;
+
+        if (ok)
+        {
+            Dialog.Close();
+            Nav.NavigateTo("/", forceLoad: false);
+        }
+        else
+        {
+            _error = SupabaseService.LetzterFehler ?? "E-Mail oder Passwort falsch.";
+        }
+    }
+
+    private void Schliessen() => Dialog.Cancel();
+
+    private void Registrieren()
+    {
+        Dialog.Close();
+        Nav.NavigateTo("/Register");
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await Anmelden();
+    }
+}

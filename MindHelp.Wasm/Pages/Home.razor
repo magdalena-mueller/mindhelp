@@ -11,9 +11,21 @@
 {
     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
 }
+else if (_gast)
+{
+    @* Noch nicht angemeldet: kurze Begrüßung, das Anmelde-Fenster kommt vom Layout *@
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-12 text-center">
+        <MudText Typo="Typo.h4" Color="Color.Primary" GutterBottom="true">Willkommen bei mindhelp</MudText>
+        <MudText Typo="Typo.body1" Class="mb-6">
+            Hier findest du schnell und vertraulich Unterstützung durch geprüfte Hilfskräfte.
+            Melde dich an oder registriere dich, um zu chatten.
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary">„Anmelden“ und „Registrieren“ findest du oben rechts.</MudText>
+    </MudContainer>
+}
 else
 {
-        <MudText Typo="Typo.h5" Class="mb-4">Hallo@(string.IsNullOrEmpty(_vorname) ? "" : " " + _vorname)! Wie geht es dir heute?</MudText>
+    <MudText Typo="Typo.h5" Class="mb-4">Hallo@(string.IsNullOrEmpty(_vorname) ? "" : " " + _vorname)! Wie geht es dir heute?</MudText>
 
     @if (_meinProfil == null && string.IsNullOrEmpty(_fehler))
     {
@@ -141,6 +153,7 @@ else
 
 @code {
     private bool _bereit;
+    private bool _gast;          // true = noch nicht angemeldet
     private bool _sendet;
     private string _fehler = "";
     private string _neueNachricht = "";
@@ -158,10 +171,29 @@ else
     protected override async Task OnInitializedAsync()
     {
         await SupabaseService.InitializeAsync();
+        SupabaseService.AnmeldungGeaendert += BeiAnmeldungGeaendert;
+        Chat.NeueNachricht += BeiNeuerNachricht;
+        await LadeDatenAsync();
+    }
 
-        if (!SupabaseService.IsLoggedIn)
+    // Lädt alles neu – beim Öffnen der Seite und nach dem An- oder Abmelden
+    private async Task LadeDatenAsync()
+    {
+        _bereit = false;
+        _fehler = "";
+        _aktiv = null;
+        _gegenueber = null;
+        _nachrichten = [];
+        _hilfskraefte = [];
+        _unterhaltungen = [];
+        _meinProfil = null;
+        _vorname = "";
+
+        _gast = !SupabaseService.IsLoggedIn;
+        if (_gast)
         {
-            Nav.NavigateTo("/login");
+            Chat.StoppeLiveEmpfang();
+            _bereit = true;
             return;
         }
 
@@ -175,17 +207,33 @@ else
                 _unterhaltungen = await Chat.GetMeineUnterhaltungenAsync();
             else
                 _hilfskraefte = await Chat.GetHilfskraefteAsync();
-
-            // Neue Nachrichten live empfangen
-            Chat.NeueNachricht += BeiNeuerNachricht;
-            await Chat.StarteLiveEmpfangAsync();
         }
         catch (Exception ex)
         {
             _fehler = "Daten konnten nicht geladen werden: " + ex.Message;
         }
 
+        try
+        {
+            // Neue Nachrichten live empfangen
+            await Chat.StarteLiveEmpfangAsync();
+        }
+        catch (Exception ex)
+        {
+            // Chat funktioniert trotzdem, neue Nachrichten erscheinen dann erst nach dem Neuladen
+            Console.WriteLine("Live-Empfang nicht möglich: " + ex.Message);
+        }
+
         _bereit = true;
+    }
+
+    private void BeiAnmeldungGeaendert()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await LadeDatenAsync();
+            StateHasChanged();
+        });
     }
 
     // Hilfesuchende/r klickt auf eine Hilfskraft
@@ -264,6 +312,7 @@ else
 
     public void Dispose()
     {
+        SupabaseService.AnmeldungGeaendert -= BeiAnmeldungGeaendert;
         Chat.NeueNachricht -= BeiNeuerNachricht;
         Chat.StoppeLiveEmpfang();
     }

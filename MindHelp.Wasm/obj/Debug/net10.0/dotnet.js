@@ -5,7 +5,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
   "mainAssemblyName": "MindHelp.Wasm",
   "applicationEnvironment": "Development",
   "resources": {
-    "hash": "sha256-A6xEXFrJbfrkaBeqpV5aD2lvX8ga/XoDB4dKLSBL1MQ=",
+    "hash": "sha256-h9MNsh5W+YiRNz7FvaJO4ApX62o6gnPzQAIWi9K7mdc=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.rjbmzc4jpg.js"
@@ -1368,28 +1368,28 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "MindHelp.Shared.wasm",
-        "name": "MindHelp.Shared.lrb1ycl7sw.wasm",
-        "hash": "sha256-0RMkbi9KyCFDcOdM8d6pM6gSHrm34yVtYouYE2bOJto=",
+        "name": "MindHelp.Shared.wp7ia8ngiu.wasm",
+        "hash": "sha256-lNHKijRXkGFNqiI2jI9qkibhoPufyS39rg4Izcut4Ng=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "MindHelp.Wasm.wasm",
-        "name": "MindHelp.Wasm.xn69xjjb2u.wasm",
-        "hash": "sha256-/WYDgMq50FkwSOtBd+bIQWLx7cIu7GbkxDdRodfM6m0=",
+        "name": "MindHelp.Wasm.g1hcpq44hz.wasm",
+        "hash": "sha256-vH1vHKu0vlihgH2Vrn0ccgfcn+6cld/U41bJl2ZuqPM=",
         "cache": "force-cache"
       }
     ],
     "pdb": [
       {
         "virtualPath": "MindHelp.Shared.pdb",
-        "name": "MindHelp.Shared.u3o7447mm5.pdb",
-        "hash": "sha256-Noasr9SmvpPFuznO2h7hZRYX+MAcJTb8vlwq+EkNtmU=",
+        "name": "MindHelp.Shared.e7isz8v4fo.pdb",
+        "hash": "sha256-1qGacPBxaE26+QhUz64n5MK20H7A5g1MO+lHoRSemDg=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "MindHelp.Wasm.pdb",
-        "name": "MindHelp.Wasm.lred4uhdvg.pdb",
-        "hash": "sha256-/2fI2XS39Mn5lcwbZGedg3F6U8FAN+HlEzMhPqE0hPM=",
+        "name": "MindHelp.Wasm.xpf7f6fgmo.pdb",
+        "hash": "sha256-q30OebF+SQm+C5cXBKFGop/zJ7HOcAisHclDU4C2JQQ=",
         "cache": "force-cache"
       }
     ],

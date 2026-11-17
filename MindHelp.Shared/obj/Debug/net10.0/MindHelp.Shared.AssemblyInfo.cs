@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MindHelp.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+490af5d4120bcb8e77ec8cf7c2fa535ed2be1e63")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ba34797cb5d9f3ce456da30b6d30fe33ce46440")]
 [assembly: System.Reflection.AssemblyProductAttribute("MindHelp.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MindHelp.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

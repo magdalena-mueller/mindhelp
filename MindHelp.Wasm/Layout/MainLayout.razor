@@ -1,20 +1,35 @@
 @inherits LayoutComponentBase
+@implements IDisposable
+@inject SupaBaseService SupabaseService
+@inject IDialogService DialogService
+@inject NavigationManager Nav
 
 <MudThemeProvider Theme="@_theme" @bind-IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
-        <MudText Typo="Typo.h6" Class="ml-2">Application</MudText>
+        <MudText Typo="Typo.h6" Class="ml-2">MindHelp</MudText>
         <MudSpacer />
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
-        <MudLink Href="https://learn.microsoft.com/aspnet/core/" Target="_blank" Color="Color.Inherit" Underline="Underline.None">
-            About
-        </MudLink>
+
+        @* Oben rechts: angemeldet → Profil-Menü, sonst → Anmelden / Registrieren *@
+        @if (_angemeldet)
+        {
+            <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit"
+                     AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" aria-label="Benutzermenü">
+                <MudMenuItem Icon="@Icons.Material.Filled.ManageAccounts" Href="profil">Mein Profil</MudMenuItem>
+                <MudMenuItem Icon="@Icons.Material.Filled.Logout" OnClick="Abmelden">Abmelden</MudMenuItem>
+            </MudMenu>
+        }
+        else
+        {
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="ZeigeLoginFenster" Class="ml-2">Anmelden</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="Register" Class="ml-2">Registrieren</MudButton>
+        }
     </MudAppBar>
 
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
@@ -28,23 +43,82 @@
 
 @code {
     private bool _drawerOpen = true;
-    private bool _isDarkMode = false; //Standardmäßig auf hellen Modus setzen, kann später geändert werden
+    private bool _isDarkMode = false;
     private MudTheme? _theme;
 
-    
+    private bool _angemeldet;
+    private bool _bereit;
+    private bool _fensterOffen;
+    private bool _schonGezeigt;
 
-    protected override void OnInitialized()
+    // Auf diesen Seiten soll das Anmelde-Fenster nicht von selbst aufpoppen
+    private static readonly string[] SeitenOhneLoginFenster = ["login", "register", "registeruser", "registerhelper"];
+
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-
         _theme = new()
         {
             PaletteLight = _lightPalette,
             PaletteDark = _darkPalette,
-            LayoutProperties = new LayoutProperties(){
-                DefaultBorderRadius = "12px" // runde Ecken
-            }
+            LayoutProperties = new LayoutProperties { DefaultBorderRadius = "12px" }
         };
+
+        await SupabaseService.InitializeAsync();
+        _angemeldet = SupabaseService.IsLoggedIn;
+        SupabaseService.AnmeldungGeaendert += BeiAnmeldungGeaendert;
+        _bereit = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Nach dem Start (das Logo liegt noch darüber): wer nicht angemeldet ist, bekommt das Anmelde-Fenster
+        if (_bereit && !_angemeldet && !_fensterOffen && !_schonGezeigt && !IstSeiteOhneLoginFenster())
+        {
+            _schonGezeigt = true;
+            await ZeigeLoginFenster();
+        }
+    }
+
+    private bool IstSeiteOhneLoginFenster()
+    {
+        var seite = Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0].ToLowerInvariant();
+        return SeitenOhneLoginFenster.Contains(seite);
+    }
+
+    private async Task ZeigeLoginFenster()
+    {
+        if (_fensterOffen) return;
+        _fensterOffen = true;
+
+        var optionen = new DialogOptions
+        {
+            BackdropClick = true,        // Klick daneben schließt das Fenster ebenfalls
+            MaxWidth = MaxWidth.ExtraSmall,
+            FullWidth = true
+        };
+        var fenster = await DialogService.ShowAsync<LoginDialog>(string.Empty, optionen);
+        await fenster.Result;
+
+        _fensterOffen = false;
+    }
+
+    private async Task Abmelden()
+    {
+        await SupabaseService.LogoutAsync();
+        Nav.NavigateTo("/");
+        _schonGezeigt = true;
+        await ZeigeLoginFenster();
+    }
+
+    private void BeiAnmeldungGeaendert()
+    {
+        _angemeldet = SupabaseService.IsLoggedIn;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        SupabaseService.AnmeldungGeaendert -= BeiAnmeldungGeaendert;
     }
 
     private void DrawerToggle()
@@ -57,6 +131,7 @@
         _isDarkMode = !_isDarkMode;
     }
 
+    // Farben passend zum mindhelp-Logo (Lila / Flieder)
     private readonly PaletteLight _lightPalette = new()
     {
         Primary = "#7E6FD8",
