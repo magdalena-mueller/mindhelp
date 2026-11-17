@@ -149,7 +149,7 @@ else
 
         if (!SupabaseService.IsLoggedIn)
         {
-            Nav.NavigateTo("/login");
+            Nav.NavigateTo("/");
             return;
         }
 
@@ -256,6 +256,6 @@ else
     {
         Chat.StoppeLiveEmpfang();
         await SupabaseService.LogoutAsync();
-        Nav.NavigateTo("/login");
+        Nav.NavigateTo("/");
     }
 }

@@ -16,6 +16,13 @@ public class SupaBaseService
 
     private Supabase.Client? _client;
 
+    // Fehlermeldung des letzten fehlgeschlagenen Logins bzw. der letzten Registrierung
+    public string? LetzterFehler { get; private set; }
+
+    // Wird ausgelöst, wenn sich jemand an- oder abmeldet (z. B. damit das Menü sich anpasst)
+    public event Action? AnmeldungGeaendert;
+
+
     /// <summary>
     /// Erstellt den Client beim ersten Aufruf und verbindet mit Supabase.
     /// Weitere Aufrufe liefern denselben Client zurück.
@@ -83,10 +90,12 @@ public class SupaBaseService
 
     private async Task<bool> RegisterUserAsyncCore(string email, string password, Dictionary<string, object>? data)
     {
-        var client = await InitializeAsync(); // Stellt sicher, dass der Client initialisiert ist (Mathias)
+        LetzterFehler = null; // Zurücksetzen der Fehlermeldung
+       
 
         try
         {
+             var client = await InitializeAsync(); // Stellt sicher, dass der Client initialisiert ist (Mathias)
             var options = new Supabase.Gotrue.SignUpOptions
             {
                 Data = data // Hier werden die zusätzlichen Daten übergeben (Mathias)
@@ -114,19 +123,40 @@ public class SupaBaseService
     // Meldet einen User an. Supabase liefert dabei das JWT (AccessToken).
     public async Task<bool> LoginAsync(string email, string password)
     {
-        var client = await InitializeAsync();
-
+        
+        LetzterFehler = null; // Zurücksetzen der Fehlermeldung
         try
         {
+            var client = await InitializeAsync();
             var session = await client.Auth.SignIn(email, password);
-            return session?.AccessToken != null;
+            var ok = session?.AccessToken != null;
+            if (ok) AnmeldungGeaendert?.Invoke();
+            return ok;
         }
         catch (Exception ex)
         {
+            LetzterFehler = Uebersetze(ex.Message); // Übersetze die Fehlermeldung ins Deutsche
             Console.WriteLine($"Login fehlgeschlagen: {ex.Message}");
             return false;
         }
     }
+
+    // Häufige Supabase-Fehlermeldungen verständlich auf Deutsch
+    private static string Uebersetze(string meldung)
+    {
+        if (meldung.Contains("Email not confirmed", StringComparison.OrdinalIgnoreCase))
+            return "Die E-Mail-Adresse ist noch nicht bestätigt. Bitte klicke auf den Link in der Bestätigungs-Mail (auch im Spam-Ordner nachsehen).";
+        if (meldung.Contains("Invalid login credentials", StringComparison.OrdinalIgnoreCase))
+            return "E-Mail oder Passwort falsch.";
+        if (meldung.Contains("already registered", StringComparison.OrdinalIgnoreCase))
+            return "Diese E-Mail-Adresse ist bereits registriert.";
+        if (meldung.Contains("rate limit", StringComparison.OrdinalIgnoreCase))
+            return "Zu viele Versuche. Bitte warte ein paar Minuten und versuche es erneut.";
+        if (meldung.Contains("Database error", StringComparison.OrdinalIgnoreCase))
+            return "Fehler in der Datenbank beim Anlegen des Profils.";
+        return "Fehler: " + meldung;
+    }
+
 
     /// <summary>
     /// Meldet den aktuellen Benutzer ab.
@@ -135,6 +165,7 @@ public class SupaBaseService
     {
         var client = await InitializeAsync();
         await client.Auth.SignOut();
+        AnmeldungGeaendert?.Invoke(); // Invoke heißt "aufrufen" – also das Event auslösen, dass sich die Anmeldung geändert hat
     }
 
     /// <summary>
