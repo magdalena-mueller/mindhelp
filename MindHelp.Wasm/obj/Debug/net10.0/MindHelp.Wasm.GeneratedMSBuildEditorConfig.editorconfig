@@ -43,8 +43,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/NotrufBanner.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5vdHJ1ZkJhbm5lci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/NotrufDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5vdHJ1ZkRpYWxvZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/RegisterDialog.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFJlZ2lzdGVyRGlhbG9nLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/UnterLeiste.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFVudGVyTGVpc3RlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/ChatSeite.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2hhdFNlaXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Home.razor]

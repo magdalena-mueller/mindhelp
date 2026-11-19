@@ -16,6 +16,21 @@
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <script type="importmap"></script>
+
+        <!-- Logo nur beim ersten Öffnen der App zeigen, nicht bei jedem Neuladen -->
+    <script>
+        try {
+            if (sessionStorage.getItem('mh-logo-gezeigt')) {
+                document.documentElement.classList.add('mh-ohne-logo');
+            } else {
+                sessionStorage.setItem('mh-logo-gezeigt', 'ja');
+            }
+        } catch (e) { }
+    </script>
+    <style>
+        .mh-ohne-logo #splash { display: none !important; }
+        .mh-ohne-logo #app { animation: none !important; }
+    </style>
 </head>
 
 <body>

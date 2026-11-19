@@ -1,26 +1,28 @@
-@implements IDisposable
-@inject SupaBaseService SupabaseService
-
-<MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Startseite</MudNavLink>
-
-    @if (SupabaseService.IsLoggedIn)
+@* Menü links – nur am Laptop/Computer. Am Handy gibt es stattdessen die Leiste unten (UnterLeiste).
+   Beide zeigen dieselben Seiten, deshalb kommen die Einträge aus UnterLeiste. *@
+<MudNavMenu Class="pt-4" Color="Color.Primary">
+    @foreach (var punkt in IstHilfskraft ? UnterLeiste.PunkteHilfskraft : UnterLeiste.PunkteHilfesuchende)
     {
-        @* Nur für angemeldete Personen *@
-        <MudNavLink Href="profil" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ManageAccounts">Mein Profil</MudNavLink>
+        @if (punkt.Ziel == "")
+        {
+            @* Chat: auch aktiv, wenn gerade ein Chat offen ist (chat/…) *@
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@punkt.Icon" Class="@(ImChat ? "mh-nav-aktiv" : "")">
+                @punkt.Text
+                @if (NeueNachrichten)
+                {
+                    <MudBadge Dot="true" Color="Color.Error" Class="ml-2" />
+                }
+            </MudNavLink>
+        }
+        else
+        {
+            <MudNavLink Href="@punkt.Ziel" Match="NavLinkMatch.Prefix" Icon="@punkt.Icon">@punkt.Text</MudNavLink>
+        }
     }
 </MudNavMenu>
 
 @code {
-    protected override void OnInitialized()
-    {
-        SupabaseService.AnmeldungGeaendert += Aktualisieren;
-    }
-
-    private void Aktualisieren() => InvokeAsync(StateHasChanged);
-
-    public void Dispose()
-    {
-        SupabaseService.AnmeldungGeaendert -= Aktualisieren;
-    }
+    [Parameter] public bool IstHilfskraft { get; set; }
+    [Parameter] public bool NeueNachrichten { get; set; }
+    [Parameter] public bool ImChat { get; set; }
 }

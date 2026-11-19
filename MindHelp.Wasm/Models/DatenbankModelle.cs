@@ -30,6 +30,11 @@ public class Profile : BaseModel
     [Column("last_online")]
     public DateTime? LastOnline { get; set; }
 
+    
+    // Wird nur gelesen (für "Du bist seit … Tagen dabei"), nie mitgeschickt
+    [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime CreatedAt { get; set; }
+
     public bool IstHilfskraft => Role == "helper";
 
     public string VollerName => $"{FirstName} {LastName}".Trim();
@@ -49,6 +54,9 @@ public class HelperDetails : BaseModel
 
     [Column("verified")]
     public bool Verified { get; set; }
+
+    [Column("erreichbar")]
+    public bool Erreichbar { get; set; } = true;
 }
 
 [Table("conversations")]
@@ -88,4 +96,122 @@ public class ChatMessage : BaseModel
 
     [Column("seen_at")]
     public DateTime? SeenAt { get; set; }
+}
+
+
+// Diese Tabellen sind für die Seiten in der Leiste und Funktionen während der Benutzung gedacht.
+
+[Table("notrufe")]
+public class Notruf : BaseModel
+{
+    [PrimaryKey("id", false)]
+    public long Id { get; set; }
+
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+
+    [Column("nachricht")]
+    public string? Nachricht { get; set; }
+
+    [Column("status")]
+    public string Status { get; set; } = "offen";   // offen → angenommen → erledigt (oder zurueckgezogen)
+
+    [Column("helper_id")]
+    public Guid? HelperId { get; set; }
+
+    [Column("conversation_id")]
+    public long? ConversationId { get; set; }
+
+    [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime CreatedAt { get; set; }
+
+    [Column("angenommen_at")]
+    public DateTime? AngenommenAt { get; set; }
+
+    [Column("erledigt_at")]
+    public DateTime? ErledigtAt { get; set; }
+}
+
+[Table("stimmungen")]
+public class Stimmung : BaseModel
+{
+    [PrimaryKey("id", false)]
+    public long Id { get; set; }
+
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+
+    [Column("wert")]
+    public int Wert { get; set; }   // 1 = schlecht … 5 = super
+
+    [Column("notiz")]
+    public string? Notiz { get; set; }
+
+    [Column("geteilt")]
+    public bool Geteilt { get; set; }
+
+    [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime CreatedAt { get; set; }
+}
+
+[Table("ziele")]
+public class Ziel : BaseModel
+{
+    [PrimaryKey("id", false)]
+    public long Id { get; set; }
+
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+
+    [Column("titel")]
+    public string Titel { get; set; } = string.Empty;
+
+    [Column("erledigt")]
+    public bool Erledigt { get; set; }
+
+    [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime CreatedAt { get; set; }
+}
+
+[Table("kurz_checks")]
+public class CheckErgebnis : BaseModel
+{
+    [PrimaryKey("id", false)]
+    public long Id { get; set; }
+
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+
+    [Column("prozent")]
+    public int Prozent { get; set; }
+
+    [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime CreatedAt { get; set; }
+}
+
+[Table("verfuegbarkeit")]
+public class Verfuegbarkeit : BaseModel
+{
+    [PrimaryKey("id", false)]
+    public long Id { get; set; }
+
+    [Column("helper_id")]
+    public Guid HelperId { get; set; }
+
+    [Column("wochentag")]
+    public int Wochentag { get; set; }   // 1 = Montag … 7 = Sonntag
+
+    [Column("block")]
+    public int Block { get; set; }       // 0 = 8–12, 1 = 12–16, 2 = 16–20, 3 = 20–24
+}
+
+// Eine Zeile in der Chatliste (wird im Programm zusammengebaut, keine eigene Tabelle)
+public class ChatEintrag
+{
+    public Conversation? Unterhaltung { get; set; }   // null = Hilfskraft, mit der noch kein Chat besteht
+    public Profile Gegenueber { get; set; } = new();
+    public HelperDetails? Details { get; set; }
+    public ChatMessage? LetzteNachricht { get; set; }
+    public int Ungelesen { get; set; }
+    public bool Notfall { get; set; }
 }

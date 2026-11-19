@@ -172,4 +172,32 @@ public class SupaBaseService
     /// Prüft, ob ein Benutzer eingeloggt ist.
     /// </summary>
     public bool IsLoggedIn => _client?.Auth.CurrentSession != null;
+
+        /// <summary>
+    /// Baut die Live-Verbindung (Realtime) zu Supabase auf – nur einmal, egal wie oft es aufgerufen wird.
+    /// Chat und Notruf brauchen sie beide.
+    /// </summary>
+    public Task VerbindeLiveAsync()
+    {
+        return _liveVerbindung ??= BaueLiveVerbindungAsync();
+    }
+
+    private Task? _liveVerbindung;
+
+    private async Task BaueLiveVerbindungAsync()
+    {
+        var client = await InitializeAsync();
+        try
+        {
+            await client.Realtime.ConnectAsync();
+            // Damit Supabase weiß, wer zuhört (sonst greifen die Sicherheitsregeln nicht)
+            if (client.Auth.CurrentSession?.AccessToken is { } token)
+                client.Realtime.SetAuth(token);
+        }
+        catch
+        {
+            _liveVerbindung = null;   // beim nächsten Mal neu versuchen
+            throw;
+        }
+    }
 }

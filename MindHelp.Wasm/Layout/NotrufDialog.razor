@@ -1,0 +1,149 @@
+@implements IDisposable
+@inject NotrufService NotrufDienst
+@inject ChatService Chat
+@inject NavigationManager Nav
+
+@* Notruf-Fenster für Hilfesuchende: 1. fragen → 2. warten → 3. angenommen *@
+<MudDialog>
+    <TitleContent>
+        <div class="d-flex align-center">
+            <MudText Typo="Typo.h6" Class="flex-grow-1" Style="font-weight: 700;">Notruf</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" aria-label="Schließen" OnClick="() => Dialog.Close()" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        @if (_schritt == "frage")
+        {
+            <MudText Typo="Typo.h6" Class="mb-2">Brauchst du jetzt sofort Hilfe?</MudText>
+            <MudText Typo="Typo.body2" Class="mh-text-leise mb-4">
+                Dein Notruf geht an alle Hilfskräfte. Die erste, die annimmt, schreibt dir sofort.
+            </MudText>
+            <MudTextField @bind-Value="_text" Label="Was ist los? (freiwillig)" Variant="Variant.Outlined"
+                          Lines="2" MaxLength="300" Class="mb-4" />
+            <MudButton Variant="Variant.Filled" Color="Color.Error" FullWidth="true" Size="Size.Large" Class="rounded-pill mb-2"
+                       StartIcon="@Icons.Material.Filled.Campaign" Disabled="_laedt" OnClick="Senden">
+                @(_laedt ? "Wird gesendet …" : "Notruf senden")
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Class="rounded-pill" OnClick="() => Dialog.Close()">
+                Abbrechen
+            </MudButton>
+        }
+        else if (_schritt == "warten")
+        {
+            <div class="d-flex flex-column align-center text-center">
+                <div class="mh-puls mb-3"><MudIcon Icon="@Icons.Material.Filled.Campaign" Style="color: white;" /></div>
+                <MudText Typo="Typo.h6">Notruf gesendet</MudText>
+                <MudText Typo="Typo.body2" Class="mh-text-leise mb-4">Alle Hilfskräfte wurden benachrichtigt. Gleich meldet sich jemand bei dir.</MudText>
+                <MudProgressLinear Color="Color.Error" Indeterminate="true" Rounded="true" Class="mb-4" />
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Class="rounded-pill mb-2" OnClick="() => Dialog.Close()">
+                    Im Hintergrund warten
+                </MudButton>
+                <MudButton Variant="Variant.Text" Color="Color.Error" FullWidth="true" Class="rounded-pill" OnClick="Zurueckziehen">
+                    Notruf zurückziehen
+                </MudButton>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex flex-column align-center text-center">
+                <div class="mh-puls mh-puls-gut mb-3"><MudIcon Icon="@Icons.Material.Filled.Check" Style="color: white;" /></div>
+                <MudText Typo="Typo.h6">@_hilfskraftName ist für dich da</MudText>
+                <MudText Typo="Typo.body2" Class="mh-text-leise mb-4">Dein Notruf wurde angenommen. Schau in den Chat.</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Size="Size.Large" Class="rounded-pill" OnClick="ZumChat">
+                    Zum Chat
+                </MudButton>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(_fehler))
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="mt-3">@_fehler</MudAlert>
+        }
+
+        @* Immer sichtbar *@
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Dense="true" Icon="@Icons.Material.Filled.Phone" Class="mt-4 mb-2 mh-notfall">
+            <b>Lebensgefahr?</b> Ruf sofort <b>144</b> an · Telefonseelsorge <b>142</b>
+        </MudAlert>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance Dialog { get; set; } = null!;
+
+    private string _schritt = "frage";
+    private string _text = "";
+    private string _fehler = "";
+    private string _hilfskraftName = "Eine Hilfskraft";
+    private bool _laedt;
+
+    protected override async Task OnInitializedAsync()
+    {
+        NotrufDienst.NotrufGeaendert += BeiAenderung;
+        await ZeigeAktuellenStand();
+    }
+
+    private async Task ZeigeAktuellenStand()
+    {
+        var notruf = NotrufDienst.MeinNotruf;
+        if (notruf == null)
+        {
+            _schritt = "frage";
+        }
+        else if (notruf.Status == "offen")
+        {
+            _schritt = "warten";
+        }
+        else if (notruf.Status == "angenommen")
+        {
+            _schritt = "angenommen";
+            if (notruf.HelperId is { } id && await Chat.GetProfilAsync(id) is { } profil)
+                _hilfskraftName = profil.VollerName;
+        }
+    }
+
+    private async Task Senden()
+    {
+        _laedt = true;
+        _fehler = "";
+        try
+        {
+            await NotrufDienst.SendeNotrufAsync(_text);
+            _schritt = "warten";
+        }
+        catch (Exception ex)
+        {
+            _fehler = "Notruf konnte nicht gesendet werden. Bitte ruf 142 oder 144 an. (" + ex.Message + ")";
+        }
+        _laedt = false;
+    }
+
+    private async Task Zurueckziehen()
+    {
+        await NotrufDienst.ZieheNotrufZurueckAsync();
+        Dialog.Close();
+    }
+
+    private void ZumChat()
+    {
+        var unterhaltung = NotrufDienst.MeinNotruf?.ConversationId;
+        NotrufDienst.VergissMeinenNotruf();
+        Dialog.Close();
+        Nav.NavigateTo(unterhaltung == null ? "/" : $"chat/{unterhaltung}");
+    }
+
+    // Kommt live von Supabase, z. B. wenn eine Hilfskraft annimmt
+    private void BeiAenderung(Notruf notruf)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await ZeigeAktuellenStand();
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        NotrufDienst.NotrufGeaendert -= BeiAenderung;
+    }
+}

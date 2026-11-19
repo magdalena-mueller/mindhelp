@@ -4,6 +4,7 @@
 @inject SupaBaseService SupabaseService
 @inject ChatService Chat
 @inject NavigationManager Nav
+@inject ISnackbar Snackbar
 @inject IDialogService DialogService
 
 <PageTitle>Startseite</PageTitle>
@@ -12,8 +13,7 @@
 {
     <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
 }
-
-    else if (_gast)
+else if (_gast)
 {
     @* ===== Willkommensseite für Gäste – MudBlazor-Bausteine + Effekte aus app.css (mh-…) ===== *@
 
@@ -24,7 +24,7 @@
 
         @* ---------- 1. Hero-Bereich ---------- *@
         <MudPaper Elevation="0" Class="mh-glas mh-einblenden pa-6 pa-md-12 rounded-xl">
-            <MudGrid Spacing="6" AlignItems="Center">
+            <MudGrid Spacing="6" Class="align-center">
                 <MudItem xs="12" md="7">
                     <MudChip T="string" Color="Color.Primary" Variant="Variant.Text" Size="Size.Medium"
                              Icon="@Icons.Material.Filled.AutoAwesome">
@@ -108,157 +108,148 @@
         </MudAlert>
     </MudContainer>
 }
-
-    else
+else
 {
-    <MudText Typo="Typo.h5" Class="mb-4">Hallo@(string.IsNullOrEmpty(_vorname) ? "" : " " + _vorname)! Wie geht es dir heute?</MudText>
+    @* ---------- Chatliste (wie bei WhatsApp) ---------- *@
+    <MudContainer MaxWidth="MaxWidth.Small" Class="px-0">
+        <MudText Typo="Typo.h5" Class="mh-text mb-1" Style="font-weight: 700;">Chats</MudText>
+        <MudText Typo="Typo.body2" Class="mh-text-leise mb-3">
+            Hallo@(string.IsNullOrEmpty(_vorname) ? "" : " " + _vorname)! @(_istHilfskraft ? "Hier sind deine Unterhaltungen." : "Schreib einer Hilfskraft, wann immer du magst.")
+        </MudText>
 
-    @if (_meinProfil == null && string.IsNullOrEmpty(_fehler))
-    {
-        <MudAlert Severity="Severity.Warning" Class="mb-4">
-            Zu deinem Konto wurde kein Profil gefunden. Bitte melde dich ab und wieder an.
-        </MudAlert>
-    }
+        @if (!string.IsNullOrEmpty(_fehler))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-3">@_fehler</MudAlert>
+        }
 
-    @if (!string.IsNullOrEmpty(_fehler))
-    {
-        <MudAlert Severity="Severity.Error" Class="mb-4">@_fehler</MudAlert>
-    }
+        <MudTextField @bind-Value="_suche" Placeholder="@(_istHilfskraft ? "Unterhaltung suchen" : "Hilfskraft suchen")"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                      Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Class="mh-suche mb-3" />
 
-    <MudGrid>
-        @* Linke Spalte: Hilfskräfte (für Hilfesuchende) bzw. Unterhaltungen (für Hilfskräfte) *@
-        <MudItem xs="12" md="4">
-            <MudPaper Elevation="2" Class="pa-2" Style="height: calc(100vh - 200px); overflow-y: auto;">
-                <MudText Typo="Typo.subtitle1" Class="pa-2">
-                    @(_meinProfil?.IstHilfskraft == true ? "Deine Unterhaltungen" : "Hilfskräfte")
+        @if (_istHilfskraft)
+        {
+            <MudChipSet T="string" @bind-SelectedValue="_filter" SelectionMode="SelectionMode.SingleSelection" CheckMark="false" Class="mb-3">
+                <MudChip T="string" Value="@("alle")" Text="Alle" Color="Color.Primary" Variant="Variant.Outlined" />
+                <MudChip T="string" Value="@("ungelesen")" Text="Ungelesen" Color="Color.Primary" Variant="Variant.Outlined" />
+                <MudChip T="string" Value="@("notfall")" Text="Notfälle" Color="Color.Error" Variant="Variant.Outlined" />
+            </MudChipSet>
+        }
+
+        <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-1">
+            @{
+                var mitChat = Gefiltert.Where(e => e.Unterhaltung != null).ToList();
+                var ohneChat = Gefiltert.Where(e => e.Unterhaltung == null).ToList();
+            }
+
+            @if (mitChat.Count == 0 && ohneChat.Count == 0)
+            {
+                <MudText Typo="Typo.body2" Class="mh-text-leise pa-4">
+                    @(_istHilfskraft ? "Noch hat dir niemand geschrieben." : "Nichts gefunden.")
                 </MudText>
+            }
 
-                <MudList T="string" Dense="true">
-                    @if (_meinProfil?.IstHilfskraft == true)
-                    {
-                        @if (_unterhaltungen.Count == 0)
-                        {
-                            <MudText Typo="Typo.body2" Class="pa-2">Noch hat dir niemand geschrieben.</MudText>
-                        }
-                        @foreach (var (unterhaltung, gegenueber) in _unterhaltungen)
-                        {
-                            <MudListItem T="string" OnClick="() => OeffneUnterhaltung(unterhaltung, gegenueber)"
-                                         Class="@(unterhaltung.Id == _aktiv?.Id ? "mud-selected-item" : "")">
-                                <div class="d-flex align-center">
-                                    <MudAvatar Color="Color.Secondary" Size="Size.Small" Class="mr-3">@Anfangsbuchstabe(gegenueber)</MudAvatar>
-                                    <MudText>@(gegenueber?.VollerName is { Length: > 0 } n ? n : "Unbekannt")</MudText>
-                                </div>
-                            </MudListItem>
-                        }
-                    }
-                    else
-                    {
-                        @if (_hilfskraefte.Count == 0)
-                        {
-                            <MudText Typo="Typo.body2" Class="pa-2">Derzeit sind keine Hilfskräfte registriert.</MudText>
-                        }
-                        @foreach (var (profil, details) in _hilfskraefte)
-                        {
-                            <MudListItem T="string" OnClick="() => StarteChatMit(profil)"
-                                         Class="@(profil.Id == _gegenueber?.Id ? "mud-selected-item" : "")">
-                                <div class="d-flex align-center">
-                                    <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-3">@Anfangsbuchstabe(profil)</MudAvatar>
-                                    <div>
-                                        <MudText>
-                                            @profil.VollerName
-                                            @if (details?.Verified == true)
-                                            {
-                                                <MudIcon Icon="@Icons.Material.Filled.Verified" Color="Color.Primary" Size="Size.Small" Class="ml-1" Title="verifiziert" />
-                                            }
-                                        </MudText>
-                                        @if (!string.IsNullOrWhiteSpace(details?.Specification))
-                                        {
-                                            <MudText Typo="Typo.caption">@details.Specification</MudText>
-                                        }
-                                    </div>
-                                </div>
-                            </MudListItem>
-                        }
-                    }
-                </MudList>
-            </MudPaper>
-        </MudItem>
+            @foreach (var eintrag in mitChat)
+            {
+                @ChatZeile(eintrag)
+            }
 
-        @* Rechte Spalte: der Chat *@
-        <MudItem xs="12" md="8">
-            <MudPaper Elevation="2" Class="d-flex flex-column" Style="height: calc(100vh - 200px);">
-                @if (_aktiv == null)
+            @if (ohneChat.Count > 0)
+            {
+                <MudText Typo="Typo.overline" Class="mh-text-leise d-block px-3 pt-3">Weitere Hilfskräfte</MudText>
+                @foreach (var eintrag in ohneChat)
                 {
-                    <div class="d-flex flex-grow-1 align-center justify-center pa-4">
-                        <MudText Typo="Typo.body1" Color="Color.Secondary">
-                            @(_meinProfil?.IstHilfskraft == true
-                                ? "Wähle links eine Unterhaltung aus."
-                                : "Wähle links eine Hilfskraft aus, um zu schreiben.")
-                        </MudText>
-                    </div>
+                    @ChatZeile(eintrag)
+                }
+            }
+        </MudPaper>
+
+        @if (!_istHilfskraft)
+        {
+            <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Dense="true" Icon="@Icons.Material.Filled.Phone" Class="mh-notfall mt-4 rounded-lg">
+                <b>In einer akuten Krise?</b> Tippe oben auf <b>SOS</b> oder ruf an: Telefonseelsorge <b>142</b> · Notruf <b>144</b>
+            </MudAlert>
+        }
+    </MudContainer>
+}
+
+@code {
+    // Eine Zeile der Chatliste (als Vorlage, damit sie oben zweimal verwendet werden kann)
+    private RenderFragment ChatZeile(ChatEintrag eintrag) => __builder =>
+    {
+        var letzte = eintrag.LetzteNachricht;
+        var vonMir = letzte != null && letzte.SenderId == _meineId;
+        <div class="mh-chatzeile" role="button" tabindex="0" @onclick="() => Oeffne(eintrag)">
+            <MudBadge Dot="true" Color="Color.Success" Overlap="true" Bordered="true" Origin="Origin.BottomRight"
+                      Visible="@(eintrag.Details?.Erreichbar == true)">
+                <MudAvatar Size="Size.Large" Class="@(eintrag.Notfall ? "mh-avatar mh-avatar-notfall" : "mh-avatar")">@Anfangsbuchstabe(eintrag.Gegenueber)</MudAvatar>
+            </MudBadge>
+
+            <div class="flex-grow-1" style="min-width: 0;">
+                <div class="d-flex align-center gap-1">
+                    <MudText Typo="Typo.subtitle1" Class="mh-einzeilig" Style="font-weight: 600;">@Name(eintrag.Gegenueber)</MudText>
+                    @if (eintrag.Details?.Verified == true)
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Verified" Color="Color.Primary" Style="font-size: 16px;" Title="verifiziert" />
+                    }
+                    @if (eintrag.Notfall)
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Error" Variant="Variant.Text" Class="ma-0">Notfall</MudChip>
+                    }
+                </div>
+                <MudText Typo="Typo.body2" Class="@($"mh-einzeilig {(eintrag.Ungelesen > 0 ? "" : "mh-text-leise")}")"
+                         Style="@(eintrag.Ungelesen > 0 ? "font-weight: 600;" : "")">
+                    @if (vonMir)
+                    {
+                        <MudIcon Icon="@(letzte!.SeenAt != null ? Icons.Material.Filled.DoneAll : Icons.Material.Filled.Done)"
+                                 Color="@(letzte.SeenAt != null ? Color.Info : Color.Default)" Style="font-size: 16px; vertical-align: -3px;" />
+                    }
+                    @(letzte?.Content ?? Untertitel(eintrag))
+                </MudText>
+            </div>
+
+            <div class="d-flex flex-column align-end gap-1">
+                @if (letzte != null)
+                {
+                    <MudText Typo="Typo.caption" Color="@(eintrag.Ungelesen > 0 ? Color.Primary : Color.Secondary)"
+                             Style="@(eintrag.Ungelesen > 0 ? "font-weight: 700;" : "")">@Zeit(letzte.CreatedAt)</MudText>
                 }
                 else
                 {
-                    @* Kopfzeile *@
-                    <div class="d-flex align-center pa-3" style="border-bottom: 1px solid var(--mud-palette-lines-default);">
-                        <MudAvatar Color="Color.Primary" Class="mr-3">@Anfangsbuchstabe(_gegenueber)</MudAvatar>
-                        <MudText Typo="Typo.subtitle1">@(_gegenueber?.VollerName is { Length: > 0 } n ? n : "Unterhaltung")</MudText>
-                    </div>
-
-                    @* Nachrichten *@
-                    <div id="chat-verlauf" class="flex-grow-1 pa-4" style="overflow-y: auto;">
-                        @if (_nachrichten.Count == 0)
-                        {
-                            <MudText Typo="Typo.body2" Color="Color.Secondary">Noch keine Nachrichten. Schreib die erste!</MudText>
-                        }
-                        @foreach (var nachricht in _nachrichten)
-                        {
-                            var vonMir = nachricht.SenderId == _meineId;
-                            <div class="d-flex mb-3 @(vonMir ? "justify-end" : "justify-start")">
-                                <MudPaper Elevation="0" Class="pa-3"
-                                          Style="@($"max-width: 70%; border-radius: 16px; background-color: {(vonMir ? "var(--mud-palette-primary)" : "var(--mud-palette-gray-light)")}; color: {(vonMir ? "white" : "inherit")};")">
-                                    <MudText Typo="Typo.body1" Style="white-space: pre-wrap;">@nachricht.Content</MudText>
-                                    <MudText Typo="Typo.caption" Style="opacity: 0.7;">@nachricht.CreatedAt.ToLocalTime().ToString("dd.MM. HH:mm")</MudText>
-                                </MudPaper>
-                            </div>
-                        }
-                    </div>
-
-                    @* Eingabezeile *@
-                    <div class="d-flex align-center pa-3" style="border-top: 1px solid var(--mud-palette-lines-default);">
-                        <MudTextField @bind-Value="_neueNachricht" Placeholder="Nachricht schreiben …" Variant="Variant.Outlined"
-                                      Margin="Margin.Dense" Immediate="true" OnKeyDown="OnKeyDown" Class="mr-2" />
-                        <MudIconButton Icon="@Icons.Material.Filled.Send" Color="Color.Primary" Variant="Variant.Filled"
-                                       Disabled="@(_sendet || string.IsNullOrWhiteSpace(_neueNachricht))" OnClick="Senden" />
-                    </div>
+                    <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text" Class="ma-0">Chat starten</MudChip>
                 }
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
+                @if (eintrag.Ungelesen > 0)
+                {
+                    <span class="@($"mh-zaehler {(eintrag.Notfall ? "mh-zaehler-notfall" : "")}")">@eintrag.Ungelesen</span>
+                }
+            </div>
+        </div>
+    };
 }
 
 @code {
     private bool _bereit;
     private bool _gast;          // true = noch nicht angemeldet
-    private bool _sendet;
+    private bool _istHilfskraft;
     private string _fehler = "";
-    private string _neueNachricht = "";
+    private string _vorname = "";
+    private string _suche = "";
+    private string _filter = "alle";
 
     private Guid? _meineId;
-    private Profile? _meinProfil;
-    private string _vorname = "";
-    private List<(Profile Profil, HelperDetails? Details)> _hilfskraefte = [];
-    private List<(Conversation Unterhaltung, Profile? Gegenueber)> _unterhaltungen = [];
+    private List<ChatEintrag> _eintraege = [];
 
-    private Conversation? _aktiv;        // gerade geöffnete Unterhaltung
-    private Profile? _gegenueber;        // Person, mit der man gerade chattet
-    private List<ChatMessage> _nachrichten = [];
+    // Suche und Filter (Alle / Ungelesen / Notfälle) anwenden
+    private IEnumerable<ChatEintrag> Gefiltert => _eintraege
+        .Where(e => string.IsNullOrWhiteSpace(_suche) || Name(e.Gegenueber).Contains(_suche, StringComparison.OrdinalIgnoreCase))
+        .Where(e => _filter != "ungelesen" || e.Ungelesen > 0)
+        .Where(e => _filter != "notfall" || e.Notfall);
 
     protected override async Task OnInitializedAsync()
     {
         await SupabaseService.InitializeAsync();
         SupabaseService.AnmeldungGeaendert += BeiAnmeldungGeaendert;
         Chat.NeueNachricht += BeiNeuerNachricht;
+        Chat.NachrichtGeaendert += BeiNeuerNachricht;
         await LadeDatenAsync();
     }
 
@@ -267,18 +258,11 @@
     {
         _bereit = false;
         _fehler = "";
-        _aktiv = null;
-        _gegenueber = null;
-        _nachrichten = [];
-        _hilfskraefte = [];
-        _unterhaltungen = [];
-        _meinProfil = null;
-        _vorname = "";
+        _eintraege = [];
 
         _gast = !SupabaseService.IsLoggedIn;
         if (_gast)
         {
-            Chat.StoppeLiveEmpfang();
             _bereit = true;
             return;
         }
@@ -286,34 +270,20 @@
         try
         {
             _meineId = await Chat.GetMeineIdAsync();
-            _meinProfil = await Chat.GetMeinProfilAsync();
-            _vorname = await Chat.GetMeinVornameAsync(_meinProfil);
-
-            if (_meinProfil?.IstHilfskraft == true)
-                _unterhaltungen = await Chat.GetMeineUnterhaltungenAsync();
-            else
-                _hilfskraefte = await Chat.GetHilfskraefteAsync();
+            var profil = await Chat.GetMeinProfilAsync();
+            _istHilfskraft = profil?.IstHilfskraft == true;
+            _vorname = await Chat.GetMeinVornameAsync(profil);
+            _eintraege = await Chat.GetChatListeAsync(_istHilfskraft);
         }
         catch (Exception ex)
         {
             _fehler = "Daten konnten nicht geladen werden: " + ex.Message;
         }
 
-        try
-        {
-            // Neue Nachrichten live empfangen
-            await Chat.StarteLiveEmpfangAsync();
-        }
-        catch (Exception ex)
-        {
-            // Chat funktioniert trotzdem, neue Nachrichten erscheinen dann erst nach dem Neuladen
-            Console.WriteLine("Live-Empfang nicht möglich: " + ex.Message);
-        }
-
         _bereit = true;
     }
 
-        // Inhalte der Willkommensseite (so muss man den Aufbau oben nur einmal schreiben)
+    // Inhalte der Willkommensseite (so muss man den Aufbau oben nur einmal schreiben)
     private static readonly (string Icon, string Titel, string Text)[] Vorteile =
     [
         (Icons.Material.Filled.Lock, "Anonym & vertraulich", "Deine Gespräche sieht nur die Hilfskraft, mit der du schreibst. Niemand sonst."),
@@ -328,13 +298,12 @@
         "Schreib einfach los – wir hören zu"
     ];
 
-        // Registrierungs-Fenster öffnen (Knopf "Jetzt kostenlos starten")
+    // Registrierungs-Fenster öffnen (Knopf "Jetzt kostenlos starten")
     private async Task ZeigeRegistrierung()
     {
         var optionen = new DialogOptions { BackdropClick = false, MaxWidth = MaxWidth.Small, FullWidth = true };
         await DialogService.ShowAsync<MindHelp.Wasm.Layout.RegisterDialog>(string.Empty, optionen);
     }
-
 
     // Anmelde-Fenster öffnen (Knopf "Ich habe schon ein Konto")
     private async Task ZeigeAnmeldung()
@@ -352,73 +321,28 @@
         });
     }
 
-    // Hilfesuchende/r klickt auf eine Hilfskraft
-    private async Task StarteChatMit(Profile hilfskraft)
+    // Chat öffnen – bei einer neuen Hilfskraft wird die Unterhaltung zuerst angelegt
+    private async Task Oeffne(ChatEintrag eintrag)
     {
         try
         {
-            var unterhaltung = await Chat.GetOderStarteUnterhaltungAsync(hilfskraft.Id);
+            var unterhaltung = eintrag.Unterhaltung ?? await Chat.GetOderStarteUnterhaltungAsync(eintrag.Gegenueber.Id);
             if (unterhaltung != null)
-                await OeffneUnterhaltung(unterhaltung, hilfskraft);
+                Nav.NavigateTo($"chat/{unterhaltung.Id}");
         }
         catch (Exception ex)
         {
-            _fehler = "Unterhaltung konnte nicht gestartet werden: " + ex.Message;
+            Snackbar.Add("Chat konnte nicht geöffnet werden: " + ex.Message, Severity.Error);
         }
     }
 
-    private async Task OeffneUnterhaltung(Conversation unterhaltung, Profile? gegenueber)
-    {
-        _aktiv = unterhaltung;
-        _gegenueber = gegenueber;
-        _nachrichten = await Chat.GetNachrichtenAsync(unterhaltung.Id);
-    }
-
-    private async Task Senden()
-    {
-        if (_aktiv == null || string.IsNullOrWhiteSpace(_neueNachricht)) return;
-
-        _sendet = true;
-        var text = _neueNachricht;
-        _neueNachricht = "";
-
-        try
-        {
-            var gesendet = await Chat.SendeNachrichtAsync(_aktiv.Id, text);
-            // Die eigene Nachricht sofort anzeigen (Live-Empfang könnte sie später nochmal liefern)
-            if (gesendet != null && _nachrichten.All(n => n.Id != gesendet.Id))
-                _nachrichten.Add(gesendet);
-        }
-        catch (Exception ex)
-        {
-            _fehler = "Nachricht konnte nicht gesendet werden: " + ex.Message;
-            _neueNachricht = text;
-        }
-
-        _sendet = false;
-    }
-
-    private async Task OnKeyDown(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter")
-            await Senden();
-    }
-
-    // Wird vom Live-Empfang aufgerufen (läuft außerhalb von Blazor, deshalb InvokeAsync)
+    // Neue oder gelesene Nachricht → Liste neu laden (letzte Nachricht, Zähler, Häkchen)
     private void BeiNeuerNachricht(ChatMessage nachricht)
     {
+        if (_gast) return;
         _ = InvokeAsync(async () =>
         {
-            if (_aktiv != null && nachricht.ConversationId == _aktiv.Id)
-            {
-                if (_nachrichten.All(n => n.Id != nachricht.Id))
-                    _nachrichten.Add(nachricht);
-            }
-            else if (_meinProfil?.IstHilfskraft == true && _unterhaltungen.All(u => u.Unterhaltung.Id != nachricht.ConversationId))
-            {
-                // Eine neue Person hat der Hilfskraft geschrieben → Liste neu laden
-                _unterhaltungen = await Chat.GetMeineUnterhaltungenAsync();
-            }
+            try { _eintraege = await Chat.GetChatListeAsync(_istHilfskraft); } catch { /* beim nächsten Mal */ }
             StateHasChanged();
         });
     }
@@ -426,10 +350,28 @@
     private static string Anfangsbuchstabe(Profile? profil) =>
         string.IsNullOrWhiteSpace(profil?.FirstName) ? "?" : profil.FirstName[..1].ToUpper();
 
+    private static string Name(Profile profil) => profil.VollerName is { Length: > 0 } n ? n : "Unbekannt";
+
+    private static string Untertitel(ChatEintrag eintrag)
+    {
+        if (eintrag.Details == null) return "Hilfesuchend";
+        var fach = string.IsNullOrWhiteSpace(eintrag.Details.Specification) ? "Hilfskraft" : eintrag.Details.Specification;
+        return eintrag.Details.Erreichbar ? fach : fach + " · gerade nicht erreichbar";
+    }
+
+    // Wie bei WhatsApp: heute → Uhrzeit, gestern → "gestern", sonst Datum
+    private static string Zeit(DateTime zeit)
+    {
+        var lokal = zeit.ToLocalTime();
+        if (lokal.Date == DateTime.Today) return lokal.ToString("HH:mm");
+        if (lokal.Date == DateTime.Today.AddDays(-1)) return "gestern";
+        return lokal.ToString("dd.MM.");
+    }
+
     public void Dispose()
     {
         SupabaseService.AnmeldungGeaendert -= BeiAnmeldungGeaendert;
         Chat.NeueNachricht -= BeiNeuerNachricht;
-        Chat.StoppeLiveEmpfang();
+        Chat.NachrichtGeaendert -= BeiNeuerNachricht;
     }
 }

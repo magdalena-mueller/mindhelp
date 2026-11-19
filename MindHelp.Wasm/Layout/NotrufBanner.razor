@@ -1,0 +1,140 @@
+@implements IDisposable
+@inject NotrufService NotrufDienst
+@inject ChatService Chat
+@inject NavigationManager Nav
+@inject ISnackbar Snackbar
+
+@* Erscheint bei allen Hilfskräften oben, sobald jemand einen Notruf sendet *@
+@if (_offen.FirstOrDefault(n => !_ausgeblendet.Contains(n.Id)) is { } notruf)
+{
+    <MudPaper Elevation="12" Class="mh-notruf-banner pa-4" role="alert">
+        <div class="d-flex align-center justify-space-between">
+            <MudText Typo="Typo.overline" Style="font-weight: 800; letter-spacing: .12em;">
+                <MudIcon Icon="@Icons.Material.Filled.Campaign" Size="Size.Small" Style="vertical-align: middle;" /> Notruf
+            </MudText>
+            <MudText Typo="Typo.caption">@Vor(notruf.CreatedAt)</MudText>
+        </div>
+        <MudText Typo="Typo.subtitle1"><b>@Name(notruf.UserId)</b> braucht sofort Hilfe.</MudText>
+        @if (!string.IsNullOrWhiteSpace(notruf.Nachricht))
+        {
+            <MudText Typo="Typo.body2" Style="opacity: .9;">„@notruf.Nachricht“</MudText>
+        }
+        <div class="d-flex gap-2 mt-3">
+            <MudButton Variant="Variant.Filled" Class="mh-notruf-annehmen rounded-pill flex-grow-1"
+                       Disabled="_nimmtAn" OnClick="() => Annehmen(notruf)">
+                @(_nimmtAn ? "Wird übernommen …" : "Annehmen")
+            </MudButton>
+            @* Wer gerade nicht kann, blendet ihn aus – die anderen Hilfskräfte sehen ihn weiterhin *@
+            <MudButton Variant="Variant.Text" Class="rounded-pill" Style="color: white;" OnClick="() => Ausblenden(notruf)">Später</MudButton>
+        </div>
+        <MudText Typo="Typo.caption" Class="d-block mt-2" Style="opacity: .85;">
+            Wer zuerst annimmt, übernimmt den Fall.
+            @if (_offen.Count(n => !_ausgeblendet.Contains(n.Id)) > 1)
+            {
+                <span> · noch @(_offen.Count(n => !_ausgeblendet.Contains(n.Id)) - 1) weitere/r Notruf(e)</span>
+            }
+        </MudText>
+    </MudPaper>
+}
+
+@code {
+    private List<Notruf> _offen = [];
+    private readonly Dictionary<Guid, string> _namen = [];
+    private readonly HashSet<long> _ausgeblendet = [];   // mit "Später" weggeklickt
+    private bool _nimmtAn;
+    private PeriodicTimer? _timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        NotrufDienst.NotrufGeaendert += BeiAenderung;
+        await Neuladen();
+        _ = RegelmaessigNeuladen();
+    }
+
+    private async Task Neuladen()
+    {
+        try
+        {
+            _offen = await NotrufDienst.GetOffeneNotrufeAsync();
+            foreach (var id in _offen.Select(n => n.UserId).Distinct().Where(id => !_namen.ContainsKey(id)))
+                _namen[id] = (await Chat.GetProfilAsync(id))?.FirstName ?? "Jemand";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Notrufe konnten nicht geladen werden: " + ex.Message);
+        }
+    }
+
+    // Wenn eine Kollegin annimmt, bekommen wir das nicht live mit → alle 15 Sekunden nachschauen
+    private async Task RegelmaessigNeuladen()
+    {
+        _timer = new PeriodicTimer(TimeSpan.FromSeconds(15));
+        while (await _timer.WaitForNextTickAsync())
+        {
+            await Neuladen();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task Annehmen(Notruf notruf)
+    {
+        _nimmtAn = true;
+        try
+        {
+            var unterhaltung = await NotrufDienst.NimmNotrufAnAsync(notruf.Id);
+            if (unterhaltung == null)
+            {
+                Snackbar.Add("Dieser Notruf wurde schon von einer Kollegin oder einem Kollegen übernommen.", Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add("Du hast den Fall übernommen.", Severity.Success);
+                Nav.NavigateTo($"chat/{unterhaltung}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Annehmen hat nicht geklappt: " + ex.Message, Severity.Error);
+        }
+        _offen.RemoveAll(n => n.Id == notruf.Id);
+        _nimmtAn = false;
+    }
+
+    private void Ausblenden(Notruf notruf)
+    {
+        _ausgeblendet.Add(notruf.Id);
+        Snackbar.Add("Ausgeblendet. Du findest offene Notrufe in deiner Übersicht.", Severity.Info);
+    }
+
+    private void BeiAenderung(Notruf notruf)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            if (notruf.Status == "offen")
+            {
+                if (_offen.All(n => n.Id != notruf.Id)) _offen.Add(notruf);
+                if (!_namen.ContainsKey(notruf.UserId))
+                    _namen[notruf.UserId] = (await Chat.GetProfilAsync(notruf.UserId))?.FirstName ?? "Jemand";
+            }
+            else
+            {
+                _offen.RemoveAll(n => n.Id == notruf.Id);
+            }
+            StateHasChanged();
+        });
+    }
+
+    private string Name(Guid id) => _namen.TryGetValue(id, out var name) && name != "" ? name : "Jemand";
+
+    private static string Vor(DateTime zeit)
+    {
+        var minuten = (int)(DateTime.UtcNow - zeit.ToUniversalTime()).TotalMinutes;
+        return minuten < 1 ? "gerade eben" : $"vor {minuten} Min.";
+    }
+
+    public void Dispose()
+    {
+        NotrufDienst.NotrufGeaendert -= BeiAenderung;
+        _timer?.Dispose();
+    }
+}

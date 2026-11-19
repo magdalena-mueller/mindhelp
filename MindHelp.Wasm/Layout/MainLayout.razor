@@ -1,8 +1,12 @@
 @inherits LayoutComponentBase
 @implements IDisposable
 @inject SupaBaseService SupabaseService
+@inject ChatService Chat
+@inject NotrufService NotrufDienst
 @inject IDialogService DialogService
 @inject NavigationManager Nav
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
 
 <MudThemeProvider Theme="@_theme" @bind-IsDarkMode="_isDarkMode" />
 
@@ -14,49 +18,76 @@
 
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
-        <MudText Typo="Typo.h6" Class="ml-2">MindHelp</MudText>
+        <MudText Typo="Typo.h6" Class="ml-1" Style="font-weight: 800;">mindhelp</MudText>
         <MudSpacer />
-        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
 
-        @* Oben rechts: angemeldet → Profil-Menü, sonst → Anmelden / Registrieren *@
-        @if (_angemeldet)
+        @* Hilfesuchende: roter SOS-Knopf, immer erreichbar *@
+        @if (_angemeldet && _profil != null && !_profil.IstHilfskraft)
         {
-            <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit"
-                     AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" aria-label="Benutzermenü">
-                <MudMenuItem Icon="@Icons.Material.Filled.ManageAccounts" Href="profil">Mein Profil</MudMenuItem>
-                <MudMenuItem Icon="@Icons.Material.Filled.Logout" OnClick="Abmelden">Abmelden</MudMenuItem>
-            </MudMenu>
+            var wartet = NotrufDienst.MeinNotruf?.Status == "offen";
+            <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" StartIcon="@Icons.Material.Filled.Campaign"
+                       Class="@($"rounded-pill mr-2 {(wartet ? "mh-blinken" : "")}")" OnClick="ZeigeNotruf">
+                @(wartet ? "wartet …" : "SOS")
+            </MudButton>
         }
-        else
+
+        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" aria-label="Hell/Dunkel" />
+
+        @if (!_angemeldet)
         {
-            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="ZeigeLoginFenster" Class="ml-2">Anmelden</MudButton>
+            @* Großer Bildschirm: Text-Knopf, Handy: nur ein Symbol, damit alles Platz hat *@
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="ZeigeLoginFenster" Class="ml-2 d-none d-sm-flex">Anmelden</MudButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Primary" OnClick="ZeigeLoginFenster" Class="d-flex d-sm-none" aria-label="Anmelden" />
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ZeigeRegistrierung" Class="ml-2">Registrieren</MudButton>
         }
     </MudAppBar>
 
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu />
-    </MudDrawer>
+    @* Hilfskräfte: Notruf-Hinweis oben, egal auf welcher Seite *@
+    @if (_angemeldet && _profil?.IstHilfskraft == true)
+    {
+        <NotrufBanner />
+    }
 
-    <MudMainContent Class="pt-16 pa-4">
+        @* Laptop: Menü links. Unter der Breite "Md" (Handy, kleines Tablet) klappt MudBlazor es von selbst weg –
+       dort gibt es stattdessen die Leiste unten. *@
+    @if (_angemeldet && _profil != null)
+    {
+        <MudDrawer @bind-Open="_menuOffen" Variant="DrawerVariant.Responsive" Breakpoint="Breakpoint.Md"
+                   ClipMode="DrawerClipMode.Always" Elevation="0">
+            <NavMenu IstHilfskraft="_profil.IstHilfskraft" NeueNachrichten="_neueNachrichten" ImChat="ImChat" />
+        </MudDrawer>
+    }
+
+    <MudMainContent Class="@(ImChat ? "pt-16" : _angemeldet ? "pt-16 pa-4 mh-mit-leiste" : "pt-16 pa-4")">
         @Body
     </MudMainContent>
+
+    @* Leiste unten – nicht im geöffneten Chat (wie bei WhatsApp) *@
+    @if (_angemeldet && _profil != null && !ImChat)
+    {
+        <UnterLeiste IstHilfskraft="_profil.IstHilfskraft" NeueNachrichten="_neueNachrichten" />
+    }
 </MudLayout>
 </div>
 
 @code {
-    private bool _drawerOpen = true;
     private bool _isDarkMode = false;
     private MudTheme? _theme;
 
     private bool _angemeldet;
     private bool _bereit;
     private bool _fensterOffen;
-    private bool _schonGezeigt;
+    private bool _notrufFensterOffen;
+    private bool _neueNachrichten;
+    private bool _menuOffen = true; // Laptop: Menü links, Handy: klappt automatisch weg
+    private Profile? _profil;
+    private Guid? _meineId;
 
     // Auf diesen Seiten soll das Anmelde-Fenster nicht von selbst aufpoppen
     private static readonly string[] SeitenOhneLoginFenster = ["login", "register", "registeruser", "registerhelper"];
+
+    private string AktuelleSeite => Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0].ToLowerInvariant();
+    private bool ImChat => AktuelleSeite.StartsWith("chat/");
 
     protected override async Task OnInitializedAsync()
     {
@@ -68,13 +99,53 @@
         };
 
         await SupabaseService.InitializeAsync();
-        _angemeldet = SupabaseService.IsLoggedIn;
         SupabaseService.AnmeldungGeaendert += BeiAnmeldungGeaendert;
+        Nav.LocationChanged += BeiSeitenwechsel;
+        Chat.NeueNachricht += BeiNeuerNachricht;
+        NotrufDienst.NotrufGeaendert += BeiNotruf;
+
+        await LadeAnmeldungAsync();
         _bereit = true;
+    }
+
+    // Wer ist angemeldet, welche Rolle? Danach Live-Empfang für Chat und Notruf starten.
+    private async Task LadeAnmeldungAsync()
+    {
+        _angemeldet = SupabaseService.IsLoggedIn;
+        _profil = null;
+        if (!_angemeldet)
+        {
+            Chat.StoppeLiveEmpfang();
+            NotrufDienst.StoppeLiveEmpfang();
+            return;
+        }
+
+        try
+        {
+            _meineId = await Chat.GetMeineIdAsync();
+            _profil = await Chat.GetMeinProfilAsync();
+            if (_profil?.IstHilfskraft == false)
+                await NotrufDienst.LadeMeinenOffenenNotrufAsync();
+
+            await Chat.StarteLiveEmpfangAsync();
+            await NotrufDienst.StarteLiveEmpfangAsync();
+        }
+        catch (Exception ex)
+        {
+            // App funktioniert trotzdem, Neues erscheint dann erst nach dem Neuladen
+            Console.WriteLine("Live-Empfang nicht möglich: " + ex.Message);
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        // Startlogo nach seiner Animation ganz entfernen, damit es beim wechseln der Seiten nie wieder auftaucht 
+        if(firstRender)
+        {
+            await JS.InvokeVoidAsync("eval", "setTimeout(function() { var s = document.getElementById('splash');if (s) s.remove(); }, 7000);");
+        }
+
+
         // Nach dem Start (das Logo liegt noch darüber): wer nicht angemeldet ist, bekommt das Anmelde-Fenster
         if (_bereit && !_angemeldet && !_fensterOffen && !_schonGezeigt && !IstSeiteOhneLoginFenster())
         {
@@ -83,11 +154,9 @@
         }
     }
 
-    private bool IstSeiteOhneLoginFenster()
-    {
-        var seite = Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0].ToLowerInvariant();
-        return SeitenOhneLoginFenster.Contains(seite);
-    }
+    private bool _schonGezeigt;
+
+    private bool IstSeiteOhneLoginFenster() => SeitenOhneLoginFenster.Contains(AktuelleSeite);
 
     private async Task ZeigeLoginFenster()
     {
@@ -106,35 +175,71 @@
         _fensterOffen = false;
     }
 
-        private async Task ZeigeRegistrierung()
+    private async Task ZeigeRegistrierung()
     {
         var optionen = new DialogOptions { BackdropClick = false, MaxWidth = MaxWidth.Small, FullWidth = true };
         await DialogService.ShowAsync<RegisterDialog>(string.Empty, optionen);
     }
 
-
-    private async Task Abmelden()
+    private async Task ZeigeNotruf()
     {
-        await SupabaseService.LogoutAsync();
-        Nav.NavigateTo("/");
-        _schonGezeigt = true;
-        await ZeigeLoginFenster();
+        _notrufFensterOffen = true;
+        var optionen = new DialogOptions { BackdropClick = false, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var fenster = await DialogService.ShowAsync<NotrufDialog>(string.Empty, optionen);
+        await fenster.Result;
+        _notrufFensterOffen = false;
+        StateHasChanged();   // SOS-Knopf zeigt evtl. "wartet …"
+    }
+
+    // Hilfesuchende: Notruf wurde angenommen, während das Fenster zu war → Hinweis mit Knopf zum Chat
+    private void BeiNotruf(Notruf notruf)
+    {
+        _ = InvokeAsync(() =>
+        {
+            if (_profil?.IstHilfskraft == false && notruf.UserId == _meineId && notruf.Status == "angenommen"
+                && !_notrufFensterOffen && notruf.ConversationId is { } unterhaltung)
+            {
+                NotrufDienst.VergissMeinenNotruf();
+                Snackbar.Add("Eine Hilfskraft hat deinen Notruf angenommen.", Severity.Success, konfig =>
+                {
+                    konfig.RequireInteraction = true;
+                    konfig.Action = "Zum Chat";
+                    konfig.OnClick = _ => { Nav.NavigateTo($"chat/{unterhaltung}"); return Task.CompletedTask; };
+                });
+            }
+            StateHasChanged();
+        });
+    }
+
+    // Roter Punkt beim Chat, wenn eine Nachricht kommt und man gerade woanders ist
+    private void BeiNeuerNachricht(ChatMessage nachricht)
+    {
+        if (nachricht.SenderId == _meineId || AktuelleSeite == "" || ImChat) return;
+        _neueNachrichten = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void BeiSeitenwechsel(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        if (AktuelleSeite == "" || ImChat) _neueNachrichten = false;
+        InvokeAsync(StateHasChanged);
     }
 
     private void BeiAnmeldungGeaendert()
     {
-        _angemeldet = SupabaseService.IsLoggedIn;
-        InvokeAsync(StateHasChanged);
+        _ = InvokeAsync(async () =>
+        {
+            await LadeAnmeldungAsync();
+            StateHasChanged();
+        });
     }
 
     public void Dispose()
     {
         SupabaseService.AnmeldungGeaendert -= BeiAnmeldungGeaendert;
-    }
-
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
+        Nav.LocationChanged -= BeiSeitenwechsel;
+        Chat.NeueNachricht -= BeiNeuerNachricht;
+        NotrufDienst.NotrufGeaendert -= BeiNotruf;
     }
 
     private void DarkModeToggle()
@@ -150,9 +255,9 @@
         Tertiary = "#C9B8F0",
         Background = "#F7F5FC",
         Surface = "#FFFFFF",
-        AppbarBackground = "#FFFFFF",
+        AppbarBackground = "rgba(255,255,255,0.65)",
         AppbarText = "#4B4470",
-        DrawerBackground = "#FFFFFF",
+        DrawerBackground = "rgba(255,255,255,0.55)",
         DrawerText = "#4B4470",
         DrawerIcon = "#7E6FD8",
         TextPrimary = "#2E2A47",
@@ -168,7 +273,7 @@
         Background = "#1a1a27",
         BackgroundGray = "#151521",
         AppbarText = "#92929f",
-        AppbarBackground = "rgba(255,255,255,0.65)",
+        AppbarBackground = "rgba(26,26,39,0.8)",
         DrawerBackground = "rgba(26,26,39,0.7)",
         ActionDefault = "#74718e",
         ActionDisabled = "#9999994d",

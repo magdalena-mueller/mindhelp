@@ -33,5 +33,7 @@ public class User
     [Column("lastOnline")]
     public DateTime? LastOnlineUsers { get; set; }
 
+     
+
     public ICollection<Chat> Chats { get; set; } = [];
 }

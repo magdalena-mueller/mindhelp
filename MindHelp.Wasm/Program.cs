@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MindHelp.Wasm.Services;
 using MudBlazor.Services;
 
+
 namespace MindHelp.Wasm;
 
 public class Program
@@ -21,6 +22,9 @@ public class Program
         builder.Services.AddScoped<SupaBaseService>();
         builder.Services.AddScoped<ChatService>();
         builder.Services.AddScoped<ProfilService>();
+        builder.Services.AddScoped<NotrufService>();
+        builder.Services.AddScoped<TagebuchService>();
+        builder.Services.AddScoped<HilfskraftService>();
 
         await builder.Build().RunAsync();
     }

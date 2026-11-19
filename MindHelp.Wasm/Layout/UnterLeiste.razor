@@ -1,0 +1,64 @@
+@implements IDisposable
+@inject NavigationManager Nav
+
+@* Leiste unten wie bei einer Handy-App. Hilfesuchende und Hilfskräfte haben andere Seiten. *@
+<MudPaper Elevation="8" Square="true" Class="mh-leiste d-md-none">
+    @foreach (var punkt in IstHilfskraft ? PunkteHilfskraft : PunkteHilfesuchende)
+    {
+        var aktiv = IstAktiv(punkt.Ziel);
+        <MudButton Href="@(punkt.Ziel == "" ? "/" : punkt.Ziel)" Variant="Variant.Text" Class="@($"mh-leiste-knopf {(aktiv ? "mh-leiste-aktiv" : "")}")"
+                   aria-current="@(aktiv ? "page" : null)">
+            <div class="d-flex flex-column align-center">
+                <MudBadge Dot="true" Color="Color.Error" Overlap="true" Visible="@(punkt.Ziel == "" && NeueNachrichten)">
+                    <span class="mh-leiste-pille"><MudIcon Icon="@punkt.Icon" Size="Size.Small" /></span>
+                </MudBadge>
+                <span class="mh-leiste-text">@punkt.Text</span>
+            </div>
+        </MudButton>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public bool IstHilfskraft { get; set; }
+    [Parameter] public bool NeueNachrichten { get; set; }   // roter Punkt beim Chat
+
+    public static readonly (string Ziel, string Text, string Icon)[] PunkteHilfesuchende =
+    [
+        ("", "Chat", Icons.Material.Filled.Chat),
+        ("heute", "Heute", Icons.Material.Filled.Mood),
+        ("mein-weg", "Mein Weg", Icons.Material.Filled.Route),
+        ("kurz-check", "Kurz-Check", Icons.Material.Filled.FactCheck),
+        ("profil", "Profil", Icons.Material.Filled.Person)
+    ];
+
+    public static readonly (string Ziel, string Text, string Icon)[] PunkteHilfskraft =
+    [
+        ("", "Chat", Icons.Material.Filled.Chat),
+        ("uebersicht", "Übersicht", Icons.Material.Filled.Dashboard),
+        ("gespraeche", "Gespräche", Icons.Material.Filled.ViewKanban),
+        ("zeiten", "Zeiten", Icons.Material.Filled.CalendarMonth),
+        ("profil", "Profil", Icons.Material.Filled.Person)
+    ];
+
+    protected override void OnInitialized()
+    {
+        Nav.LocationChanged += BeiSeitenwechsel;
+    }
+
+    private bool IstAktiv(string ziel)
+    {
+        var seite = Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0].ToLowerInvariant();
+        if (ziel == "") return seite == "" || seite.StartsWith("chat/");   // Chat ist auch aktiv, wenn ein Chat offen ist
+        return seite == ziel;
+    }
+
+    private void BeiSeitenwechsel(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Nav.LocationChanged -= BeiSeitenwechsel;
+    }
+}

@@ -407,3 +407,20 @@ code {
     border-color: #7e6fff !important;
     background-color: rgba(126, 111, 255, 0.15) !important;
 }
+
+/* ---------- Laptop: Menü links statt Leiste unten ---------- */
+@media (min-width: 960px) {
+    .mh-mit-leiste {
+        padding-bottom: 24px !important;   /* keine Leiste unten → kein Platz nötig */
+    }
+}
+
+/* "Chat" im Menü links markieren, auch wenn gerade ein Chat offen ist (chat/…) */
+.mh-nav-aktiv .mud-nav-link {
+    color: var(--mud-palette-primary) !important;
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+.mh-nav-aktiv .mud-nav-link .mud-icon-root {
+    color: var(--mud-palette-primary) !important;
+}

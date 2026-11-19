@@ -1,0 +1,247 @@
+@page "/chat/{Id:long}"
+@implements IDisposable
+@inject ChatService Chat
+@inject NotrufService NotrufDienst
+@inject TagebuchService Tagebuch
+@inject NavigationManager Nav
+@inject ISnackbar Snackbar
+
+<PageTitle>Chat</PageTitle>
+
+@* Geöffneter Chat über den ganzen Bildschirm (wie bei WhatsApp) *@
+<div class="mh-chatfenster">
+
+    @* ---------- Kopfzeile ---------- *@
+    <div class="mh-chat-kopf">
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Href="/" aria-label="Zurück zur Chatliste" />
+        <MudBadge Dot="true" Color="Color.Success" Overlap="true" Bordered="true" Origin="Origin.BottomRight" Visible="@(_details?.Erreichbar == true)">
+            <MudAvatar Class="@(_notruf != null ? "mh-avatar mh-avatar-notfall" : "mh-avatar")">@Anfangsbuchstabe</MudAvatar>
+        </MudBadge>
+        <div class="flex-grow-1" style="min-width: 0;">
+            <MudText Typo="Typo.subtitle1" Class="mh-einzeilig" Style="font-weight: 600;">@(_gegenueber?.VollerName ?? "Chat")</MudText>
+            <MudText Typo="Typo.caption" Class="mh-text-leise mh-einzeilig d-block">@Untertitel</MudText>
+        </div>
+        @if (_stimmung != null)
+        {
+            @* Nur Hilfskräfte sehen das – und nur, wenn die Person es geteilt hat *@
+            <MudTooltip Text="@($"Geteilte Stimmung vom {_stimmung.CreatedAt.ToLocalTime():dd.MM.}")">
+                <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Outlined" Icon="@StimmungIcon(_stimmung.Wert)">
+                    @StimmungText(_stimmung.Wert)
+                </MudChip>
+            </MudTooltip>
+        }
+    </div>
+
+    @* ---------- Notfall-Leiste ---------- *@
+    @if (_notruf != null)
+    {
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Dense="true" Icon="@Icons.Material.Filled.Campaign" Class="mh-notfall mx-3 mt-2">
+            @if (_binHilfskraft)
+            {
+                <div class="d-flex align-center flex-wrap gap-2">
+                    <span><b>Notfall-Fall</b> · in Bearbeitung</span>
+                    <MudSpacer />
+                    <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Error" Class="rounded-pill" OnClick="FallAbschliessen">Fall abschließen</MudButton>
+                </div>
+            }
+            else
+            {
+                <span><b>Notfall-Gespräch.</b> Lebensgefahr? Ruf sofort <b>144</b> an.</span>
+            }
+        </MudAlert>
+    }
+
+    @* ---------- Nachrichten ---------- *@
+    @* column-reverse: der Verlauf startet unten und bleibt bei neuen Nachrichten unten – ganz ohne JavaScript *@
+    <div class="mh-chat-verlauf">
+        <div class="d-flex flex-column gap-1">
+            @if (_laedt)
+            {
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" Class="mx-auto my-4" />
+            }
+            else if (_nachrichten.Count == 0)
+            {
+                <span class="mh-tag">Schreib die erste Nachricht. Alles bleibt zwischen euch.</span>
+            }
+
+            @{ DateTime? letzterTag = null; }
+            @foreach (var nachricht in _nachrichten)
+            {
+                var tag = nachricht.CreatedAt.ToLocalTime().Date;
+                if (tag != letzterTag)
+                {
+                    letzterTag = tag;
+                    <span class="mh-tag">@TagText(tag)</span>
+                }
+
+                var vonMir = nachricht.SenderId == _meineId;
+                var istNotruf = nachricht.Content.StartsWith("NOTRUF:");
+                <div class="@($"mh-blase {(vonMir ? "mh-blase-ich" : "mh-blase-du")} {(istNotruf ? "mh-blase-notruf" : "")}")">
+                    <span style="white-space: pre-wrap;">@nachricht.Content</span>
+                    <span class="mh-blase-zeit">
+                        @nachricht.CreatedAt.ToLocalTime().ToString("HH:mm")
+                        @if (vonMir)
+                        {
+                            <MudIcon Icon="@(nachricht.SeenAt != null ? Icons.Material.Filled.DoneAll : Icons.Material.Filled.Done)"
+                                     Class="@(nachricht.SeenAt != null ? "mh-gelesen" : "")" Style="font-size: 15px; vertical-align: -3px;" />
+                        }
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* ---------- Eingabe ---------- *@
+    <div class="mh-chat-eingabe">
+        <MudTextField @bind-Value="_neueNachricht" Placeholder="Nachricht schreiben …" Variant="Variant.Outlined"
+                      Margin="Margin.Dense" Immediate="true" OnKeyDown="OnKeyDown" Class="mh-suche" />
+        <MudIconButton Icon="@Icons.Material.Filled.Send" Color="Color.Primary" Variant="Variant.Filled" Class="mh-senden"
+                       Disabled="@(_sendet || string.IsNullOrWhiteSpace(_neueNachricht))" OnClick="Senden" aria-label="Senden" />
+    </div>
+</div>
+
+@code {
+    [Parameter] public long Id { get; set; }
+
+    private Guid? _meineId;
+    private bool _binHilfskraft;
+    private Profile? _gegenueber;
+    private HelperDetails? _details;      // nur wenn das Gegenüber eine Hilfskraft ist
+    private Notruf? _notruf;              // gesetzt, wenn dieser Chat ein laufender Notfall ist
+    private Stimmung? _stimmung;          // geteilte Stimmung (nur für Hilfskräfte)
+    private List<ChatMessage> _nachrichten = [];
+    private string _neueNachricht = "";
+    private bool _laedt = true;
+    private bool _sendet;
+
+    protected override void OnInitialized()
+    {
+        Chat.NeueNachricht += BeiNeuerNachricht;
+        Chat.NachrichtGeaendert += BeiGeaenderterNachricht;
+    }
+
+    // Wird auch aufgerufen, wenn man von einem Chat direkt in einen anderen springt
+    protected override async Task OnParametersSetAsync()
+    {
+        _laedt = true;
+        try
+        {
+            _meineId = await Chat.GetMeineIdAsync();
+            var unterhaltung = await Chat.GetUnterhaltungAsync(Id);
+            if (unterhaltung == null)
+            {
+                Nav.NavigateTo("");
+                return;
+            }
+
+            _binHilfskraft = unterhaltung.HelperId == _meineId;
+            var andereId = _binHilfskraft ? unterhaltung.UserId : unterhaltung.HelperId;
+            _gegenueber = await Chat.GetProfilAsync(andereId);
+            _details = _binHilfskraft ? null : await Chat.GetHilfskraftDetailsAsync(andereId);
+            _stimmung = _binHilfskraft ? await Tagebuch.GetLetzteGeteilteStimmungAsync(andereId) : null;
+            _notruf = await NotrufDienst.GetAngenommenenNotrufAsync(Id);
+            _nachrichten = await Chat.GetNachrichtenAsync(Id);
+            await Chat.MarkiereAlsGelesenAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Chat konnte nicht geladen werden: " + ex.Message, Severity.Error);
+        }
+        _laedt = false;
+    }
+
+    private async Task Senden()
+    {
+        if (string.IsNullOrWhiteSpace(_neueNachricht)) return;
+
+        _sendet = true;
+        var text = _neueNachricht;
+        _neueNachricht = "";
+
+        try
+        {
+            var gesendet = await Chat.SendeNachrichtAsync(Id, text);
+            // Die eigene Nachricht sofort anzeigen (Live-Empfang könnte sie später nochmal liefern)
+            if (gesendet != null && _nachrichten.All(n => n.Id != gesendet.Id))
+                _nachrichten.Add(gesendet);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Nachricht konnte nicht gesendet werden: " + ex.Message, Severity.Error);
+            _neueNachricht = text;
+        }
+
+        _sendet = false;
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await Senden();
+    }
+
+    private async Task FallAbschliessen()
+    {
+        if (_notruf == null) return;
+        await NotrufDienst.SchliesseFallAbAsync(_notruf.Id);
+        _notruf = null;
+        Snackbar.Add("Fall abgeschlossen. Danke für deine Hilfe!", Severity.Success);
+    }
+
+    // Kommt live von Supabase
+    private void BeiNeuerNachricht(ChatMessage nachricht)
+    {
+        if (nachricht.ConversationId != Id) return;
+        _ = InvokeAsync(async () =>
+        {
+            if (_nachrichten.All(n => n.Id != nachricht.Id))
+                _nachrichten.Add(nachricht);
+            if (nachricht.SenderId != _meineId)
+                await Chat.MarkiereAlsGelesenAsync(Id);   // ich sehe sie ja gerade
+            StateHasChanged();
+        });
+    }
+
+    // Die andere Person hat gelesen → zwei blaue Häkchen
+    private void BeiGeaenderterNachricht(ChatMessage nachricht)
+    {
+        var index = _nachrichten.FindIndex(n => n.Id == nachricht.Id);
+        if (index < 0) return;
+        _nachrichten[index] = nachricht;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string Anfangsbuchstabe =>
+        string.IsNullOrWhiteSpace(_gegenueber?.FirstName) ? "?" : _gegenueber.FirstName[..1].ToUpper();
+
+    private string Untertitel
+    {
+        get
+        {
+            if (_binHilfskraft) return _notruf != null ? "Notfall · seit " + _notruf.AngenommenAt?.ToLocalTime().ToString("HH:mm") : "Hilfesuchend";
+            if (_details == null) return "Hilfskraft";
+            var fach = string.IsNullOrWhiteSpace(_details.Specification) ? "Hilfskraft" : _details.Specification;
+            return _details.Erreichbar ? fach + " · erreichbar" : fach + " · gerade nicht erreichbar";
+        }
+    }
+
+    private static string TagText(DateTime tag) =>
+        tag == DateTime.Today ? "Heute" : tag == DateTime.Today.AddDays(-1) ? "Gestern" : tag.ToString("dd.MM.yyyy");
+
+    private static string StimmungText(int wert) => wert switch { 1 => "schlecht", 2 => "mäßig", 3 => "okay", 4 => "gut", _ => "super" };
+
+    private static string StimmungIcon(int wert) => wert switch
+    {
+        1 => Icons.Material.Filled.SentimentVeryDissatisfied,
+        2 => Icons.Material.Filled.SentimentDissatisfied,
+        3 => Icons.Material.Filled.SentimentNeutral,
+        4 => Icons.Material.Filled.SentimentSatisfied,
+        _ => Icons.Material.Filled.SentimentVerySatisfied
+    };
+
+    public void Dispose()
+    {
+        Chat.NeueNachricht -= BeiNeuerNachricht;
+        Chat.NachrichtGeaendert -= BeiGeaenderterNachricht;
+    }
+}
