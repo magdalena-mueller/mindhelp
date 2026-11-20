@@ -3,11 +3,16 @@
 @inject TagebuchService Tagebuch
 @inject ChatService Chat
 @inject ISnackbar Snackbar
+@inject BegleiterService BegleiterDienst
 
 <PageTitle>Mein Weg</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="px-0">
     <MudText Typo="Typo.h5" Class="mh-text mb-3" Style="font-weight: 700;">Mein Weg</MudText>
+
+    
+    @* Begleiter "Mindi" – wächst mit jedem Schritt *@
+    <MindiBegleiter />
 
     @* ---------- Fortschritt ---------- *@
     <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3 d-flex align-center gap-4">
@@ -73,6 +78,9 @@
     private bool _atmet;
     private string _phase = "";
     private CancellationTokenSource? _atemStopp;
+    
+    private bool _atemBelohnt; // Atemübung gibt pro Besuch einmal Punkte
+    private readonly HashSet<long> _belohnteZiele = []; // jedes Ziel gibt nur einmal Punkte
 
     private int Erledigt => _ziele.Count(z => z.Erledigt);
     private double Prozent => _ziele.Count == 0 ? 0 : 100.0 * Erledigt / _ziele.Count;
@@ -107,6 +115,8 @@
     private async Task Abhaken(Ziel ziel, bool erledigt)
     {
         await Tagebuch.SetzeErledigtAsync(ziel, erledigt);
+        if (erledigt && _belohnteZiele.Add(ziel.Id))
+            await BegleiterDienst.PunkteDazuAsync(10);
         if (erledigt && _ziele.All(z => z.Erledigt))
             Snackbar.Add("Alle Ziele geschafft – richtig stark!", Severity.Success);
     }
@@ -139,6 +149,14 @@
                     _phase = text;
                     StateHasChanged();
                     await Task.Delay(sekunden * 1000, stopp);
+
+                    
+                // Eine ganze Runde geschafft → Mindi bekommt Punkte (einmal pro Besuch)
+                if (!_atemBelohnt)
+                {
+                    _atemBelohnt = true;
+                    await BegleiterDienst.PunkteDazuAsync(5);
+                }
                 }
             }
         }

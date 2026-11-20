@@ -215,3 +215,23 @@ public class ChatEintrag
     public int Ungelesen { get; set; }
     public bool Notfall { get; set; }
 }
+
+[Table("begleiter")]
+public class Begleiter : BaseModel
+{
+    // true = die ID schicken wir selbst mit (es ist die ID der angemeldeten Person)
+    [PrimaryKey("user_id", true)]
+    public Guid UserId { get; set; }
+
+    [Column("name")]
+    public string Name { get; set; } = "Mindi";
+
+    [Column("punkte")]
+    public int Punkte { get; set; }
+
+    [Column("letzte_pflege")]
+    public DateTime LetztePflege { get; set; } = DateTime.UtcNow;
+
+    [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime CreatedAt { get; set; }
+}

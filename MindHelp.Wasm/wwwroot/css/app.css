@@ -540,7 +540,7 @@ code {
     display: grid;
     place-items: center;
     background: var(--mud-palette-error);
-    animation: mh-puls 1.6s infinite;
+    animation: mh-sos-puls 1.6s infinite;
 }
 
 .mh-puls-gut {
@@ -548,7 +548,7 @@ code {
     animation: none;
 }
 
-@keyframes mh-puls {
+@keyframes mh-sos-puls {
     0% { box-shadow: 0 0 0 0 rgba(242, 28, 13, 0.45); }
     100% { box-shadow: 0 0 0 22px rgba(242, 28, 13, 0); }
 }
@@ -896,3 +896,459 @@ code {
 .mh-dunkel .mh-stimmung-3 { --mh-farbe: #BBADF3; }
 .mh-dunkel .mh-stimmung-4 { --mh-farbe: #D0C4F8; }
 .mh-dunkel .mh-stimmung-5 { --mh-farbe: #E6DDFC; }
+
+/* ---------- Schriftzug "mindhelp" oben: Farben fließen langsam durch ---------- */
+.mh-logo-text {
+    background: linear-gradient(90deg, #7E6FD8, #B48FE0, #7FB0F5, #F3A6DD, #7E6FD8);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    animation: mh-farbfluss 8s linear infinite;
+}
+
+@keyframes mh-farbfluss {
+    from { background-position: 0% 50%; }
+    to   { background-position: 300% 50%; }
+}
+
+.mh-dunkel .mh-logo-text {
+    background-image: linear-gradient(90deg, #A99CFF, #D3B4F5, #9FC6FF, #F7C1E6, #A99CFF);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mh-logo-text {
+        animation: none;
+    }
+}
+
+/* =====================================================================
+   Startseite (Gäste): neues Design, besonders fürs Handy
+   ===================================================================== */
+
+/* Logo-Bühne: immer ein echter Kreis, nie ein Oval */
+.mh-logo-buehne {
+    width: min(340px, 80vw) !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+}
+
+.mh-logo-bild {
+    width: 78%;
+    height: auto;
+}
+
+/* Haupt-Knopf mit Farbverlauf */
+.mh-knopf-haupt {
+    text-transform: none !important;
+    font-weight: 700 !important;
+    color: white !important;
+    background: linear-gradient(90deg, #7E6FD8, #B48FE0) !important;
+    box-shadow: 0 10px 25px rgba(126, 111, 216, 0.4) !important;
+}
+
+.mh-knopf-weiss {
+    text-transform: none !important;
+    font-weight: 700 !important;
+    background: white !important;
+    color: #7E6FD8 !important;
+}
+
+.mh-hero-knoepfe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.mh-untertitel {
+    font-weight: 400 !important;
+    max-width: 520px;
+}
+
+/* Vertrauens-Zeile unter den Knöpfen */
+.mh-vertrauen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+}
+
+.mh-vertrauen-punkt {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6E6A85;
+}
+
+.mh-vertrauen-punkt .mud-icon-root {
+    color: #7E6FD8;
+}
+
+/* Runde Icon-Kachel mit Farbverlauf */
+.mh-icon-kachel {
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    color: white;
+    background: linear-gradient(135deg, #7E6FD8, #B48FE0);
+    box-shadow: 0 8px 20px rgba(126, 111, 216, 0.35);
+}
+
+.mh-icon-klein {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+}
+
+.mh-icon-notfall {
+    background: linear-gradient(135deg, #E2445C, #F07A8C);
+    box-shadow: 0 8px 20px rgba(226, 68, 92, 0.35);
+}
+
+.mh-abschnitt {
+    font-weight: 800 !important;
+}
+
+/* Funktionen: 4 nebeneinander am Laptop, 2 × 2 am Handy */
+.mh-funktionen {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.mh-funktion-notfall {
+    border: 1px solid rgba(226, 68, 92, 0.35) !important;
+}
+
+/* Schritte: am Laptop nebeneinander */
+.mh-schritte {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.mh-schritt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mh-schritt-nummer {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: white;
+    background: linear-gradient(135deg, #7E6FD8, #B48FE0);
+    box-shadow: 0 6px 16px rgba(126, 111, 216, 0.35);
+    position: relative;
+    z-index: 1;
+}
+
+/* Abschluss-Karte in Lila */
+.mh-abschluss {
+    background: linear-gradient(135deg, #7E6FD8 0%, #A58BE6 55%, #7FB0F5 100%) !important;
+    box-shadow: 0 20px 50px rgba(126, 111, 216, 0.35) !important;
+}
+
+/* ---------- Handy (bis 599 px) ---------- */
+@media (max-width: 599px) {
+    .mh-hero {
+        padding: 24px 18px !important;
+    }
+
+    /* Logo oben, kleiner */
+    .mh-hero-logo {
+        order: -1;
+        padding-bottom: 0 !important;
+    }
+
+    .mh-logo-buehne {
+        width: 190px !important;
+    }
+
+    /* Text mittig */
+    .mh-hero-text {
+        text-align: center;
+    }
+
+    .mh-titel {
+        font-size: 2.3rem !important;
+        line-height: 1.15 !important;
+    }
+
+    .mh-untertitel {
+        font-size: 1.05rem !important;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 24px !important;
+    }
+
+    /* Knöpfe untereinander, volle Breite */
+    .mh-hero-knoepfe {
+        flex-direction: column;
+    }
+
+    .mh-hero-knoepfe .mud-button-root {
+        width: 100%;
+    }
+
+    .mh-vertrauen {
+        justify-content: center;
+    }
+
+    .mh-abschnitt {
+        font-size: 1.6rem !important;
+    }
+
+    .mh-funktionen {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    /* Schritte als Zeitleiste mit Linie */
+    .mh-schritte {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        position: relative;
+    }
+
+    .mh-schritte::before {
+        content: "";
+        position: absolute;
+        left: 19px;
+        top: 20px;
+        bottom: 20px;
+        width: 2px;
+        background: linear-gradient(#7E6FD8, #B48FE0);
+        opacity: .4;
+    }
+
+    .mh-abschluss {
+        padding: 28px 20px !important;
+    }
+
+    .mh-abschluss .mud-button-root {
+        width: 100%;
+    }
+}
+
+/* ---------- Tablet (600–959 px): Funktionen 2 × 2 ---------- */
+@media (min-width: 600px) and (max-width: 959px) {
+    .mh-funktionen {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ---------- Dunkler Modus ---------- */
+.mh-dunkel .mh-vertrauen-punkt {
+    color: #A9A6C4;
+}
+
+.mh-dunkel .mh-vertrauen-punkt .mud-icon-root {
+    color: #A99CFF;
+}
+
+.mh-dunkel .mh-abschluss {
+    background: linear-gradient(135deg, #5B4BC4 0%, #7E62C9 55%, #4D7FD0 100%) !important;
+}
+
+/* Laptop: Logo rechts neben dem Text */
+@media (min-width: 960px) {
+    .mh-hero-logo {
+        order: 2;
+    }
+}
+
+/* ---------- Login / Registrieren oben rechts: klein und als Paar ---------- */
+.mh-anmelde-knoepfe {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mh-knopf-klein {
+    text-transform: none !important;
+    font-weight: 600 !important;
+    padding: 4px 14px !important;
+    min-width: 0 !important;
+}
+
+/* =====================================================================
+   Begleiter "Mindi"
+   ===================================================================== */
+.mh-mindi-buehne {
+    position: relative;
+    height: 210px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border-radius: 20px;
+    background: radial-gradient(circle at 50% 60%, rgba(185, 163, 242, 0.28), transparent 65%);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mh-mindi-buehne:focus-visible {
+    outline: 2px solid var(--mud-palette-primary);
+    outline-offset: 2px;
+}
+
+.mh-mindi {
+    width: 190px;
+    height: 190px;
+    animation: mh-mindi-atmen 3.5s ease-in-out infinite;
+    transform-origin: 50% 90%;
+}
+
+/* Mit jeder Stufe etwas größer */
+.mh-mindi-stufe-0 { width: 150px; height: 150px; }
+.mh-mindi-stufe-1 { width: 140px; height: 140px; }
+.mh-mindi-stufe-2 { width: 165px; height: 165px; }
+.mh-mindi-stufe-3 { width: 185px; height: 185px; }
+.mh-mindi-stufe-4 { width: 200px; height: 200px; }
+
+@keyframes mh-mindi-atmen {
+    0%, 100% { transform: scale(1, 1); }
+    50%      { transform: scale(1.03, 0.97); }
+}
+
+/* Beim Streicheln hüpfen */
+.mh-mindi-huepft {
+    animation: mh-mindi-huepfen 0.9s ease;
+}
+
+@keyframes mh-mindi-huepfen {
+    0%   { transform: translateY(0) scale(1, 1); }
+    20%  { transform: translateY(0) scale(1.1, 0.88); }
+    45%  { transform: translateY(-28px) scale(0.95, 1.06); }
+    70%  { transform: translateY(0) scale(1.06, 0.94); }
+    100% { transform: translateY(0) scale(1, 1); }
+}
+
+/* Das Ei wackelt ab und zu */
+.mh-mindi-wackeln {
+    transform-origin: 100px 170px;
+    animation: mh-mindi-wackeln 4s ease-in-out infinite;
+}
+
+@keyframes mh-mindi-wackeln {
+    0%, 70%, 100% { transform: rotate(0); }
+    75% { transform: rotate(-6deg); }
+    80% { transform: rotate(6deg); }
+    85% { transform: rotate(-4deg); }
+    90% { transform: rotate(3deg); }
+}
+
+/* Blinzeln */
+.mh-mindi-augen {
+    transform-origin: 100px 108px;
+    animation: mh-mindi-blinzeln 5s infinite;
+}
+
+@keyframes mh-mindi-blinzeln {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+}
+
+/* Winken mit dem rechten Ärmchen */
+.mh-mindi-arm-rechts {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: mh-mindi-winken 3s ease-in-out infinite;
+}
+
+@keyframes mh-mindi-winken {
+    0%, 60%, 100% { transform: rotate(25deg); }
+    70% { transform: rotate(-5deg); }
+    80% { transform: rotate(30deg); }
+    90% { transform: rotate(0deg); }
+}
+
+/* Strahlend: leuchtender Kreis und funkelnde Sterne */
+.mh-mindi-glanz {
+    animation: mh-mindi-glanz 3s ease-in-out infinite;
+}
+
+@keyframes mh-mindi-glanz {
+    0%, 100% { opacity: .5; }
+    50%      { opacity: 1; }
+}
+
+.mh-mindi-stern {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mh-mindi-funkeln 2s ease-in-out infinite;
+}
+
+.mh-stern-2 { animation-delay: .6s; }
+.mh-stern-3 { animation-delay: 1.2s; }
+
+@keyframes mh-mindi-funkeln {
+    0%, 100% { transform: scale(.6); opacity: .5; }
+    50%      { transform: scale(1.2); opacity: 1; }
+}
+
+/* Herzen beim Streicheln */
+.mh-herzen {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.mh-herzen span {
+    position: absolute;
+    bottom: 45%;
+    font-size: 26px;
+    color: #F07AB8;
+    opacity: 0;
+    animation: mh-herz-steigen 1.4s ease-out forwards;
+}
+
+.mh-herzen span:nth-child(1) { left: 34%; }
+.mh-herzen span:nth-child(2) { left: 48%; animation-delay: .15s; font-size: 32px; }
+.mh-herzen span:nth-child(3) { left: 62%; animation-delay: .3s; }
+
+@keyframes mh-herz-steigen {
+    0%   { transform: translateY(0) scale(.6); opacity: 0; }
+    20%  { opacity: 1; }
+    100% { transform: translateY(-110px) scale(1.2); opacity: 0; }
+}
+
+/* Schlafend: Zzz steigt auf */
+.mh-zzz {
+    position: absolute;
+    top: 18%;
+    right: 26%;
+    font-weight: 800;
+    font-size: 22px;
+    color: #9D8BE8;
+    animation: mh-zzz 2.5s ease-in-out infinite;
+}
+
+.mh-zzz small {
+    font-size: 0.7em;
+    margin-left: 2px;
+}
+
+@keyframes mh-zzz {
+    0%, 100% { transform: translateY(0); opacity: .6; }
+    50%      { transform: translateY(-8px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mh-mindi, .mh-mindi-huepft, .mh-mindi-wackeln, .mh-mindi-augen, .mh-mindi-arm-rechts,
+    .mh-mindi-glanz, .mh-mindi-stern, .mh-zzz {
+        animation: none;
+    }
+
+    .mh-herzen span {
+        animation-duration: .01s;
+    }
+}

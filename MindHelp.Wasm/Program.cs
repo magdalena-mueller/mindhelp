@@ -25,6 +25,8 @@ public class Program
         builder.Services.AddScoped<NotrufService>();
         builder.Services.AddScoped<TagebuchService>();
         builder.Services.AddScoped<HilfskraftService>();
+        builder.Services.AddScoped<DesignService>();
+        builder.Services.AddScoped<BegleiterService>();
 
         await builder.Build().RunAsync();
     }

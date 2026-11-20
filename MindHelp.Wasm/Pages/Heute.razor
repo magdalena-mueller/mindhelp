@@ -2,6 +2,7 @@
 @inject TagebuchService Tagebuch
 @inject ChatService Chat
 @inject ISnackbar Snackbar
+@inject BegleiterService BegleiterDienst
 
 <PageTitle>Wie geht's dir heute?</PageTitle>
 
@@ -83,6 +84,7 @@
     private async Task LadeWocheAsync()
     {
         var eintraege = await Tagebuch.GetStimmungenAsync(7);
+        await BegleiterDienst.PunkteDazuAsync(5);   // Mindi wächst mit
         var tage = Enumerable.Range(0, 7).Select(i => DateTime.Today.AddDays(i - 6)).ToList();
 
         _tage = tage.Select(t => t.ToString("ddd", new System.Globalization.CultureInfo("de-AT"))).ToArray();

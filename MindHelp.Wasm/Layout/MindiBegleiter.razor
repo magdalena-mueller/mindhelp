@@ -1,0 +1,266 @@
+@implements IDisposable
+@inject BegleiterService BegleiterDienst
+@inject ISnackbar Snackbar
+
+@* Begleiter "Mindi": wächst mit jeder guten Tat für sich selbst. Antippen = streicheln. *@
+<MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+    @if (_b == null)
+    {
+        <div class="d-flex justify-center pa-6"><MudProgressCircular Indeterminate="true" Color="Color.Primary" /></div>
+    }
+    else
+    {
+        @* Kopf: Name (änderbar) und Stufe *@
+        <div class="d-flex align-center justify-space-between">
+            @if (_bearbeiten)
+            {
+                <div class="d-flex align-center gap-1 flex-grow-1">
+                    <MudTextField @bind-Value="_neuerName" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20"
+                                  Immediate="true" OnKeyDown="@(e => e.Key == "Enter" ? NameSpeichern() : Task.CompletedTask)" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Primary" Size="Size.Small"
+                                   Disabled="@string.IsNullOrWhiteSpace(_neuerName)" OnClick="NameSpeichern" aria-label="Namen speichern" />
+                </div>
+            }
+            else
+            {
+                <div class="d-flex align-center">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 700;">@_b.Name</MudText>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="Size.Small" OnClick="() => { _neuerName = _b.Name; _bearbeiten = true; }"
+                                   aria-label="Namen ändern" />
+                </div>
+            }
+            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text" Class="ma-0">
+                Stufe @(StufeNr + 1): @BegleiterService.Stufen[StufeNr].Name
+            </MudChip>
+        </div>
+
+        @* Bühne – antippen zum Streicheln *@
+        <div class="mh-mindi-buehne" role="button" tabindex="0" aria-label="@($"{_b.Name} streicheln")" @onclick="Streicheln">
+            @if (_herzRunde > 0)
+            {
+                <div class="mh-herzen" @key="@($"herzen-{_herzRunde}")" aria-hidden="true">
+                    <span>♥</span><span>♥</span><span>♥</span>
+                </div>
+            }
+            @if (Schlaeft)
+            {
+                <span class="mh-zzz" aria-hidden="true">Z<small>z</small><small>z</small></span>
+            }
+
+            <svg viewBox="0 0 200 200" class="@($"mh-mindi mh-mindi-stufe-{StufeNr} {(_huepft ? "mh-mindi-huepft" : "")}")" @key="@($"mindi-{_huepfRunde}")" aria-hidden="true">
+                <defs>
+                    <radialGradient id="mh-mindi-koerper" cx="40%" cy="35%" r="70%">
+                        <stop offset="0" stop-color="#D9C9FA" />
+                        <stop offset="0.55" stop-color="#A78BEA" />
+                        <stop offset="1" stop-color="#7E6FD8" />
+                    </radialGradient>
+                    <radialGradient id="mh-mindi-ei" cx="40%" cy="30%" r="75%">
+                        <stop offset="0" stop-color="#FFFFFF" />
+                        <stop offset="1" stop-color="#D8CCF7" />
+                    </radialGradient>
+                </defs>
+
+                @if (StufeNr == 0)
+                {
+                    @* ---------- Ei ---------- *@
+                    <ellipse cx="100" cy="175" rx="40" ry="7" fill="rgba(78,64,160,.15)" />
+                    <g class="mh-mindi-wackeln">
+                        <ellipse cx="100" cy="110" rx="48" ry="62" fill="url(#mh-mindi-ei)" stroke="#B9A3F2" stroke-width="3" />
+                        <circle cx="82" cy="92" r="6" fill="#C9B8F0" />
+                        <circle cx="116" cy="126" r="8" fill="#C9B8F0" />
+                        <circle cx="110" cy="80" r="4" fill="#C9B8F0" />
+                        @if (_b.Punkte >= 10)
+                        {
+                            @* Kurz vor dem Schlüpfen: ein Riss *@
+                            <path d="M62 112 l12 -8 l9 10 l11 -10 l10 9 l12 -9 l10 8" fill="none" stroke="#9D8BE8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                        }
+                    </g>
+                }
+                else
+                {
+                    @* ---------- Wesen (wird mit jeder Stufe größer und bekommt mehr) ---------- *@
+                    <ellipse cx="100" cy="180" rx="50" ry="8" fill="rgba(78,64,160,.15)" />
+
+                    @if (StufeNr >= 4)
+                    {
+                        @* Strahlend: Glanz und Sterne *@
+                        <circle cx="100" cy="115" r="78" fill="rgba(185,163,242,.25)" class="mh-mindi-glanz" />
+                        <path class="mh-mindi-stern" d="M32 52 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4z" fill="#F3C969" />
+                        <path class="mh-mindi-stern mh-stern-2" d="M168 70 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#F3A6DD" />
+                        <path class="mh-mindi-stern mh-stern-3" d="M160 150 l3 6 6 3 -6 3 -3 6 -3 -6 -6 -3 6 -3z" fill="#7FB0F5" />
+                    }
+
+                    @* Spross bzw. Blätter auf dem Kopf *@
+                    <path d="M100 66 C100 56 100 50 100 44" stroke="#5FAF7A" stroke-width="4" stroke-linecap="round" fill="none" />
+                    <path d="M100 50 C88 38 76 42 74 48 C84 54 94 54 100 50Z" fill="#7CC793" />
+                    @if (StufeNr >= 2)
+                    {
+                        <path d="M100 46 C112 32 126 36 128 42 C118 50 106 50 100 46Z" fill="#7CC793" />
+                    }
+                    @if (StufeNr >= 3)
+                    {
+                        @* Blüte *@
+                        <circle cx="100" cy="38" r="9" fill="#F3A6DD" />
+                        <circle cx="100" cy="38" r="4" fill="#F3C969" />
+                    }
+
+                    @* Füße und Ärmchen ab Stufe "Klein" *@
+                    @if (StufeNr >= 2)
+                    {
+                        <ellipse cx="78" cy="170" rx="14" ry="8" fill="#7E6FD8" />
+                        <ellipse cx="122" cy="170" rx="14" ry="8" fill="#7E6FD8" />
+                        <ellipse cx="44" cy="122" rx="10" ry="16" fill="#9D8BE8" transform="rotate(-25 44 122)" class="mh-mindi-arm-links" />
+                        <ellipse cx="156" cy="122" rx="10" ry="16" fill="#9D8BE8" transform="rotate(25 156 122)" class="mh-mindi-arm-rechts" />
+                    }
+
+                    @* Körper *@
+                    <ellipse cx="100" cy="118" rx="58" ry="54" fill="url(#mh-mindi-koerper)" />
+
+                    @* Augen: offen oder (schlafend) geschlossen *@
+                    @if (Schlaeft)
+                    {
+                        <path d="M70 110 q10 8 20 0" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
+                        <path d="M110 110 q10 8 20 0" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
+                    }
+                    else
+                    {
+                        <g class="mh-mindi-augen">
+                            <ellipse cx="80" cy="108" rx="9" ry="11" fill="#2E2A47" />
+                            <ellipse cx="120" cy="108" rx="9" ry="11" fill="#2E2A47" />
+                            <circle cx="83" cy="104" r="3.5" fill="#fff" />
+                            <circle cx="123" cy="104" r="3.5" fill="#fff" />
+                        </g>
+                    }
+
+                    @* Bäckchen und Mund *@
+                    <ellipse cx="66" cy="128" rx="9" ry="6" fill="#F3A6DD" opacity=".8" />
+                    <ellipse cx="134" cy="128" rx="9" ry="6" fill="#F3A6DD" opacity=".8" />
+                    @if (_huepft)
+                    {
+                        <path d="M88 130 q12 16 24 0 z" fill="#2E2A47" />
+                    }
+                    else
+                    {
+                        <path d="M90 132 q10 9 20 0" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
+                    }
+                }
+            </svg>
+        </div>
+
+        <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-3" Style="min-height: 48px;">@_spruch</MudText>
+
+        @* Fortschritt bis zur nächsten Stufe *@
+        <MudProgressLinear Color="Color.Primary" Value="@Fortschritt" Rounded="true" Size="Size.Medium" />
+        <div class="d-flex justify-space-between mt-1">
+            <MudText Typo="Typo.caption" Class="mh-text-leise">@_b.Punkte Punkte</MudText>
+            <MudText Typo="Typo.caption" Class="mh-text-leise">
+                @(StufeNr >= BegleiterService.Stufen.Length - 1 ? "Höchste Stufe erreicht!" : $"noch {NaechsteStufeAb - _b.Punkte} bis „{BegleiterService.Stufen[StufeNr + 1].Name}“")
+            </MudText>
+        </div>
+
+        <MudText Typo="Typo.caption" Class="mh-text-leise d-block mt-3">
+            So wächst @_b.Name: Ziel abhaken +10 · Stimmung eintragen +5 · Atemübung +5 · Kurz-Check +10
+        </MudText>
+    }
+</MudPaper>
+
+@code {
+    private Begleiter? _b;
+    private string _spruch = "";
+    private bool _bearbeiten;
+    private string _neuerName = "";
+    private bool _huepft;
+    private int _huepfRunde;
+    private int _herzRunde;
+    private bool _warSchlafend;
+
+    private static readonly string[] Sprueche =
+    [
+        "Schön, dass du da bist!",
+        "Ich bin stolz auf dich.",
+        "Ein kleiner Schritt ist auch ein Schritt.",
+        "Du darfst dir heute Zeit für dich nehmen.",
+        "Atme tief durch – ich bin bei dir.",
+        "Du machst das besser, als du denkst.",
+        "Heute zählt jede Kleinigkeit.",
+        "Hihi, das kitzelt!"
+    ];
+
+    private int StufeNr => BegleiterService.Stufe(_b?.Punkte ?? 0);
+    private int StufeAb => BegleiterService.Stufen[StufeNr].Ab;
+    private int NaechsteStufeAb => StufeNr + 1 < BegleiterService.Stufen.Length ? BegleiterService.Stufen[StufeNr + 1].Ab : StufeAb;
+
+    private double Fortschritt => StufeNr >= BegleiterService.Stufen.Length - 1
+        ? 100
+        : 100.0 * (_b!.Punkte - StufeAb) / (NaechsteStufeAb - StufeAb);
+
+    // Länger als 2 Tage nichts für sich getan → schläft (kein Vorwurf, nur ein Nickerchen)
+    private bool Schlaeft => _b != null && StufeNr > 0 && !_huepft && DateTime.UtcNow - _b.LetztePflege.ToUniversalTime() > TimeSpan.FromDays(2);
+
+    protected override async Task OnInitializedAsync()
+    {
+        BegleiterDienst.Geaendert += BeiAenderung;
+        try
+        {
+            _b = await BegleiterDienst.GetAsync();
+            _warSchlafend = Schlaeft;
+            _spruch = StufeNr == 0
+                ? "Ein Ei! Kümmere dich um dich selbst – dann schlüpft hier bald jemand."
+                : Schlaeft
+                    ? $"{_b.Name} hat dich vermisst. Schön, dass du wieder da bist! Tipp mich an."
+                    : $"Hallo! {_b.Name} freut sich, dich zu sehen.";
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Begleiter konnte nicht geladen werden: " + ex.Message, Severity.Warning);
+        }
+    }
+
+    private async Task Streicheln()
+    {
+        if (_b == null) return;
+
+        _huepft = true;
+        _huepfRunde++;
+        _herzRunde++;
+        _spruch = StufeNr == 0
+            ? "Das Ei wackelt ein bisschen … bald ist es so weit!"
+            : _warSchlafend ? $"{_b.Name} ist aufgewacht und freut sich riesig!" : Sprueche[Random.Shared.Next(Sprueche.Length)];
+        _warSchlafend = false;
+
+        try { await BegleiterDienst.StreichelnAsync(_b); } catch { /* nur Optik */ }
+
+        await Task.Delay(900);
+        _huepft = false;
+    }
+
+    private async Task NameSpeichern()
+    {
+        if (_b == null || string.IsNullOrWhiteSpace(_neuerName)) return;
+        await BegleiterDienst.UmbenennenAsync(_b, _neuerName);
+        _bearbeiten = false;
+        _spruch = $"Ich heiße jetzt {_b.Name}. Schöner Name!";
+    }
+
+    // Punkte kamen dazu (z. B. Ziel abgehakt) → neu anzeigen, bei neuer Stufe feiern
+    private void BeiAenderung(Begleiter neu)
+    {
+        _ = InvokeAsync(() =>
+        {
+            var alteStufe = StufeNr;
+            _b = neu;
+            if (StufeNr > alteStufe)
+            {
+                _spruch = alteStufe == 0 ? $"Geschlüpft! Hallo, ich bin {neu.Name}!" : $"{neu.Name} ist gewachsen!";
+                Snackbar.Add($"{neu.Name} hat Stufe {StufeNr + 1} erreicht: {BegleiterService.Stufen[StufeNr].Name}!", Severity.Success);
+                _herzRunde++;
+            }
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        BegleiterDienst.Geaendert -= BeiAenderung;
+    }
+}

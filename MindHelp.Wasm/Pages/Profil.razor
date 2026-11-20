@@ -5,6 +5,7 @@
 @inject ProfilService ProfilDienst
 @inject NavigationManager Nav
 @inject ISnackbar Snackbar
+@inject DesignService Design
 
 <PageTitle>Mein Profil</PageTitle>
 
@@ -118,6 +119,18 @@ else
                     Passwort ändern
                 </MudButton>
             </MudPaper>
+
+            @* Darstellung: hell / dunkel – bleibt gespeichert, bis man es wieder ändert *@
+            <MudPaper Elevation="2" Class="pa-4 mb-4">
+                <MudText Typo="Typo.subtitle1" Class="mb-1">Darstellung</MudText>
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@(Design.Dunkel ? Icons.Material.Filled.DarkMode : Icons.Material.Filled.LightMode)" Color="Color.Primary" Class="mr-3" />
+                    <MudText Typo="Typo.body1" Class="flex-grow-1">Dunkler Modus</MudText>
+                    <MudSwitch T="bool" Value="Design.Dunkel" ValueChanged="Design.SetzeDunkelAsync" Color="Color.Primary" aria-label="Dunkler Modus" />
+                </div>
+                <MudText Typo="Typo.caption" Class="mh-text-leise">Deine Wahl wird auf diesem Gerät gespeichert.</MudText>
+            </MudPaper>
+
 
             @* Abmelden *@
             <MudButton Variant="Variant.Text" Color="Color.Error" StartIcon="@Icons.Material.Filled.Logout" OnClick="Abmelden">

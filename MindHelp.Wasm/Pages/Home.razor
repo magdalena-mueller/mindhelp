@@ -23,38 +23,46 @@ else if (_gast)
     <MudContainer MaxWidth="MaxWidth.Large" Class="mh-inhalt pb-10">
 
         @* ---------- 1. Hero-Bereich ---------- *@
-        <MudPaper Elevation="0" Class="mh-glas mh-einblenden pa-6 pa-md-12 rounded-xl">
+        <MudPaper Elevation="0" Class="mh-glas mh-einblenden mh-hero pa-6 pa-md-12 rounded-xl">
             <MudGrid Spacing="6" Class="align-center">
-                <MudItem xs="12" md="7">
+                @* Am Handy steht das Logo oben (CSS: .mh-hero-logo), am Laptop rechts *@
+                <MudItem xs="12" md="5" Class="d-flex justify-center mh-hero-logo">
+                    <div class="mh-logo-buehne">
+                        <MudImage Src="images/logo_frei.png" Alt="mindhelp Logo" Class="mh-schweben mh-logo-bild" />
+                    </div>
+                </MudItem>
+
+                <MudItem xs="12" md="7" Class="mh-hero-text">
                     <MudChip T="string" Color="Color.Primary" Variant="Variant.Text" Size="Size.Medium"
                              Icon="@Icons.Material.Filled.AutoAwesome">
                         Vertraulich · Kostenlos · Sofort
                     </MudChip>
 
-                    <MudText Typo="Typo.h2" Class="mh-schimmer mt-4 mb-3">
+                    <MudText Typo="Typo.h2" Class="mh-schimmer mh-titel mt-4 mb-3">
                         Du bist nicht allein.
                     </MudText>
 
-                    <MudText Typo="Typo.h6" Class="mh-text mb-8" Style="font-weight: 400; max-width: 520px;">
+                    <MudText Typo="Typo.h6" Class="mh-text mh-untertitel mb-8">
                         mindhelp verbindet dich mit geprüften Hilfskräften – anonym, sicher und genau dann, wenn du jemanden zum Reden brauchst.
                     </MudText>
 
-                    <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="3">
+                    <div class="mh-hero-knoepfe">
                         <MudButton Variant="Variant.Filled" Size="Size.Large" OnClick="ZeigeRegistrierung"
-                                   StartIcon="@Icons.Material.Filled.FavoriteBorder" Class="rounded-pill px-6"
-                                   Style="text-transform: none; font-weight: 600; color: white; background: linear-gradient(90deg, #7E6FD8, #B48FE0); box-shadow: 0 10px 25px rgba(126,111,216,.4);">
+                                   StartIcon="@Icons.Material.Filled.FavoriteBorder" Class="rounded-pill px-6 mh-knopf-haupt">
                             Jetzt kostenlos starten
                         </MudButton>
                         <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" OnClick="ZeigeAnmeldung"
                                    Class="mh-knopf-hell rounded-pill px-6" Style="text-transform: none; font-weight: 600;">
                             Ich habe schon ein Konto
                         </MudButton>
-                    </MudStack>
-                </MudItem>
+                    </div>
 
-                <MudItem xs="12" md="5" Class="d-flex justify-center">
-                    <div class="mh-logo-buehne">
-                        <MudImage Src="images/logo_frei.png" Alt="mindhelp Logo" Width="300" Class="mh-schweben" Style="max-width: 85%; height: auto;" />
+                    @* Vertrauens-Zeile *@
+                    <div class="mh-vertrauen mt-6">
+                        @foreach (var (icon, text) in Vertrauen)
+                        {
+                            <span class="mh-vertrauen-punkt"><MudIcon Icon="@icon" Size="Size.Small" /> @text</span>
+                        }
                     </div>
                 </MudItem>
             </MudGrid>
@@ -67,42 +75,70 @@ else if (_gast)
                 var (icon, titel, text) = Vorteile[i];
                 var verzoegerung = $"mh-verzoegerung-{i + 1}";
                 <MudItem xs="12" md="4">
-                    <MudCard Elevation="0" Class="@($"mh-glas mh-karte mh-einblenden {verzoegerung} rounded-xl pa-2")" Style="height: 100%;">
-                        <MudCardContent>
-                            <MudAvatar Rounded="true" Size="Size.Large" Class="mb-4"
-                                       Style="background: linear-gradient(135deg, #7E6FD8, #B48FE0); color: white; border-radius: 16px; box-shadow: 0 8px 20px rgba(126,111,216,.35);">
-                                <MudIcon Icon="@icon" />
-                            </MudAvatar>
-                            <MudText Typo="Typo.h6" Class="mb-2">@titel</MudText>
-                            <MudText Typo="Typo.body2" Class="mh-text-leise">@text</MudText>
+                    <MudCard Elevation="0" Class="@($"mh-glas mh-karte mh-einblenden {verzoegerung} rounded-xl pa-2 mh-vorteil")" Style="height: 100%;">
+                        <MudCardContent Class="d-flex flex-md-column gap-4 align-start">
+                            <div class="mh-icon-kachel"><MudIcon Icon="@icon" /></div>
+                            <div>
+                                <MudText Typo="Typo.h6" Class="mb-1">@titel</MudText>
+                                <MudText Typo="Typo.body2" Class="mh-text-leise">@text</MudText>
+                            </div>
                         </MudCardContent>
                     </MudCard>
                 </MudItem>
             }
         </MudGrid>
 
-        @* ---------- 3. So funktioniert's ---------- *@
-        <MudText Typo="Typo.h4" Align="Align.Center" Class="mh-text mh-einblenden mh-verzoegerung-3 mt-10 mb-5" Style="font-weight: 700;">
+        @* ---------- 3. Was die App kann ---------- *@
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="mh-text mh-abschnitt mh-einblenden mh-verzoegerung-3 mt-10 mb-2">
+            Alles, was du brauchst
+        </MudText>
+        <MudText Typo="Typo.body1" Align="Align.Center" Class="mh-text-leise mb-5">
+            Mehr als ein Chat – kleine Helfer für jeden Tag.
+        </MudText>
+        <div class="mh-funktionen">
+            @foreach (var (icon, titel, text, notfall) in Funktionen)
+            {
+                <MudPaper Elevation="0" Class="@($"mh-glas mh-karte mh-funktion rounded-xl pa-4 {(notfall ? "mh-funktion-notfall" : "")}")">
+                    <div class="@($"mh-icon-kachel mh-icon-klein {(notfall ? "mh-icon-notfall" : "")}")"><MudIcon Icon="@icon" Size="Size.Small" /></div>
+                    <MudText Typo="Typo.subtitle1" Class="mt-3" Style="font-weight: 700;">@titel</MudText>
+                    <MudText Typo="Typo.body2" Class="mh-text-leise">@text</MudText>
+                </MudPaper>
+            }
+        </div>
+
+        @* ---------- 4. So funktioniert's (am Handy als Zeitleiste) ---------- *@
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="mh-text mh-abschnitt mh-einblenden mh-verzoegerung-3 mt-10 mb-5">
             So funktioniert's
         </MudText>
-        <MudGrid Spacing="3" Justify="Justify.Center">
+        <div class="mh-schritte">
             @for (var i = 0; i < Schritte.Length; i++)
             {
                 // Werte in eigene Variablen kopieren – sonst sieht Blazor beim Anzeigen nur das letzte i
                 var nummer = i + 1;
                 var schritt = Schritte[i];
-                <MudItem xs="12" sm="4">
-                    <MudPaper Elevation="0" Class="mh-glas mh-karte mh-einblenden mh-verzoegerung-4 d-flex align-center gap-3 pa-4 rounded-xl">
-                        <MudAvatar Size="Size.Medium" Style="background: linear-gradient(135deg, #7E6FD8, #B48FE0); color: white; font-weight: 700;">@nummer</MudAvatar>
-                        <MudText Typo="Typo.body1" Style="font-weight: 500;">@schritt</MudText>
+                <div class="mh-schritt">
+                    <span class="mh-schritt-nummer">@nummer</span>
+                    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 flex-grow-1">
+                        <MudText Typo="Typo.body1" Style="font-weight: 600;">@schritt</MudText>
                     </MudPaper>
-                </MudItem>
+                </div>
             }
-        </MudGrid>
+        </div>
 
-        @* ---------- 4. Notfall-Hinweis ---------- *@
+        @* ---------- 5. Abschluss ---------- *@
+        <MudPaper Elevation="0" Class="mh-abschluss rounded-xl pa-8 mt-10 text-center">
+            <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">Du musst das nicht allein schaffen.</MudText>
+            <MudText Typo="Typo.body1" Class="mt-2 mb-5" Style="color: rgba(255,255,255,.9);">
+                In einer Minute registriert – und jemand hört dir zu.
+            </MudText>
+            <MudButton Variant="Variant.Filled" Size="Size.Large" OnClick="ZeigeRegistrierung" Class="rounded-pill px-8 mh-knopf-weiss">
+                Jetzt kostenlos starten
+            </MudButton>
+        </MudPaper>
+
+        @* ---------- 6. Notfall-Hinweis ---------- *@
         <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Phone"
-                  Class="mh-notfall mh-einblenden mh-verzoegerung-4 mt-10 rounded-lg">
+                  Class="mh-notfall mt-6 rounded-lg">
             <b>In einer akuten Krise?</b> Ruf sofort an: Telefonseelsorge <b>142</b> · Rat auf Draht <b>147</b> ·
             Notruf <b>144</b> – rund um die Uhr und kostenlos.
         </MudAlert>
@@ -289,6 +325,22 @@ else
         (Icons.Material.Filled.Lock, "Anonym & vertraulich", "Deine Gespräche sieht nur die Hilfskraft, mit der du schreibst. Niemand sonst."),
         (Icons.Material.Filled.Verified, "Geprüfte Hilfskräfte", "Alle Hilfskräfte weisen ihre Ausbildung nach und werden von uns überprüft."),
         (Icons.Material.Filled.ChatBubbleOutline, "Einfach schreiben", "Kein Termin, kein Telefonat – du schreibst einfach los, wann es für dich passt.")
+    ];
+
+    private static readonly (string Icon, string Text)[] Vertrauen =
+    [
+        (Icons.Material.Filled.Lock, "Anonym"),
+        (Icons.Material.Filled.Verified, "Geprüfte Fachkräfte"),
+        (Icons.Material.Filled.Favorite, "Kostenlos")
+    ];
+
+    // Was die App kann (Notfall = roter Akzent)
+    private static readonly (string Icon, string Titel, string Text, bool Notfall)[] Funktionen =
+    [
+        (Icons.Material.Filled.Chat, "Chat", "Schreib mit geprüften Fachkräften – wann es dir passt.", false),
+        (Icons.Material.Filled.Campaign, "SOS-Knopf", "Ein Tipp, und alle verfügbaren Fachkräfte werden alarmiert.", true),
+        (Icons.Material.Filled.Mood, "Wie geht's dir?", "Dein Stimmungstagebuch mit Wochenkurve.", false),
+        (Icons.Material.Filled.FactCheck, "Kurz-Check", "Fünf Fragen zu deinem Wohlbefinden.", false)
     ];
 
     private static readonly string[] Schritte =
