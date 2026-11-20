@@ -1,0 +1,102 @@
+@page "/zeiten"
+@inject HilfskraftService Hilfskraft
+@inject ChatService Chat
+@inject ProfilService ProfilDienst
+@inject ISnackbar Snackbar
+
+<PageTitle>Meine Zeiten</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="px-0">
+    <MudText Typo="Typo.h5" Class="mh-text mb-3" Style="font-weight: 700;">Meine Zeiten</MudText>
+
+    @* ---------- Wochenraster ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+        <div class="d-flex align-center justify-space-between mb-3">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Wann bin ich erreichbar?</MudText>
+            <MudText Typo="Typo.caption" Class="mh-text-leise">antippen</MudText>
+        </div>
+
+        <div class="mh-woche">
+            <span></span>
+            @foreach (var tag in HilfskraftService.Wochentage)
+            {
+                <span class="mh-woche-kopf">@tag</span>
+            }
+
+            @for (var b = 0; b < HilfskraftService.Bloecke.Length; b++)
+            {
+                var block = b;
+                <span class="mh-woche-zeit">@HilfskraftService.Bloecke[block]</span>
+                @for (var t = 1; t <= 7; t++)
+                {
+                    var tag = t;
+                    var aktiv = IstAktiv(tag, block);
+                    <button type="button" class="@($"mh-zelle {(aktiv ? "mh-zelle-aktiv" : "")}")" aria-pressed="@(aktiv ? "true" : "false")"
+                            aria-label="@($"{HilfskraftService.Wochentage[tag - 1]} {HilfskraftService.Bloecke[block]} Uhr")"
+                            @onclick="() => Umschalten(tag, block)"></button>
+                }
+            }
+        </div>
+    </MudPaper>
+
+    @* ---------- Vorschau ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4">
+        <MudText Typo="Typo.caption" Class="mh-text-leise">So sehen dich Hilfesuchende</MudText>
+        <div class="d-flex align-center gap-3 mt-2">
+            <MudBadge Dot="true" Color="Color.Success" Overlap="true" Bordered="true" Origin="Origin.BottomRight" Visible="_erreichbar">
+                <MudAvatar Class="mh-avatar">@_name.FirstOrDefault()</MudAvatar>
+            </MudBadge>
+            <div style="min-width: 0;">
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">@_name</MudText>
+                <MudText Typo="Typo.body2" Class="mh-text-leise">@_fach · @HilfskraftService.ZeitenHeute(_zeiten)</MudText>
+            </div>
+        </div>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<Verfuegbarkeit> _zeiten = [];
+    private string _name = "";
+    private string _fach = "Hilfskraft";
+    private bool _erreichbar = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _zeiten = await Hilfskraft.GetZeitenAsync();
+            var profil = await Chat.GetMeinProfilAsync();
+            _name = profil?.VollerName ?? "";
+            if (profil != null && await ProfilDienst.GetMeineHilfskraftDatenAsync(profil.Id) is { } details)
+            {
+                _fach = string.IsNullOrWhiteSpace(details.Specification) ? "Hilfskraft" : details.Specification;
+                _erreichbar = details.Erreichbar;
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Zeiten konnten nicht geladen werden: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private bool IstAktiv(int tag, int block) => _zeiten.Any(z => z.Wochentag == tag && z.Block == block);
+
+    private async Task Umschalten(int tag, int block)
+    {
+        var aktiv = !IstAktiv(tag, block);
+
+        // Sofort anzeigen, dann speichern
+        if (aktiv) _zeiten.Add(new Verfuegbarkeit { Wochentag = tag, Block = block });
+        else _zeiten.RemoveAll(z => z.Wochentag == tag && z.Block == block);
+
+        try
+        {
+            await Hilfskraft.SetzeZeitAsync(tag, block, aktiv);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Konnte nicht gespeichert werden: " + ex.Message, Severity.Error);
+            _zeiten = await Hilfskraft.GetZeitenAsync();
+        }
+    }
+}

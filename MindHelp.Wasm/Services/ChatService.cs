@@ -241,6 +241,7 @@ public class ChatService
             var hilfskraefte = await GetHilfskraefteAsync();
             liste.AddRange(hilfskraefte
                 .Where(h => !schonImChat.Contains(h.Profil.Id))
+                .Where(h => h.Details?.Verified == true)   // nur geprüfte Hilfskräfte können angeschrieben werden
                 .Select(h => new ChatEintrag { Gegenueber = h.Profil, Details = h.Details }));
         }
 

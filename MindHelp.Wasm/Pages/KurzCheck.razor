@@ -1,0 +1,138 @@
+@page "/kurz-check"
+@inject TagebuchService Tagebuch
+@inject ISnackbar Snackbar
+
+<PageTitle>Kurz-Check</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="px-0">
+    <MudText Typo="Typo.h5" Class="mh-text mb-3" Style="font-weight: 700;">Kurz-Check</MudText>
+
+    @if (!_fertig)
+    {
+        @* ---------- Eine Frage nach der anderen ---------- *@
+        <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+            <MudText Typo="Typo.caption" Class="mh-text-leise">Frage @(_frage + 1) von @Fragen.Length · in den letzten 2 Wochen</MudText>
+            <MudProgressLinear Color="Color.Primary" Value="@(100.0 * (_frage + 1) / Fragen.Length)" Rounded="true" Class="my-3" />
+            <MudText Typo="Typo.h6" Class="mb-4">@Fragen[_frage]</MudText>
+
+            <div class="mh-skala" role="group" aria-label="Antwort wählen">
+                @for (var w = 0; w <= 5; w++)
+                {
+                    var wert = w;
+                    <MudButton Variant="@(_antworten[_frage] == wert ? Variant.Filled : Variant.Outlined)" Color="Color.Primary"
+                               OnClick="() => Antworten(wert)">@wert</MudButton>
+                }
+            </div>
+            <div class="d-flex justify-space-between mt-1">
+                <MudText Typo="Typo.caption" Class="mh-text-leise">nie</MudText>
+                <MudText Typo="Typo.caption" Class="mh-text-leise">die ganze Zeit</MudText>
+            </div>
+
+            @if (_frage > 0)
+            {
+                <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" Class="mt-3"
+                           OnClick="() => _frage--">Zurück</MudButton>
+            }
+        </MudPaper>
+    }
+    else
+    {
+        @* ---------- Ergebnis ---------- *@
+        <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Dein Wohlbefinden</MudText>
+            <div class="d-flex align-center gap-3 my-3">
+                <MudProgressLinear Color="@(_prozent > 50 ? Color.Success : Color.Warning)" Value="_prozent" Size="Size.Large" Rounded="true" Class="flex-grow-1" />
+                <MudText Typo="Typo.h6" Style="font-variant-numeric: tabular-nums;">@_prozent %</MudText>
+            </div>
+            <MudText Typo="Typo.body2">
+                @if (_prozent > 50)
+                {
+                    <span>Dein Wohlbefinden ist im guten Bereich. Wenn dich trotzdem etwas beschäftigt, ist jemand für dich da.</span>
+                }
+                else
+                {
+                    <span>Dir geht es gerade nicht so gut. Sprich mit einer Hilfskraft darüber – du musst das nicht allein schaffen.</span>
+                }
+            </MudText>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="rounded-pill" Href="/" StartIcon="@Icons.Material.Filled.Chat">Mit einer Hilfskraft schreiben</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="rounded-pill" OnClick="Neu">Nochmal machen</MudButton>
+            </div>
+        </MudPaper>
+    }
+
+    @* ---------- Frühere Ergebnisse ---------- *@
+    @if (_frueher.Count > 0)
+    {
+        <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+            <MudText Typo="Typo.subtitle1" Class="mb-2" Style="font-weight: 600;">Deine letzten Checks</MudText>
+            @foreach (var check in _frueher)
+            {
+                <div class="d-flex align-center gap-3 py-1">
+                    <MudText Typo="Typo.body2" Class="mh-text-leise" Style="width: 64px;">@check.CreatedAt.ToLocalTime().ToString("dd.MM.")</MudText>
+                    <MudProgressLinear Color="@(check.Prozent > 50 ? Color.Success : Color.Warning)" Value="check.Prozent" Rounded="true" Class="flex-grow-1" />
+                    <MudText Typo="Typo.body2" Style="width: 44px; text-align: right;">@check.Prozent %</MudText>
+                </div>
+            }
+        </MudPaper>
+    }
+
+    <MudText Typo="Typo.caption" Class="mh-text-leise d-block px-1">
+        Der Kurz-Check beruht auf dem WHO-5-Fragebogen. Er ersetzt keine Diagnose, sondern hilft dir, über dein Befinden nachzudenken.
+        In einer akuten Krise: Telefonseelsorge 142 · Notruf 144.
+    </MudText>
+</MudContainer>
+
+@code {
+    // WHO-5-Fragebogen zum Wohlbefinden
+    private static readonly string[] Fragen =
+    [
+        "Ich war froh und guter Laune.",
+        "Ich habe mich ruhig und entspannt gefühlt.",
+        "Ich habe mich energisch und aktiv gefühlt.",
+        "Ich habe mich beim Aufwachen frisch und ausgeruht gefühlt.",
+        "Mein Alltag war voller Dinge, die mich interessieren."
+    ];
+
+    private int?[] _antworten = new int?[5];
+    private int _frage;
+    private bool _fertig;
+    private int _prozent;
+    private List<CheckErgebnis> _frueher = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        try { _frueher = await Tagebuch.GetChecksAsync(); }
+        catch { /* ohne Verlauf geht es auch */ }
+    }
+
+    private async Task Antworten(int wert)
+    {
+        _antworten[_frage] = wert;
+        if (_frage < Fragen.Length - 1)
+        {
+            _frage++;
+            return;
+        }
+
+        // Rohwert 0–25 × 4 = 0–100 %
+        _prozent = _antworten.Sum(a => a ?? 0) * 4;
+        _fertig = true;
+        try
+        {
+            await Tagebuch.SpeichereCheckAsync(_prozent);
+            _frueher = await Tagebuch.GetChecksAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Ergebnis konnte nicht gespeichert werden: " + ex.Message, Severity.Warning);
+        }
+    }
+
+    private void Neu()
+    {
+        _antworten = new int?[5];
+        _frage = 0;
+        _fertig = false;
+    }
+}

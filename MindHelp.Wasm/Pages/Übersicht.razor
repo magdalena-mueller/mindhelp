@@ -1,0 +1,125 @@
+@page "/uebersicht"
+@inject ChatService Chat
+@inject NotrufService NotrufDienst
+@inject HilfskraftService Hilfskraft
+@inject ProfilService ProfilDienst
+@inject ISnackbar Snackbar
+
+<PageTitle>Meine Übersicht</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="px-0">
+    <MudText Typo="Typo.h5" Class="mh-text mb-3" Style="font-weight: 700;">Meine Übersicht</MudText>
+
+    @* ---------- Begrüßung + erreichbar ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3 d-flex align-center gap-3">
+        <div class="flex-grow-1">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">@Begruessung, @_vorname</MudText>
+            <MudText Typo="Typo.body2" Class="mh-text-leise">
+                @(_erreichbar ? "Du bist für Hilfesuchende sichtbar." : "Du bist gerade nicht sichtbar.")
+            </MudText>
+        </div>
+        <MudSwitch T="bool" Value="_erreichbar" ValueChanged="ErreichbarAendern" Color="Color.Success" aria-label="Erreichbar" />
+    </MudPaper>
+
+    @* ---------- Zahlen ---------- *@
+    <MudGrid Spacing="2" Class="mb-3">
+        @foreach (var (zahl, text, farbe) in Zahlen)
+        {
+            <MudItem xs="4">
+                <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-3 text-center" Style="height: 100%;">
+                    <MudText Typo="Typo.h4" Color="farbe" Style="font-weight: 700; font-variant-numeric: tabular-nums;">@zahl</MudText>
+                    <MudText Typo="Typo.caption" Class="mh-text-leise">@text</MudText>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
+
+    @* ---------- Diagramm ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+        <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Deine Nachrichten pro Woche</MudText>
+        <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serien" ChartLabels="@_wochen" Height="220px" Width="100%" />
+    </MudPaper>
+
+    @* ---------- Verifizierung ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 d-flex align-center justify-space-between">
+        <MudText Typo="Typo.body1">Verifizierung</MudText>
+        @if (_verifiziert)
+        {
+            <MudChip T="string" Color="Color.Success" Variant="Variant.Text" Icon="@Icons.Material.Filled.Verified" Class="ma-0">bestätigt</MudChip>
+        }
+        else
+        {
+            <MudChip T="string" Color="Color.Warning" Variant="Variant.Text" Icon="@Icons.Material.Filled.HourglassTop" Class="ma-0">wird geprüft</MudChip>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private string _vorname = "";
+    private bool _erreichbar = true;
+    private bool _verifiziert;
+    private int _offeneNotrufe, _gespraeche, _ungelesen;
+
+    private string[] _wochen = [];
+    private List<ChartSeries<double>> _serien = [];
+
+    private (int Zahl, string Text, Color Farbe)[] Zahlen =>
+    [
+        (_offeneNotrufe, "offene Notrufe", _offeneNotrufe > 0 ? Color.Error : Color.Default),
+        (_gespraeche, "Gespräche", Color.Primary),
+        (_ungelesen, "ungelesen", _ungelesen > 0 ? Color.Primary : Color.Default)
+    ];
+
+    private static string Begruessung
+    {
+        get
+        {
+            var stunde = DateTime.Now.Hour;
+            if (stunde < 11) return "Guten Morgen";
+            if (stunde < 18) return "Hallo";
+            return "Guten Abend";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var profil = await Chat.GetMeinProfilAsync();
+            _vorname = await Chat.GetMeinVornameAsync(profil);
+
+            if (profil != null && await ProfilDienst.GetMeineHilfskraftDatenAsync(profil.Id) is { } details)
+            {
+                _erreichbar = details.Erreichbar;
+                _verifiziert = details.Verified;
+            }
+
+            var chats = await Chat.GetChatListeAsync(true);
+            _gespraeche = chats.Count;
+            _ungelesen = chats.Sum(c => c.Ungelesen);
+            _offeneNotrufe = (await NotrufDienst.GetOffeneNotrufeAsync()).Count;
+
+            var (wochen, anzahl) = await Hilfskraft.GetNachrichtenProWocheAsync();
+            _wochen = wochen;
+            _serien = [new ChartSeries<double> { Name = "Nachrichten", Data = new ChartData<double>(anzahl) }];
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Übersicht konnte nicht geladen werden: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task ErreichbarAendern(bool erreichbar)
+    {
+        _erreichbar = erreichbar;
+        try
+        {
+            await Hilfskraft.SetzeErreichbarAsync(erreichbar);
+        }
+        catch (Exception ex)
+        {
+            _erreichbar = !erreichbar;
+            Snackbar.Add("Konnte nicht gespeichert werden: " + ex.Message, Severity.Error);
+        }
+    }
+}

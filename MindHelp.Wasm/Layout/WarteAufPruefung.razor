@@ -1,0 +1,53 @@
+@* Wird Hilfskräften gezeigt, solange ihr Berufsnachweis noch nicht vom mindhelp-Team geprüft wurde.
+   Bis dahin können sie niemandem schreiben und bekommen keine Notrufe (auch in der Datenbank gesperrt). *@
+<MudContainer MaxWidth="MaxWidth.Small" Class="px-0">
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-6 d-flex flex-column align-center text-center">
+        <div class="mh-sanduhr mb-4">
+            <MudIcon Icon="@Icons.Material.Filled.HourglassTop" Style="font-size: 44px; color: white;" />
+        </div>
+
+        <MudText Typo="Typo.h5" Class="mh-text mb-2" Style="font-weight: 700;">Dein Profil wird geprüft</MudText>
+        <MudText Typo="Typo.body1" Class="mh-text-leise mb-4">
+            Zum Schutz der Hilfesuchenden prüfen wir jeden Berufsnachweis persönlich.
+            Sobald du freigeschaltet bist, kannst du Chats führen und Notrufe annehmen.
+        </MudText>
+
+        @if (NachweisHochgeladen)
+        {
+            <MudAlert Severity="Severity.Info" Dense="true" Class="mb-4" Style="width: 100%;">
+                Dein Nachweis ist da – die Prüfung dauert meist ein bis zwei Tage.
+            </MudAlert>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Warning" Dense="true" Class="mb-4" Style="width: 100%;">
+                Wir haben noch keinen Nachweis von dir. Bitte lade ihn in deinem Profil hoch.
+            </MudAlert>
+        }
+
+        <div class="d-flex flex-wrap justify-center gap-2">
+            <MudButton Variant="@(NachweisHochgeladen ? Variant.Outlined : Variant.Filled)" Color="Color.Primary" Class="rounded-pill"
+                       StartIcon="@Icons.Material.Filled.UploadFile" Href="profil">
+                @(NachweisHochgeladen ? "Zum Profil" : "Nachweis hochladen")
+            </MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" Class="rounded-pill" StartIcon="@Icons.Material.Filled.Refresh"
+                       Disabled="_laedt" OnClick="NeuPruefen">
+                @(_laedt ? "Wird geprüft …" : "Erneut prüfen")
+            </MudButton>
+        </div>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [Parameter] public bool NachweisHochgeladen { get; set; }
+    [Parameter] public EventCallback OnNeuPruefen { get; set; }   // lädt im MainLayout den Status neu
+
+    private bool _laedt;
+
+    private async Task NeuPruefen()
+    {
+        _laedt = true;
+        await OnNeuPruefen.InvokeAsync();
+        _laedt = false;
+    }
+}

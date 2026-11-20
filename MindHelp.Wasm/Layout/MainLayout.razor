@@ -43,7 +43,7 @@
     </MudAppBar>
 
     @* Hilfskräfte: Notruf-Hinweis oben, egal auf welcher Seite *@
-    @if (_angemeldet && _profil?.IstHilfskraft == true)
+    @if (_angemeldet && _profil?.IstHilfskraft == true && _verifiziert)
     {
         <NotrufBanner />
     }
@@ -59,7 +59,15 @@
     }
 
     <MudMainContent Class="@(ImChat ? "pt-16" : _angemeldet ? "pt-16 pa-4 mh-mit-leiste" : "pt-16 pa-4")">
-        @Body
+        @if (WartetAufPruefung && AktuelleSeite != "profil")
+        {
+            @* Noch nicht geprüfte Hilfskraft: statt Chats nur der Hinweis (Profil bleibt erreichbar, um den Nachweis hochzuladen) *@
+            <WarteAufPruefung NachweisHochgeladen="@(!string.IsNullOrEmpty(_details?.ProofUrl))" OnNeuPruefen="LadeAnmeldungNeuAsync" />
+        }
+        else
+        {
+            @Body
+        }
     </MudMainContent>
 
     @* Leiste unten – nicht im geöffneten Chat (wie bei WhatsApp) *@
@@ -81,6 +89,11 @@
     private bool _neueNachrichten;
     private bool _menuOffen = true; // Laptop: Menü links, Handy: klappt automatisch weg
     private Profile? _profil;
+    private HelperDetails? _details;   // nur bei Hilfskräften
+    private bool _verifiziert;          // Hilfskraft vom mindhelp-Team geprüft?
+
+    // Hilfskraft, deren Nachweis noch nicht geprüft wurde → darf noch niemandem schreiben
+    private bool WartetAufPruefung => _angemeldet && _profil?.IstHilfskraft == true && !_verifiziert;
     private Guid? _meineId;
 
     // Auf diesen Seiten soll das Anmelde-Fenster nicht von selbst aufpoppen
@@ -113,6 +126,8 @@
     {
         _angemeldet = SupabaseService.IsLoggedIn;
         _profil = null;
+        _details = null;
+        _verifiziert = false;
         if (!_angemeldet)
         {
             Chat.StoppeLiveEmpfang();
@@ -124,6 +139,8 @@
         {
             _meineId = await Chat.GetMeineIdAsync();
             _profil = await Chat.GetMeinProfilAsync();
+            _details = _profil?.IstHilfskraft == true ? await Chat.GetHilfskraftDetailsAsync(_profil.Id) : null;
+            _verifiziert = _details?.Verified == true;
             if (_profil?.IstHilfskraft == false)
                 await NotrufDienst.LadeMeinenOffenenNotrufAsync();
 
@@ -224,6 +241,14 @@
         if (AktuelleSeite == "" || ImChat) _neueNachrichten = false;
         InvokeAsync(StateHasChanged);
     }
+
+        // Knopf "Erneut prüfen" auf der Warteseite
+    private async Task LadeAnmeldungNeuAsync()
+    {
+        await LadeAnmeldungAsync();
+        StateHasChanged();
+    }
+
 
     private void BeiAnmeldungGeaendert()
     {

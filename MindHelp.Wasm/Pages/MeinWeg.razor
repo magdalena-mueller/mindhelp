@@ -1,0 +1,152 @@
+@page "/mein-weg"
+@implements IDisposable
+@inject TagebuchService Tagebuch
+@inject ChatService Chat
+@inject ISnackbar Snackbar
+
+<PageTitle>Mein Weg</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="px-0">
+    <MudText Typo="Typo.h5" Class="mh-text mb-3" Style="font-weight: 700;">Mein Weg</MudText>
+
+    @* ---------- Fortschritt ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3 d-flex align-center gap-4">
+        <div class="mh-ring">
+            <MudProgressCircular Color="Color.Primary" Value="@Prozent" Size="Size.Large" StrokeWidth="5" />
+            <span class="mh-ring-text">@Erledigt/@_ziele.Count</span>
+        </div>
+        <div>
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Deine kleinen Schritte</MudText>
+            <MudText Typo="Typo.body2" Class="mh-text-leise">
+                Du bist seit <b>@_tageDabei @(_tageDabei == 1 ? "Tag" : "Tagen")</b> dabei. Jeder kleine Schritt zählt.
+            </MudText>
+        </div>
+    </MudPaper>
+
+    @* ---------- Ziele ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+        <MudText Typo="Typo.subtitle1" Class="mb-2" Style="font-weight: 600;">Meine Ziele</MudText>
+
+        @if (_ziele.Count == 0)
+        {
+            <MudText Typo="Typo.body2" Class="mh-text-leise mb-2">Noch keine Ziele. Fang klein an, z. B. „10 Minuten spazieren gehen“.</MudText>
+        }
+
+        @foreach (var ziel in _ziele)
+        {
+            <div class="d-flex align-center">
+                <MudCheckBox T="bool" Value="ziel.Erledigt" ValueChanged="@(wert => Abhaken(ziel, wert))" Color="Color.Primary" />
+                <MudText Typo="Typo.body1" Class="flex-grow-1" Style="@(ziel.Erledigt ? "text-decoration: line-through; opacity: .6;" : "")">@ziel.Titel</MudText>
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Size="Size.Small" aria-label="Ziel löschen" OnClick="() => Loeschen(ziel)" />
+            </div>
+        }
+
+        <div class="d-flex align-center gap-2 mt-2">
+            <MudTextField @bind-Value="_neuesZiel" Placeholder="Neues Ziel …" Variant="Variant.Outlined" Margin="Margin.Dense"
+                          Immediate="true" OnKeyDown="OnKeyDown" MaxLength="100" />
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled"
+                           Disabled="@string.IsNullOrWhiteSpace(_neuesZiel)" OnClick="Hinzufuegen" aria-label="Ziel hinzufügen" />
+        </div>
+    </MudPaper>
+
+    @* ---------- Atemübung ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4">
+        <div class="d-flex align-center justify-space-between">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Atemübung</MudText>
+            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text" Class="ma-0">4 – 2 – 6</MudChip>
+        </div>
+        <div class="mh-atem">
+            <div class="@($"mh-atem-kreis {(_atmet ? "mh-atem-laeuft" : "")}")"></div>
+        </div>
+        <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-3">@(_atmet ? _phase : "Atme 4 Sekunden ein, halte 2, atme 6 aus.")</MudText>
+        <MudButton Variant="@(_atmet ? Variant.Outlined : Variant.Filled)" Color="Color.Primary" FullWidth="true" Class="rounded-pill" OnClick="AtemStartStop">
+            @(_atmet ? "Stopp" : "Übung starten")
+        </MudButton>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<Ziel> _ziele = [];
+    private string _neuesZiel = "";
+    private int _tageDabei = 1;
+
+    private bool _atmet;
+    private string _phase = "";
+    private CancellationTokenSource? _atemStopp;
+
+    private int Erledigt => _ziele.Count(z => z.Erledigt);
+    private double Prozent => _ziele.Count == 0 ? 0 : 100.0 * Erledigt / _ziele.Count;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _ziele = await Tagebuch.GetZieleAsync();
+            if (await Chat.GetMeinProfilAsync() is { } profil)
+                _tageDabei = Math.Max(1, (DateTime.Today - profil.CreatedAt.ToLocalTime().Date).Days + 1);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Ziele konnten nicht geladen werden: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task Hinzufuegen()
+    {
+        if (string.IsNullOrWhiteSpace(_neuesZiel)) return;
+        var neu = await Tagebuch.NeuesZielAsync(_neuesZiel);
+        if (neu != null) _ziele.Add(neu);
+        _neuesZiel = "";
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await Hinzufuegen();
+    }
+
+    private async Task Abhaken(Ziel ziel, bool erledigt)
+    {
+        await Tagebuch.SetzeErledigtAsync(ziel, erledigt);
+        if (erledigt && _ziele.All(z => z.Erledigt))
+            Snackbar.Add("Alle Ziele geschafft – richtig stark!", Severity.Success);
+    }
+
+    private async Task Loeschen(Ziel ziel)
+    {
+        await Tagebuch.LoescheZielAsync(ziel);
+        _ziele.Remove(ziel);
+    }
+
+    // Die Kreis-Animation macht CSS, hier wird nur der Text im richtigen Takt gewechselt
+    private async Task AtemStartStop()
+    {
+        if (_atmet)
+        {
+            _atemStopp?.Cancel();
+            _atmet = false;
+            return;
+        }
+
+        _atmet = true;
+        _atemStopp = new CancellationTokenSource();
+        var stopp = _atemStopp.Token;
+        try
+        {
+            while (!stopp.IsCancellationRequested)
+            {
+                foreach (var (text, sekunden) in new[] { ("Einatmen …", 4), ("Halten …", 2), ("Ausatmen …", 6) })
+                {
+                    _phase = text;
+                    StateHasChanged();
+                    await Task.Delay(sekunden * 1000, stopp);
+                }
+            }
+        }
+        catch (TaskCanceledException) { /* gestoppt */ }
+    }
+
+    public void Dispose()
+    {
+        _atemStopp?.Cancel();
+    }
+}

@@ -63,8 +63,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2hhdFNlaXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Gespraeche.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzcHJhZWNoZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Heute.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSGV1dGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/KurzCheck.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcS3VyekNoZWNrLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/MeinWeg.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVpbldlZy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/NotFound.razor]
@@ -77,6 +93,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Zeiten.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcWmVpdGVuLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Übersicht.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcw5xiZXJzaWNodC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/_Imports.razor]

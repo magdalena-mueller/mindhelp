@@ -1,0 +1,130 @@
+@page "/heute"
+@inject TagebuchService Tagebuch
+@inject ChatService Chat
+@inject ISnackbar Snackbar
+
+<PageTitle>Wie geht's dir heute?</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="px-0">
+    <MudText Typo="Typo.h5" Class="mh-text mb-3" Style="font-weight: 700;">Wie geht's dir heute?</MudText>
+
+    @* ---------- Stimmung wählen ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+        <MudText Typo="Typo.subtitle1" Class="mb-3" Style="font-weight: 600;">
+            Wie fühlst du dich gerade@(string.IsNullOrEmpty(_vorname) ? "" : ", " + _vorname)?
+        </MudText>
+        <div class="mh-stimmungen" role="group" aria-label="Stimmung wählen">
+            @for (var i = 1; i <= 5; i++)
+            {
+                var wert = i;   // Kopie, sonst merkt sich der Klick den falschen Wert
+                <button type="button" class="@($"mh-stimmung mh-stimmung-{wert} {(_wert == wert ? "mh-stimmung-aktiv" : "")}")"
+                        aria-pressed="@(_wert == wert ? "true" : "false")" @onclick="() => _wert = wert">
+                    <MudIcon Icon="@Icon(wert)" Style="font-size: 32px;" />
+                    <span>@Text(wert)</span>
+                </button>
+            }
+        </div>
+    </MudPaper>
+
+    @* ---------- Woche ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
+        <div class="d-flex align-center justify-space-between">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Deine Woche</MudText>
+            @if (_trend != null)
+            {
+                <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Class="ma-0"
+                         Color="@(_trend > 0 ? Color.Success : _trend < 0 ? Color.Warning : Color.Default)">
+                    @(_trend > 0 ? "aufwärts" : _trend < 0 ? "abwärts" : "gleich")
+                </MudChip>
+            }
+        </div>
+        @if (_hatDaten)
+        {
+            <MudChart T="double" ChartType="ChartType.Line" ChartSeries="@_serien" ChartLabels="@_tage" Height="200px" Width="100%" />
+        }
+        else
+        {
+            <MudText Typo="Typo.body2" Class="mh-text-leise mt-2">Sobald du ein paar Tage eingetragen hast, siehst du hier deine Kurve.</MudText>
+        }
+    </MudPaper>
+
+    @* ---------- Notiz ---------- *@
+    <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4">
+        <MudText Typo="Typo.subtitle1" Class="mb-2" Style="font-weight: 600;">Was hat dich heute beschäftigt?</MudText>
+        <MudTextField @bind-Value="_notiz" Placeholder="Nur für dich – oder teile es mit deinen Hilfskräften." Variant="Variant.Outlined"
+                      Lines="3" MaxLength="500" />
+        <MudSwitch @bind-Value="_geteilt" Color="Color.Primary" Class="mt-2" Label="Mit meinen Hilfskräften teilen" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="rounded-pill mt-2"
+                   Disabled="@(_wert == 0 || _speichert)" OnClick="Speichern">
+            @(_wert == 0 ? "Wähle zuerst eine Stimmung" : _speichert ? "Wird gespeichert …" : "Speichern")
+        </MudButton>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private int _wert;            // 0 = noch nichts gewählt
+    private string _notiz = "";
+    private bool _geteilt;
+    private bool _speichert;
+    private string _vorname = "";
+
+    private bool _hatDaten;
+    private int? _trend;
+    private string[] _tage = [];
+    private List<ChartSeries<double>> _serien = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _vorname = await Chat.GetMeinVornameAsync(await Chat.GetMeinProfilAsync());
+        await LadeWocheAsync();
+    }
+
+    // Letzte 7 Tage: pro Tag der Durchschnitt (Tage ohne Eintrag bleiben leer)
+    private async Task LadeWocheAsync()
+    {
+        var eintraege = await Tagebuch.GetStimmungenAsync(7);
+        var tage = Enumerable.Range(0, 7).Select(i => DateTime.Today.AddDays(i - 6)).ToList();
+
+        _tage = tage.Select(t => t.ToString("ddd", new System.Globalization.CultureInfo("de-AT"))).ToArray();
+        var werte = tage.Select(t =>
+        {
+            var tagesWerte = eintraege.Where(e => e.CreatedAt.ToLocalTime().Date == t).Select(e => (double)e.Wert).ToList();
+            return tagesWerte.Count == 0 ? (double?)null : Math.Round(tagesWerte.Average(), 1);
+        }).ToList();
+
+        _hatDaten = werte.Any(w => w != null);
+        _serien = [new ChartSeries<double> { Name = "Stimmung", Data = new ChartData<double>(werte) }];
+
+        var vorhanden = werte.Where(w => w != null).ToList();
+        _trend = vorhanden.Count < 2 ? null : Math.Sign(vorhanden[^1]!.Value - vorhanden[0]!.Value);
+    }
+
+    private async Task Speichern()
+    {
+        _speichert = true;
+        try
+        {
+            await Tagebuch.SpeichereStimmungAsync(_wert, _notiz, _geteilt);
+            Snackbar.Add("Gespeichert. Schön, dass du dir Zeit für dich nimmst.", Severity.Success);
+            _wert = 0;
+            _notiz = "";
+            await LadeWocheAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Speichern hat nicht geklappt: " + ex.Message, Severity.Error);
+        }
+        _speichert = false;
+    }
+
+    private static string Text(int wert) => wert switch { 1 => "schlecht", 2 => "mäßig", 3 => "okay", 4 => "gut", _ => "super" };
+
+    private static string Icon(int wert) => wert switch
+    {
+        1 => Icons.Material.Filled.SentimentVeryDissatisfied,
+        2 => Icons.Material.Filled.SentimentDissatisfied,
+        3 => Icons.Material.Filled.SentimentNeutral,
+        4 => Icons.Material.Filled.SentimentSatisfied,
+        _ => Icons.Material.Filled.SentimentVerySatisfied
+    };
+}

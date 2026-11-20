@@ -424,3 +424,475 @@ code {
 .mh-nav-aktiv .mud-nav-link .mud-icon-root {
     color: var(--mud-palette-primary) !important;
 }
+
+
+/* =====================================================================
+   App-Ansicht nach dem Anmelden: Leiste unten, Chats, Notruf, Seiten
+   ===================================================================== */
+
+/* ---------- Hintergrund der App-Seiten ---------- */
+.mh-mit-leiste,
+.mh-chatfenster {
+    background:
+        radial-gradient(70% 45% at 0% 0%, rgba(160, 140, 255, 0.22), transparent 60%),
+        radial-gradient(70% 45% at 100% 100%, rgba(127, 176, 245, 0.22), transparent 60%),
+        var(--mud-palette-background);
+    background-attachment: fixed;
+}
+
+.mh-mit-leiste {
+    min-height: 100dvh;
+    padding-bottom: 96px !important;   /* Platz für die Leiste unten */
+}
+
+.mh-mit-leiste .mh-glas,
+.mh-chatfenster .mh-glas {
+    background: rgba(255, 255, 255, 0.75) !important;
+    box-shadow: 0 8px 30px rgba(78, 64, 160, 0.08) !important;
+}
+
+.mh-einzeilig {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------- Leiste unten ---------- */
+.mh-leiste {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1200;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 6px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--mud-palette-lines-default);
+}
+
+.mh-leiste-knopf {
+    min-width: 0 !important;
+    padding: 4px 0 !important;
+    text-transform: none !important;
+    color: var(--mud-palette-text-secondary) !important;
+    border-radius: 14px !important;
+}
+
+.mh-leiste-pille {
+    display: grid;
+    place-items: center;
+    padding: 3px 16px;
+    border-radius: 999px;
+    transition: background-color .2s;
+}
+
+.mh-leiste-text {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+.mh-leiste-aktiv {
+    color: var(--mud-palette-primary) !important;
+}
+
+.mh-leiste-aktiv .mh-leiste-pille {
+    background: rgba(126, 111, 216, 0.16);
+}
+
+/* ---------- SOS / Notruf ---------- */
+.mh-blinken {
+    animation: mh-blinken 1.2s ease-in-out infinite;
+}
+
+@keyframes mh-blinken {
+    50% { opacity: .55; }
+}
+
+.mh-notruf-banner {
+    position: fixed;
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    max-width: 460px;
+    margin: 0 auto;
+    z-index: 1300;
+    background: var(--mud-palette-error) !important;
+    color: #fff !important;
+    border-radius: 18px !important;
+    animation: mh-aufploppen .3s ease;
+}
+
+.mh-notruf-annehmen {
+    background: #fff !important;
+    color: var(--mud-palette-error) !important;
+    font-weight: 700 !important;
+}
+
+.mh-puls {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--mud-palette-error);
+    animation: mh-puls 1.6s infinite;
+}
+
+.mh-puls-gut {
+    background: var(--mud-palette-success);
+    animation: none;
+}
+
+@keyframes mh-puls {
+    0% { box-shadow: 0 0 0 0 rgba(242, 28, 13, 0.45); }
+    100% { box-shadow: 0 0 0 22px rgba(242, 28, 13, 0); }
+}
+
+/* ---------- Chatliste ---------- */
+.mh-suche .mud-input-outlined-border {
+    border-radius: 999px !important;
+}
+
+.mh-chatzeile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background-color .15s;
+}
+
+.mh-chatzeile:hover,
+.mh-chatzeile:focus-visible {
+    background: rgba(126, 111, 216, 0.08);
+    outline: none;
+}
+
+.mh-chatzeile + .mh-chatzeile {
+    border-top: 1px solid var(--mud-palette-lines-default);
+}
+
+.mh-avatar {
+    background: linear-gradient(135deg, #7E6FD8, #B48FE0) !important;
+    color: #fff !important;
+    font-weight: 700;
+}
+
+.mh-avatar-notfall {
+    background: var(--mud-palette-error) !important;
+}
+
+.mh-zaehler {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--mud-palette-primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+}
+
+.mh-zaehler-notfall {
+    background: var(--mud-palette-error);
+}
+
+/* ---------- Geöffneter Chat ---------- */
+.mh-chatfenster {
+    height: calc(100dvh - 64px);
+    display: flex;
+    flex-direction: column;
+}
+
+.mh-chat-kopf {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px 6px 4px;
+    background: var(--mud-palette-surface);
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+.mh-chat-verlauf {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;   /* startet unten */
+    padding: 12px;
+    background-image: radial-gradient(rgba(126, 111, 216, 0.14) 1px, transparent 1.4px);
+    background-size: 18px 18px;
+}
+
+.mh-chat-verlauf > div {
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.mh-tag {
+    align-self: center;
+    font-size: 12px;
+    color: var(--mud-palette-text-secondary);
+    background: var(--mud-palette-surface);
+    border: 1px solid var(--mud-palette-lines-default);
+    padding: 3px 10px;
+    border-radius: 8px;
+    margin: 8px 0 4px;
+    text-align: center;
+}
+
+.mh-blase {
+    max-width: 78%;
+    padding: 8px 12px 6px;
+    border-radius: 16px;
+    font-size: 14.5px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
+}
+
+.mh-blase-ich {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #7E6FD8, #B48FE0);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.mh-blase-du {
+    align-self: flex-start;
+    background: var(--mud-palette-surface);
+    color: var(--mud-palette-text-primary);
+    border-bottom-left-radius: 4px;
+}
+
+.mh-blase-notruf {
+    border: 2px solid var(--mud-palette-error);
+    font-weight: 600;
+}
+
+.mh-blase-zeit {
+    display: block;
+    text-align: right;
+    font-size: 11px;
+    opacity: .75;
+    margin-top: 2px;
+}
+
+.mh-gelesen {
+    color: #C8F1FF;
+}
+
+.mh-chat-eingabe {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--mud-palette-surface);
+    border-top: 1px solid var(--mud-palette-lines-default);
+}
+
+.mh-chat-eingabe .mud-input-control {
+    margin: 0 !important;
+}
+
+.mh-senden {
+    border-radius: 50% !important;
+    flex: none;
+}
+
+/* ---------- Heute: Stimmung ---------- */
+.mh-stimmungen {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.mh-stimmung {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 10px 2px;
+    border-radius: 14px;
+    border: 1px solid var(--mud-palette-lines-default);
+    background: var(--mud-palette-surface);
+    color: var(--mud-palette-text-secondary);
+    font: 500 12px var(--mud-typography-default-family);
+    cursor: pointer;
+    transition: transform .15s, border-color .15s;
+}
+
+.mh-stimmung:hover {
+    transform: translateY(-2px);
+}
+
+.mh-stimmung-aktiv {
+    border-color: var(--mud-palette-primary);
+    background: rgba(126, 111, 216, 0.12);
+    color: var(--mud-palette-primary);
+}
+
+/* ---------- Mein Weg ---------- */
+.mh-ring {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+}
+
+.mh-ring-text {
+    position: absolute;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.mh-atem {
+    height: 150px;
+    display: grid;
+    place-items: center;
+}
+
+.mh-atem-kreis {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #B48FE0, #7E6FD8);
+    box-shadow: 0 0 34px rgba(126, 111, 216, 0.5);
+    transform: scale(.8);
+}
+
+/* 12 Sekunden: 4 ein (groß werden), 2 halten, 6 aus (klein werden) */
+.mh-atem-laeuft {
+    animation: mh-atmen 12s ease-in-out infinite;
+}
+
+@keyframes mh-atmen {
+    0% { transform: scale(.8); }
+    33% { transform: scale(1.6); }
+    50% { transform: scale(1.6); }
+    100% { transform: scale(.8); }
+}
+
+/* ---------- Kurz-Check ---------- */
+.mh-skala {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+}
+
+.mh-skala .mud-button-root {
+    min-width: 0 !important;
+}
+
+/* ---------- Gespräche (Board) ---------- */
+.mh-karte-notfall {
+    border-left: 4px solid var(--mud-palette-error) !important;
+}
+
+/* ---------- Zeiten ---------- */
+.mh-woche {
+    display: grid;
+    grid-template-columns: 44px repeat(7, minmax(0, 1fr));
+    gap: 5px;
+    align-items: center;
+    font-size: 11px;
+    color: var(--mud-palette-text-secondary);
+}
+
+.mh-woche-kopf {
+    text-align: center;
+    font-weight: 600;
+}
+
+.mh-zelle {
+    height: 28px;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(110, 106, 133, 0.15);
+    cursor: pointer;
+    transition: background-color .15s;
+}
+
+.mh-zelle-aktiv {
+    background: linear-gradient(90deg, #7E6FD8, #B48FE0);
+}
+
+.mh-zelle:focus-visible,
+.mh-stimmung:focus-visible {
+    outline: 2px solid var(--mud-palette-primary);
+    outline-offset: 2px;
+}
+
+/* ---------- Dunkler Modus ---------- */
+.mh-dunkel .mh-mit-leiste .mh-glas,
+.mh-dunkel .mh-chatfenster .mh-glas {
+    background: rgba(30, 30, 45, 0.8) !important;
+}
+
+.mh-dunkel .mh-leiste {
+    background: rgba(26, 26, 39, 0.9) !important;
+}
+
+.mh-dunkel .mh-mit-leiste,
+.mh-dunkel .mh-chatfenster {
+    background:
+        radial-gradient(70% 45% at 0% 0%, rgba(126, 111, 255, 0.14), transparent 60%),
+        radial-gradient(70% 45% at 100% 100%, rgba(74, 134, 255, 0.10), transparent 60%),
+        var(--mud-palette-background);
+}
+
+/* ---------- Weniger Bewegung, wenn im System so eingestellt ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .mh-blinken, .mh-puls, .mh-atem-laeuft, .mh-notruf-banner {
+        animation: none;
+    }
+}
+
+/* ---------- Laptop: Menü links statt Leiste unten ---------- */
+@media (min-width: 960px) {
+    .mh-mit-leiste {
+        padding-bottom: 24px !important;   /* keine Leiste unten → kein Platz nötig */
+    }
+}
+
+/* "Chat" im Menü links markieren, auch wenn gerade ein Chat offen ist (chat/…) */
+.mh-nav-aktiv .mud-nav-link {
+    color: var(--mud-palette-primary) !important;
+    background-color: var(--mud-palette-action-default-hover);
+}
+
+.mh-nav-aktiv .mud-nav-link .mud-icon-root {
+    color: var(--mud-palette-primary) !important;
+}
+
+/* ---------- Stimmungs-Smileys: von dunklem Lila (schlecht) bis hellem Flieder (super) ---------- */
+.mh-stimmung-1 { --mh-farbe: #3F2E8C; }
+.mh-stimmung-2 { --mh-farbe: #5A47B5; }
+.mh-stimmung-3 { --mh-farbe: #7E6FD8; }
+.mh-stimmung-4 { --mh-farbe: #9D8BE8; }
+.mh-stimmung-5 { --mh-farbe: #B9A3F2; }
+
+.mh-stimmung .mud-icon-root {
+    color: var(--mh-farbe);
+}
+
+.mh-stimmung-aktiv {
+    border-color: var(--mh-farbe) !important;
+    background: color-mix(in srgb, var(--mh-farbe) 14%, var(--mud-palette-surface)) !important;
+    color: var(--mh-farbe) !important;
+    font-weight: 700;
+}
+
+/* Im dunklen Modus etwas heller, damit man das dunkle Lila noch sieht */
+.mh-dunkel .mh-stimmung-1 { --mh-farbe: #8F7FE8; }
+.mh-dunkel .mh-stimmung-2 { --mh-farbe: #A595EE; }
+.mh-dunkel .mh-stimmung-3 { --mh-farbe: #BBADF3; }
+.mh-dunkel .mh-stimmung-4 { --mh-farbe: #D0C4F8; }
+.mh-dunkel .mh-stimmung-5 { --mh-farbe: #E6DDFC; }

@@ -1,0 +1,113 @@
+@page "/gespraeche"
+@inject ChatService Chat
+@inject NotrufService NotrufDienst
+@inject ISnackbar Snackbar
+
+<PageTitle>Meine Gespräche</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="px-0">
+    <div class="d-flex align-center justify-space-between mb-3">
+        <MudText Typo="Typo.h5" Class="mh-text" Style="font-weight: 700;">Meine Gespräche</MudText>
+        @if (_notfaelle.Count(n => n.Status == "angenommen") is var laufend and > 0)
+        {
+            <MudChip T="string" Color="Color.Error" Variant="Variant.Text" Icon="@Icons.Material.Filled.Campaign" Class="ma-0">@laufend laufende/r Notfall/Notfälle</MudChip>
+        }
+    </div>
+
+    @* Am Handy untereinander, am Computer nebeneinander – kein seitliches Scrollen *@
+    <MudGrid Spacing="3">
+        @foreach (var (titel, eintraege, leer) in Spalten)
+        {
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.overline" Class="mh-text-leise d-block mb-1">@titel · @eintraege.Count</MudText>
+                <div class="d-flex flex-column gap-2">
+                    @if (eintraege.Count == 0)
+                    {
+                        <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-3">
+                            <MudText Typo="Typo.body2" Class="mh-text-leise">@leer</MudText>
+                        </MudPaper>
+                    }
+                    @foreach (var eintrag in eintraege)
+                    {
+                        <MudCard Elevation="0" Class="@($"mh-glas mh-karte rounded-xl {(eintrag.Notfall ? "mh-karte-notfall" : "")}")">
+                            <MudCardContent Class="pa-3">
+                                <div class="d-flex align-center gap-2">
+                                    <MudAvatar Size="Size.Small" Class="@(eintrag.Notfall ? "mh-avatar mh-avatar-notfall" : "mh-avatar")">@eintrag.Gegenueber.FirstName.FirstOrDefault()</MudAvatar>
+                                    <MudText Typo="Typo.subtitle2" Class="flex-grow-1 mh-einzeilig">@eintrag.Gegenueber.VollerName</MudText>
+                                    @if (eintrag.Notfall)
+                                    {
+                                        <MudChip T="string" Size="Size.Small" Color="Color.Error" Variant="Variant.Text" Class="ma-0">Notfall</MudChip>
+                                    }
+                                    @if (eintrag.Ungelesen > 0)
+                                    {
+                                        <span class="mh-zaehler">@eintrag.Ungelesen</span>
+                                    }
+                                </div>
+                                <MudText Typo="Typo.body2" Class="mh-text-leise mh-einzeilig mt-1">@(eintrag.LetzteNachricht?.Content ?? "Noch keine Nachrichten")</MudText>
+                            </MudCardContent>
+                            <MudCardActions Class="pt-0 px-3 pb-2">
+                                <MudButton Size="Size.Small" Color="Color.Primary" Href="@($"chat/{eintrag.Unterhaltung!.Id}")">Öffnen</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    }
+                </div>
+            </MudItem>
+        }
+    </MudGrid>
+
+    @* ---------- Abgeschlossene Notfälle ---------- *@
+    @if (_notfaelle.Any(n => n.Status == "erledigt"))
+    {
+        <MudText Typo="Typo.overline" Class="mh-text-leise d-block mt-6 mb-1">Abgeschlossene Notfälle</MudText>
+        <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-2">
+            @foreach (var fall in _notfaelle.Where(n => n.Status == "erledigt").Take(10))
+            {
+                <div class="d-flex align-center gap-2 pa-2">
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" Size="Size.Small" />
+                    <MudText Typo="Typo.body2" Class="flex-grow-1">@Name(fall.UserId)</MudText>
+                    <MudText Typo="Typo.caption" Class="mh-text-leise">@fall.ErledigtAt?.ToLocalTime().ToString("dd.MM. HH:mm")</MudText>
+                </div>
+            }
+        </MudPaper>
+    }
+
+    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Dense="true" Class="mh-notfall mt-4 rounded-lg">
+        Bei einem Krisenhinweis: Gespräch sofort öffnen und auf 142 / 144 hinweisen.
+    </MudAlert>
+</MudContainer>
+
+@code {
+    private List<ChatEintrag> _chats = [];
+    private List<Notruf> _notfaelle = [];
+    private Guid? _meineId;
+
+    // Drei Spalten: wartet auf mich (letzte Nachricht von der anderen Person), ich habe geantwortet, Notfälle
+    private (string Titel, List<ChatEintrag> Eintraege, string Leer)[] Spalten =>
+    [
+        ("Wartet auf dich",
+            _chats.Where(c => !c.Notfall && c.LetzteNachricht != null && c.LetzteNachricht.SenderId != _meineId).ToList(),
+            "Niemand wartet gerade auf eine Antwort."),
+        ("Beantwortet",
+            _chats.Where(c => !c.Notfall && (c.LetzteNachricht == null || c.LetzteNachricht.SenderId == _meineId)).ToList(),
+            "Noch keine Gespräche."),
+        ("Notfälle",
+            _chats.Where(c => c.Notfall).ToList(),
+            "Keine laufenden Notfälle.")
+    ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _meineId = await Chat.GetMeineIdAsync();
+            _chats = await Chat.GetChatListeAsync(true);
+            _notfaelle = await NotrufDienst.GetMeineFaelleAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Gespräche konnten nicht geladen werden: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private string Name(Guid id) => _chats.FirstOrDefault(c => c.Gegenueber.Id == id)?.Gegenueber.VollerName ?? "Hilfesuchende/r";
+}

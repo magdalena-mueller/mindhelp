@@ -102,6 +102,16 @@ public class SupaBaseService
             };
             var response = await client.Auth.SignUp(email, password, options); // Legt einen neuen User an
 
+                        // Supabase-Trick gegen das Ausspionieren von E-Mail-Adressen: Ist die Adresse schon registriert,
+            // kommt trotzdem ein "User" zurück – aber ohne Identitäten, und es wird nichts gespeichert oder gemailt.
+            if (response?.User != null && response.User.Identities is { Count: 0 })
+            {
+                LetzterFehler = "Diese E-Mail-Adresse ist bereits registriert. Bitte melde dich an oder nimm eine andere Adresse.";
+                Console.WriteLine("Signup: E-Mail-Adresse ist schon registriert.");
+                return false;
+            }
+
+
             if (response?.User != null)
             {
                 Console.WriteLine($"User registered: {response.User.Email}");
