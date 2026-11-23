@@ -20,101 +20,117 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = browser
 build_property.RootNamespace = MindHelp.Wasm
 build_property.RootNamespace = MindHelp.Wasm
-build_property.ProjectDir = C:\Diplomarbeit_mindhelp\mindhelp_pro\mindhelp\MindHelp.Wasm\
+build_property.ProjectDir = C:\Diplomarbeit_mindhelp\mindhelp_pro\mindhelp\Mindhelp.wasm\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = false
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Diplomarbeit_mindhelp\mindhelp_pro\mindhelp\MindHelp.Wasm
+build_property.MSBuildProjectDirectory = C:\Diplomarbeit_mindhelp\mindhelp_pro\mindhelp\Mindhelp.wasm
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/App.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/LoginDialog.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/AbmeldenDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XEFibWVsZGVuRGlhbG9nLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/BegleiterFigur.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XEJlZ2xlaXRlckZpZ3VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/KontoLoeschenDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XEtvbnRvTG9lc2NoZW5EaWFsb2cucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/LoginDialog.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XExvZ2luRGlhbG9nLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/MindiBegleiter.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/MindiBegleiter.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1pbmRpQmVnbGVpdGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/NavMenu.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/NachrichtenBanner.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hY2hyaWNodGVuQmFubmVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/NotrufBanner.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/NotrufBanner.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5vdHJ1ZkJhbm5lci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/NotrufDialog.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/NotrufDialog.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5vdHJ1ZkRpYWxvZy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/RegisterDialog.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/RegisterDialog.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFJlZ2lzdGVyRGlhbG9nLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/UnterLeiste.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/UnterLeiste.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFVudGVyTGVpc3RlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/WarteAufPruefung.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/WarteAufPruefung.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFdhcnRlQXVmUHJ1ZWZ1bmcucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/ChatSeite.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/ChatSeite.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2hhdFNlaXRlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Gespraeche.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/Gespraeche.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VzcHJhZWNoZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Heute.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/Heute.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSGV1dGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Home.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/KurzCheck.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/KurzCheck.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcS3VyekNoZWNrLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/MeinWeg.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/MeinWeg.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVpbldlZy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/NotFound.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/NotFound.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTm90Rm91bmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Profil.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/Profil.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZmlsLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Register.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/Register.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Zeiten.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/Zeiten.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcWmVpdGVuLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Pages/Übersicht.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Pages/Übersicht.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcw5xiZXJzaWNodC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/_Imports.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/MindHelp.Wasm/Layout/MainLayout.razor]
+[C:/Diplomarbeit_mindhelp/mindhelp_pro/mindhelp/Mindhelp.wasm/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-rkpf37daxb

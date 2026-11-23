@@ -51,6 +51,12 @@
     {
         <NotrufBanner />
     }
+    
+    @* Neue Nachricht aus einem anderen Chat → Banner oben (nicht für noch ungeprüfte Hilfskräfte) *@
+    @if (_angemeldet && _profil != null && !WartetAufPruefung)
+    {
+        <NachrichtenBanner />
+    }
 
         @* Laptop: Menü links. Unter der Breite "Md" (Handy, kleines Tablet) klappt MudBlazor es von selbst weg –
        dort gibt es stattdessen die Leiste unten. *@

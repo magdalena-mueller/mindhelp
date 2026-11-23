@@ -1,12 +1,46 @@
 @implements IDisposable
 @inject BegleiterService BegleiterDienst
 @inject ISnackbar Snackbar
+@inject TagebuchService Tagebuch
+@inject IJSRuntime JS
+@inject NavigationManager Nav
 
-@* Begleiter "Mindi": wächst mit jeder guten Tat für sich selbst. Antippen = streicheln. *@
+@* Begleiter: wächst mit jeder guten Tat für sich selbst. Antippen = streicheln.
+   Ganz freiwillig: beim ersten Mal kommt eine Begrüßung, "Nein danke" blendet ihn aus (im Profil wieder einschaltbar). *@
+@if (_geladen && _b != null && !_b.Aktiv)
+{
+    @* "Nein danke" bzw. im Profil ausgeschaltet → nichts anzeigen *@
+}
+else
+{
 <MudPaper Elevation="0" Class="mh-glas rounded-xl pa-4 mb-3">
-    @if (_b == null)
+    @if (!_geladen)
     {
         <div class="d-flex justify-center pa-6"><MudProgressCircular Indeterminate="true" Color="Color.Primary" /></div>
+    }
+    else if (_b == null)
+    {
+        @* ---------- Begrüßung beim ersten Mal ---------- *@
+        <div class="text-center">
+            <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight: 800;">Hallo! Möchtest du einen kleinen Begleiter?</MudText>
+            <MudText Typo="Typo.body2" Align="Align.Center" Class="mh-text-leise mt-1 mb-3">Er begleitet dich auf deinem Weg – ganz ohne Druck.</MudText>
+        </div>
+        <div class="d-flex flex-column gap-2 mb-4">
+            @foreach (var (icon, text) in Erklaerung)
+            {
+                <div class="d-flex align-center gap-3">
+                    <div class="mh-icon-kachel mh-icon-klein"><MudIcon Icon="@icon" Size="Size.Small" /></div>
+                    <MudText Typo="Typo.body2">@text</MudText>
+                </div>
+            }
+        </div>
+        <MudText Typo="Typo.subtitle2" Class="mb-2" Style="font-weight: 700;">Such dir ein Ei aus:</MudText>
+        @EiAuswahl(ErsteWahl)
+        <div class="text-center mt-3">
+            <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" Class="mh-knopf-klein" Disabled="_speichert"
+                       OnClick="NeinDanke">Nein danke</MudButton>
+            <MudText Typo="Typo.caption" Align="Align.Center" Class="mh-text-leise d-block">Du kannst ihn später jederzeit im Profil einschalten.</MudText>
+        </div>
     }
     else
     {
@@ -47,107 +81,86 @@
                 <span class="mh-zzz" aria-hidden="true">Z<small>z</small><small>z</small></span>
             }
 
-            <svg viewBox="0 0 200 200" class="@($"mh-mindi mh-mindi-stufe-{StufeNr} {(_huepft ? "mh-mindi-huepft" : "")}")" @key="@($"mindi-{_huepfRunde}")" aria-hidden="true">
-                <defs>
-                    <radialGradient id="mh-mindi-koerper" cx="40%" cy="35%" r="70%">
-                        <stop offset="0" stop-color="#D9C9FA" />
-                        <stop offset="0.55" stop-color="#A78BEA" />
-                        <stop offset="1" stop-color="#7E6FD8" />
-                    </radialGradient>
-                    <radialGradient id="mh-mindi-ei" cx="40%" cy="30%" r="75%">
-                        <stop offset="0" stop-color="#FFFFFF" />
-                        <stop offset="1" stop-color="#D8CCF7" />
-                    </radialGradient>
-                </defs>
-
-                @if (StufeNr == 0)
-                {
-                    @* ---------- Ei ---------- *@
-                    <ellipse cx="100" cy="175" rx="40" ry="7" fill="rgba(78,64,160,.15)" />
-                    <g class="mh-mindi-wackeln">
-                        <ellipse cx="100" cy="110" rx="48" ry="62" fill="url(#mh-mindi-ei)" stroke="#B9A3F2" stroke-width="3" />
-                        <circle cx="82" cy="92" r="6" fill="#C9B8F0" />
-                        <circle cx="116" cy="126" r="8" fill="#C9B8F0" />
-                        <circle cx="110" cy="80" r="4" fill="#C9B8F0" />
-                        @if (_b.Punkte >= 10)
-                        {
-                            @* Kurz vor dem Schlüpfen: ein Riss *@
-                            <path d="M62 112 l12 -8 l9 10 l11 -10 l10 9 l12 -9 l10 8" fill="none" stroke="#9D8BE8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                        }
-                    </g>
-                }
-                else
-                {
-                    @* ---------- Wesen (wird mit jeder Stufe größer und bekommt mehr) ---------- *@
-                    <ellipse cx="100" cy="180" rx="50" ry="8" fill="rgba(78,64,160,.15)" />
-
-                    @if (StufeNr >= 4)
-                    {
-                        @* Strahlend: Glanz und Sterne *@
-                        <circle cx="100" cy="115" r="78" fill="rgba(185,163,242,.25)" class="mh-mindi-glanz" />
-                        <path class="mh-mindi-stern" d="M32 52 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4z" fill="#F3C969" />
-                        <path class="mh-mindi-stern mh-stern-2" d="M168 70 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#F3A6DD" />
-                        <path class="mh-mindi-stern mh-stern-3" d="M160 150 l3 6 6 3 -6 3 -3 6 -3 -6 -6 -3 6 -3z" fill="#7FB0F5" />
-                    }
-
-                    @* Spross bzw. Blätter auf dem Kopf *@
-                    <path d="M100 66 C100 56 100 50 100 44" stroke="#5FAF7A" stroke-width="4" stroke-linecap="round" fill="none" />
-                    <path d="M100 50 C88 38 76 42 74 48 C84 54 94 54 100 50Z" fill="#7CC793" />
-                    @if (StufeNr >= 2)
-                    {
-                        <path d="M100 46 C112 32 126 36 128 42 C118 50 106 50 100 46Z" fill="#7CC793" />
-                    }
-                    @if (StufeNr >= 3)
-                    {
-                        @* Blüte *@
-                        <circle cx="100" cy="38" r="9" fill="#F3A6DD" />
-                        <circle cx="100" cy="38" r="4" fill="#F3C969" />
-                    }
-
-                    @* Füße und Ärmchen ab Stufe "Klein" *@
-                    @if (StufeNr >= 2)
-                    {
-                        <ellipse cx="78" cy="170" rx="14" ry="8" fill="#7E6FD8" />
-                        <ellipse cx="122" cy="170" rx="14" ry="8" fill="#7E6FD8" />
-                        <ellipse cx="44" cy="122" rx="10" ry="16" fill="#9D8BE8" transform="rotate(-25 44 122)" class="mh-mindi-arm-links" />
-                        <ellipse cx="156" cy="122" rx="10" ry="16" fill="#9D8BE8" transform="rotate(25 156 122)" class="mh-mindi-arm-rechts" />
-                    }
-
-                    @* Körper *@
-                    <ellipse cx="100" cy="118" rx="58" ry="54" fill="url(#mh-mindi-koerper)" />
-
-                    @* Augen: offen oder (schlafend) geschlossen *@
-                    @if (Schlaeft)
-                    {
-                        <path d="M70 110 q10 8 20 0" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
-                        <path d="M110 110 q10 8 20 0" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
-                    }
-                    else
-                    {
-                        <g class="mh-mindi-augen">
-                            <ellipse cx="80" cy="108" rx="9" ry="11" fill="#2E2A47" />
-                            <ellipse cx="120" cy="108" rx="9" ry="11" fill="#2E2A47" />
-                            <circle cx="83" cy="104" r="3.5" fill="#fff" />
-                            <circle cx="123" cy="104" r="3.5" fill="#fff" />
-                        </g>
-                    }
-
-                    @* Bäckchen und Mund *@
-                    <ellipse cx="66" cy="128" rx="9" ry="6" fill="#F3A6DD" opacity=".8" />
-                    <ellipse cx="134" cy="128" rx="9" ry="6" fill="#F3A6DD" opacity=".8" />
-                    @if (_huepft)
-                    {
-                        <path d="M88 130 q12 16 24 0 z" fill="#2E2A47" />
-                    }
-                    else
-                    {
-                        <path d="M90 132 q10 9 20 0" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
-                    }
-                }
-            </svg>
+            <BegleiterFigur @key="@($"figur-{_huepfRunde}")" Art="@_b.Art" Stufe="StufeNr" Punkte="_b.Punkte" Schlaeft="Schlaeft" Huepft="_huepft" />
         </div>
 
         <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-3" Style="min-height: 48px;">@_spruch</MudText>
+
+        @* Solange es ein Ei ist, darf man es noch tauschen *@
+        @if (StufeNr == 0)
+        {
+            @if (_tauschen)
+            {
+                <MudText Typo="Typo.subtitle2" Class="mb-2" Style="font-weight: 700;">Welches Ei möchtest du lieber?</MudText>
+                @EiAuswahl(EiTauschen)
+                <div class="text-center mb-3">
+                    <MudButton Variant="Variant.Text" Size="Size.Small" Class="mh-knopf-klein" OnClick="() => _tauschen = false">Abbrechen</MudButton>
+                </div>
+            }
+            else
+            {
+                <div class="text-center mb-2">
+                    <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" Class="mh-knopf-klein"
+                               StartIcon="@Icons.Material.Filled.SwapHoriz" OnClick="() => _tauschen = true">Anderes Ei wählen</MudButton>
+                </div>
+            }
+        }
+
+        @if (StufeNr >= BegleiterService.Stufen.Length - 1)
+        {
+            @* ---------- Ganz gewachsen: in die Sammlung und neues Ei wählen ---------- *@
+            <div class="mh-geschafft mb-3">
+                @if (!_waehleNeu)
+                {
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 800;">@_b.Name ist vollständig gewachsen!</MudText>
+                    <MudText Typo="Typo.body2" Class="mb-3">
+                        Bring @_b.Name in deine Sammlung – dort bleibt es für immer. Danach wartet ein neues Ei auf dich.
+                    </MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="rounded-pill mh-knopf-klein" StartIcon="@Icons.Material.Filled.Egg"
+                               OnClick="() => _waehleNeu = true">Neues Ei wählen</MudButton>
+                }
+                else
+                {
+                    <MudText Typo="Typo.subtitle1" Class="mb-2" Style="font-weight: 800;">Welches Ei möchtest du als Nächstes?</MudText>
+                    @EiAuswahl(NeuesEi)
+                    <MudButton Variant="Variant.Text" Size="Size.Small" Class="mt-2 mh-knopf-klein" OnClick="() => _waehleNeu = false">Abbrechen</MudButton>
+                }
+            </div>
+        }
+        else
+        {
+        @* Vorschlag von Mindi: was man heute noch Gutes für sich tun könnte *@
+        <div class="mh-vorschlag mb-3">
+            @if (AktuellerVorschlag is { } v)
+            {
+                <div class="d-flex align-start gap-3">
+                    <div class="mh-icon-kachel mh-icon-klein"><MudIcon Icon="@v.Icon" Size="Size.Small" /></div>
+                    <div class="flex-grow-1">
+                        <MudText Typo="Typo.body2" Style="font-weight: 600;">@v.Text</MudText>
+                        <MudText Typo="Typo.caption" Class="mh-text-leise">Nur wenn du magst · +@v.Punkte Punkte für @_b.Name</MudText>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="rounded-pill mh-knopf-klein"
+                               OnClick="() => VorschlagAusfuehren(v)">@v.Knopf</MudButton>
+                    @if (_vorschlaege.Count > 1)
+                    {
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" Class="rounded-pill mh-knopf-klein"
+                                   StartIcon="@Icons.Material.Filled.Autorenew" OnClick="AndereIdee">Andere Idee</MudButton>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="d-flex align-center gap-3">
+                    <div class="mh-icon-kachel mh-icon-klein"><MudIcon Icon="@Icons.Material.Filled.Favorite" Size="Size.Small" /></div>
+                    <MudText Typo="Typo.body2" Style="font-weight: 600;">
+                        Du hast heute schon so viel für dich getan. Ich bin stolz auf dich!
+                    </MudText>
+                </div>
+            }
+        </div>
+        }
 
         @* Fortschritt bis zur nächsten Stufe *@
         <MudProgressLinear Color="Color.Primary" Value="@Fortschritt" Rounded="true" Size="Size.Medium" />
@@ -161,11 +174,69 @@
         <MudText Typo="Typo.caption" Class="mh-text-leise d-block mt-3">
             So wächst @_b.Name: Ziel abhaken +10 · Stimmung eintragen +5 · Atemübung +5 · Kurz-Check +10
         </MudText>
+
+        @* ---------- Sammlung: alle schon großgezogenen Begleiter ---------- *@
+        @if (_sammlung.Count > 0)
+        {
+            <MudDivider Class="my-3" />
+            <MudText Typo="Typo.overline" Class="mh-text-leise d-block">Deine Sammlung · @_sammlung.Count</MudText>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+                @foreach (var eintrag in _sammlung)
+                {
+                    var info = BegleiterService.ArtInfo(eintrag.Art);
+                    <MudTooltip Text="@($"{info.Titel} · großgezogen am {eintrag.AbgeschlossenAt.ToLocalTime():dd.MM.yyyy}")">
+                        <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Class="@($"ma-0 mh-sammlung-{eintrag.Art}")" Icon="@info.Icon">
+                            @eintrag.Name
+                        </MudChip>
+                    </MudTooltip>
+                }
+            </div>
+        }
     }
 </MudPaper>
+}
 
 @code {
+    // Damit "Atemübung starten" die Übung auf der Seite "Mein Weg" direkt beginnt
+    [Parameter] public EventCallback OnAtemStarten { get; set; }
+    [Parameter] public bool AtemSchonGemacht { get; set; }
+
+    // Ein Vorschlag: was, wie viele Punkte, Knopftext und wohin
+    private record Vorschlag(string Ziel, string Icon, string Text, int Punkte, string Knopf);
+
+    private List<Vorschlag> _vorschlaege = [];
+    private int _vorschlagNr;
+    private Vorschlag? AktuellerVorschlag => _vorschlaege.Count == 0 ? null : _vorschlaege[_vorschlagNr % _vorschlaege.Count];
+
     private Begleiter? _b;
+    private bool _geladen;    // erst nach dem Laden wissen wir, ob es schon einen Begleiter gibt
+    private bool _tauschen;   // Ei-Auswahl zum Tauschen offen?
+
+    // Erklärung bei der Begrüßung
+    private static readonly (string Icon, string Text)[] Erklaerung =
+    [
+        (Icons.Material.Filled.Spa, "Er wächst, wenn du dir Gutes tust: Ziele, Stimmung, Atemübung, Kurz-Check."),
+        (Icons.Material.Filled.Favorite, "Er wird nie traurig und verliert nichts, wenn du mal eine Pause brauchst."),
+        (Icons.Material.Filled.TouchApp, "Tipp ihn an – dann freut er sich und sagt dir etwas Nettes.")
+    ];
+
+    // Die drei Eier zum Aussuchen (wird an drei Stellen gebraucht)
+    private RenderFragment EiAuswahl(Func<string, Task> beiWahl) => __builder =>
+    {
+        <div class="mh-ei-wahl">
+            @foreach (var art in BegleiterService.Arten)
+            {
+                <button type="button" class="@($"mh-ei-option mh-ei-{art.Art}")" disabled="@_speichert" @onclick="() => beiWahl(art.Art)">
+                    <span class="mh-ei-form"></span>
+                    <b>@art.Titel</b>
+                    <small>@art.Beschreibung</small>
+                </button>
+            }
+        </div>
+    };
+    private List<SammlungEintrag> _sammlung = [];
+    private bool _waehleNeu;
+    private bool _speichert;
     private string _spruch = "";
     private bool _bearbeiten;
     private string _neuerName = "";
@@ -203,17 +274,153 @@
         try
         {
             _b = await BegleiterDienst.GetAsync();
-            _warSchlafend = Schlaeft;
-            _spruch = StufeNr == 0
-                ? "Ein Ei! Kümmere dich um dich selbst – dann schlüpft hier bald jemand."
-                : Schlaeft
-                    ? $"{_b.Name} hat dich vermisst. Schön, dass du wieder da bist! Tipp mich an."
-                    : $"Hallo! {_b.Name} freut sich, dich zu sehen.";
+            if (_b != null)
+            {
+                _warSchlafend = Schlaeft;
+                _spruch = StufeNr == 0
+                    ? $"Ein Ei! Kümmere dich um dich selbst – dann schlüpft hier bald {BegleiterService.ArtInfo(_b.Art).Titel}."
+                    : Schlaeft
+                        ? $"{_b.Name} hat dich vermisst. Schön, dass du wieder da bist! Tipp mich an."
+                        : $"Hallo! {_b.Name} freut sich, dich zu sehen.";
+            }
         }
         catch (Exception ex)
         {
             Snackbar.Add("Begleiter konnte nicht geladen werden: " + ex.Message, Severity.Warning);
         }
+        _geladen = true;
+
+        await LadeVorschlaegeAsync();
+        try { _sammlung = await BegleiterDienst.GetSammlungAsync(); } catch { /* ohne Sammlung geht es auch */ }
+    }
+
+    // Begrüßung: Ei ausgesucht
+    private async Task ErsteWahl(string art)
+    {
+        _speichert = true;
+        try
+        {
+            _b = await BegleiterDienst.ErstelleAsync(art, aktiv: true);
+            _spruch = $"Dein Ei ist da! Kümmere dich um dich selbst – dann schlüpft hier bald {BegleiterService.ArtInfo(art).Titel}.";
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Das hat nicht geklappt: " + ex.Message, Severity.Error);
+        }
+        _speichert = false;
+    }
+
+    // Begrüßung: "Nein danke" – wird gemerkt, im Profil kann man ihn später einschalten
+    private async Task NeinDanke()
+    {
+        _speichert = true;
+        try
+        {
+            _b = await BegleiterDienst.ErstelleAsync("mindi", aktiv: false);
+            Snackbar.Add("Alles klar! Du kannst den Begleiter jederzeit im Profil einschalten.", Severity.Info);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Das hat nicht geklappt: " + ex.Message, Severity.Error);
+        }
+        _speichert = false;
+    }
+
+    // Noch ein Ei → Art tauschen
+    private async Task EiTauschen(string art)
+    {
+        if (_b == null) return;
+        _speichert = true;
+        try
+        {
+            await BegleiterDienst.TauscheEiAsync(_b, art);
+            _tauschen = false;
+            _spruch = $"Neues Ei! Hier schlüpft bald {BegleiterService.ArtInfo(art).Titel}.";
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Das hat nicht geklappt: " + ex.Message, Severity.Error);
+        }
+        _speichert = false;
+    }
+
+    // Ganz gewachsenen Begleiter in die Sammlung, neues Ei der gewählten Art
+    private async Task NeuesEi(string art)
+    {
+        if (_b == null) return;
+        _speichert = true;
+        try
+        {
+            var alterName = _b.Name;
+            await BegleiterDienst.InSammlungUndNeuesEiAsync(_b, art);
+            _sammlung = await BegleiterDienst.GetSammlungAsync();
+            _waehleNeu = false;
+            _spruch = $"{alterName} wohnt jetzt in deiner Sammlung. Und schau – ein neues Ei!";
+            await LadeVorschlaegeAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Das hat nicht geklappt: " + ex.Message, Severity.Error);
+        }
+        _speichert = false;
+    }
+
+    // Schaut nach, was heute noch nicht gemacht wurde, und macht daraus freundliche Vorschläge
+    private async Task LadeVorschlaegeAsync()
+    {
+        var liste = new List<Vorschlag>();
+        try
+        {
+            var stimmungHeute = (await Tagebuch.GetStimmungenAsync(1)).Any(s => s.CreatedAt.ToLocalTime().Date == DateTime.Today);
+            var ziele = await Tagebuch.GetZieleAsync();
+            var letzterCheck = (await Tagebuch.GetChecksAsync()).FirstOrDefault();
+
+            if (!stimmungHeute)
+                liste.Add(new("heute", Icons.Material.Filled.Mood, "Magst du mir erzählen, wie es dir heute geht?", 5, "Zu „Heute“"));
+            if (!AtemSchonGemacht)
+                liste.Add(new("atem", Icons.Material.Filled.Air, "Wollen wir zusammen kurz durchatmen? Nur eine Minute.", 5, "Atemübung starten"));
+            if (ziele.Any(z => !z.Erledigt))
+                liste.Add(new("ziele", Icons.Material.Filled.CheckCircleOutline, "Hast du eins deiner Ziele geschafft? Dann hak es ab!", 10, "Zu meinen Zielen"));
+            else if (ziele.Count == 0)
+                liste.Add(new("ziele", Icons.Material.Filled.Flag, "Wie wär's mit einem ganz kleinen Ziel für heute?", 10, "Ziel eintragen"));
+            if (letzterCheck == null || DateTime.UtcNow - letzterCheck.CreatedAt.ToUniversalTime() > TimeSpan.FromDays(7))
+                liste.Add(new("kurz-check", Icons.Material.Filled.FactCheck, "Lust auf den Kurz-Check? Nur 5 Fragen.", 10, "Zum Kurz-Check"));
+        }
+        catch { /* ohne Vorschläge geht es auch */ }
+
+        _vorschlaege = liste;
+        _vorschlagNr = 0;
+    }
+
+    private void AndereIdee() => _vorschlagNr++;
+
+    private async Task VorschlagAusfuehren(Vorschlag v)
+    {
+        switch (v.Ziel)
+        {
+            case "heute":
+            case "kurz-check":
+                Nav.NavigateTo(v.Ziel);
+                break;
+            case "atem":
+                await ScrolleZu("mh-atem");
+                await OnAtemStarten.InvokeAsync();
+                _vorschlaege.Remove(v);
+                break;
+            case "ziele":
+                await ScrolleZu("mh-ziele");
+                break;
+        }
+    }
+
+    // Sanft zu einem Bereich auf der Seite scrollen
+    private async Task ScrolleZu(string id)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("eval", $"document.getElementById('{id}')?.scrollIntoView({{ behavior: 'smooth', block: 'center' }});");
+        }
+        catch { /* dann eben nicht scrollen */ }
     }
 
     private async Task Streicheln()
@@ -249,6 +456,7 @@
         {
             var alteStufe = StufeNr;
             _b = neu;
+            _ = InvokeAsync(async () => { await LadeVorschlaegeAsync(); StateHasChanged(); });   // Erledigtes verschwindet aus den Vorschlägen
             if (StufeNr > alteStufe)
             {
                 _spruch = alteStufe == 0 ? $"Geschlüpft! Hallo, ich bin {neu.Name}!" : $"{neu.Name} ist gewachsen!";
@@ -264,3 +472,4 @@
         BegleiterDienst.Geaendert -= BeiAenderung;
     }
 }
+

@@ -670,7 +670,7 @@
           }
         }
       },
-      "MudBlazor/9.12.0": {
+      "MudBlazor/9.14.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Components": "10.0.1",
@@ -1558,7 +1558,7 @@
           }
         }
       },
-      "MudBlazor/9.12.0": {
+      "MudBlazor/9.14.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Components": "10.0.1",
@@ -2999,10 +2999,10 @@
         "mimemapping.nuspec"
       ]
     },
-    "MudBlazor/9.12.0": {
-      "sha512": "T6PQUCJe60UTSy3u1F8R2nuC06Cox6WEhon5GA2/AZNVI1WstlPSJZdGPyp6pHFpWdjPpla65piLpyJsbW+1rA==",
+    "MudBlazor/9.14.0": {
+      "sha512": "VmMM/u4upqpc0lJoXmo30Zj1d/Zq3BjdS11+q/eB/+p20pV1WXbLS0C17WbV4xqLM1i9Kpco6emt6M4s2R/BUA==",
       "type": "package",
-      "path": "mudblazor/9.12.0",
+      "path": "mudblazor/9.14.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3019,11 +3019,13 @@
         "buildTransitive/MudBlazor.props",
         "lib/net10.0/MudBlazor.dll",
         "lib/net10.0/MudBlazor.xml",
+        "lib/net11.0/MudBlazor.dll",
+        "lib/net11.0/MudBlazor.xml",
         "lib/net8.0/MudBlazor.dll",
         "lib/net8.0/MudBlazor.xml",
         "lib/net9.0/MudBlazor.dll",
         "lib/net9.0/MudBlazor.xml",
-        "mudblazor.9.12.0.nupkg.sha512",
+        "mudblazor.9.14.0.nupkg.sha512",
         "mudblazor.nuspec",
         "staticwebassets/MudBlazor.min.css",
         "staticwebassets/MudBlazor.min.js",
@@ -3270,11 +3272,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj",
+      "projectUniqueName": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.Wasm\\MindHelp.Wasm.csproj",
       "projectName": "MindHelp.Wasm",
-      "projectPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\MindHelp.Wasm.csproj",
+      "projectPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.Wasm\\MindHelp.Wasm.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.wasm\\obj\\",
+      "outputPath": "C:\\Diplomarbeit_mindhelp\\mindhelp_pro\\mindhelp\\Mindhelp.Wasm\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

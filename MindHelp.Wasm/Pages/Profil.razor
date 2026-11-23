@@ -5,7 +5,9 @@
 @inject ProfilService ProfilDienst
 @inject NavigationManager Nav
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 @inject DesignService Design
+@inject BegleiterService BegleiterDienst
 
 <PageTitle>Mein Profil</PageTitle>
 
@@ -120,6 +122,24 @@ else
                 </MudButton>
             </MudPaper>
 
+            @* Begleiter ein- oder ausschalten (nur für Hilfesuchende) *@
+            @if (!_profil.IstHilfskraft)
+            {
+                <MudPaper Elevation="2" Class="pa-4 mb-4">
+                    <MudText Typo="Typo.subtitle1" Class="mb-1">Begleiter</MudText>
+                    <div class="d-flex align-center">
+                        <MudIcon Icon="@Icons.Material.Filled.Spa" Color="Color.Primary" Class="mr-3" />
+                        <MudText Typo="Typo.body1" Class="flex-grow-1">Begleiter auf „Mein Weg“ anzeigen</MudText>
+                        <MudSwitch T="bool" Value="@(_begleiter?.Aktiv == true)" ValueChanged="BegleiterUmschalten" Color="Color.Primary" aria-label="Begleiter anzeigen" />
+                    </div>
+                    <MudText Typo="Typo.caption" Class="mh-text-leise">
+                        @(_begleiter == null
+                            ? "Du hast noch keinen Begleiter. Schalte ihn ein, dann kannst du dir auf „Mein Weg“ ein Ei aussuchen."
+                            : "Beim Ausschalten bleiben Punkte und Sammlung gespeichert.")
+                    </MudText>
+                </MudPaper>
+            }
+
             @* Darstellung: hell / dunkel – bleibt gespeichert, bis man es wieder ändert *@
             <MudPaper Elevation="2" Class="pa-4 mb-4">
                 <MudText Typo="Typo.subtitle1" Class="mb-1">Darstellung</MudText>
@@ -131,11 +151,20 @@ else
                 <MudText Typo="Typo.caption" Class="mh-text-leise">Deine Wahl wird auf diesem Gerät gespeichert.</MudText>
             </MudPaper>
 
-
             @* Abmelden *@
             <MudButton Variant="Variant.Text" Color="Color.Error" StartIcon="@Icons.Material.Filled.Logout" OnClick="Abmelden">
                 Abmelden
             </MudButton>
+
+            @* Konto löschen (DSGVO) *@
+            <MudPaper Elevation="0" Class="pa-4 mt-6 rounded-lg mh-gefahr">
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Konto löschen</MudText>
+                <MudText Typo="Typo.body2" Class="mh-text-leise mb-3">
+                    Löscht dein Konto und alle deine Daten dauerhaft. Das kann nicht rückgängig gemacht werden.
+                </MudText>
+                <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever"
+                           Class="rounded-pill" OnClick="KontoLoeschen">Konto löschen</MudButton>
+            </MudPaper>
         </MudItem>
     </MudGrid>
 }
@@ -148,6 +177,7 @@ else
     private bool _passwortLaeuft;
 
     private Profile? _profil;
+    private Begleiter? _begleiter;   // null = noch nicht entschieden
     private HelperDetails? _hilfskraft;
     private string? _email;
     private string _neuesPasswort = "";
@@ -162,13 +192,17 @@ else
 
         if (!SupabaseService.IsLoggedIn)
         {
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/");   // dort erscheint das Anmelde-Fenster
             return;
         }
 
         try
         {
             _profil = await Chat.GetMeinProfilAsync();
+            if (_profil?.IstHilfskraft == false)
+            {
+                try { _begleiter = await BegleiterDienst.GetAsync(); } catch { /* ohne geht es auch */ }
+            }
             _email = await ProfilDienst.GetMeineEmailAsync();
 
             if (_profil?.IstHilfskraft == true)
@@ -265,10 +299,57 @@ else
         _passwortLaeuft = false;
     }
 
+    // Begleiter ein-/ausschalten. Noch keiner da? Einschalten → zur Ei-Auswahl auf "Mein Weg"
+    private async Task BegleiterUmschalten(bool an)
+    {
+        try
+        {
+            if (_begleiter == null)
+            {
+                if (an)
+                {
+                    Nav.NavigateTo("mein-weg");
+                    return;
+                }
+                _begleiter = await BegleiterDienst.ErstelleAsync("mindi", aktiv: false);
+            }
+            else
+            {
+                await BegleiterDienst.SetzeAktivAsync(_begleiter, an);
+            }
+            Snackbar.Add(an ? "Dein Begleiter ist wieder da!" : "Begleiter ausgeblendet. Punkte und Sammlung bleiben gespeichert.", Severity.Info);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Konnte nicht gespeichert werden: " + ex.Message, Severity.Error);
+        }
+    }
+
     private async Task Abmelden()
     {
+        // Zuerst nachfragen
+        var optionen = new DialogOptions { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, BackdropClick = true };
+        var fenster = await DialogService.ShowAsync<AbmeldenDialog>(string.Empty, optionen);
+        var ergebnis = await fenster.Result;
+        if (ergebnis == null || ergebnis.Canceled) return;   // "Nein, angemeldet bleiben"
+
         Chat.StoppeLiveEmpfang();
         await SupabaseService.LogoutAsync();
         Nav.NavigateTo("/");
+        Snackbar.Add("Du wurdest abgemeldet. Bis bald!", Severity.Info);
+    }
+
+    private async Task KontoLoeschen()
+    {
+        var optionen = new DialogOptions { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, BackdropClick = false };
+        var fenster = await DialogService.ShowAsync<KontoLoeschenDialog>(string.Empty, optionen);
+        var ergebnis = await fenster.Result;
+        if (ergebnis == null || ergebnis.Canceled) return;
+
+        Chat.StoppeLiveEmpfang();
+        Snackbar.Add("Dein Konto wurde gelöscht. Pass gut auf dich auf!", Severity.Info);
+        // Neu laden, damit die App ganz ohne Anmeldung startet
+        Nav.NavigateTo("/", forceLoad: true);
     }
 }
+

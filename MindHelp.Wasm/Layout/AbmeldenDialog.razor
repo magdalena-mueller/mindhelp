@@ -1,0 +1,20 @@
+@* Nachfrage vor dem Abmelden. Ergebnis: Ok = abmelden, Abbrechen = angemeldet bleiben *@
+<MudDialog>
+    <DialogContent>
+        <div class="d-flex flex-column align-center text-center pt-4">
+            <div class="mh-icon-kachel mb-3"><MudIcon Icon="@Icons.Material.Filled.Logout" /></div>
+            <MudText Typo="Typo.h6" Style="font-weight: 700;">Bist du sicher, dass du dich abmelden willst?</MudText>
+            <MudText Typo="Typo.body2" Class="mh-text-leise mt-1 mb-4">Dein Konto bleibt bei uns gespeichert.</MudText>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="rounded-pill mb-2" Style="text-transform: none; font-weight: 600;"
+                       OnClick="() => Dialog.Close(DialogResult.Ok(true))">Ja, jetzt abmelden</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Class="rounded-pill mb-2" Style="text-transform: none; font-weight: 600;"
+                       OnClick="() => Dialog.Cancel()">Nein, angemeldet bleiben</MudButton>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance Dialog { get; set; } = null!;
+}

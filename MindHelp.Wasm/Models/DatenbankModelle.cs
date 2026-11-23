@@ -226,6 +226,13 @@ public class Begleiter : BaseModel
     [Column("name")]
     public string Name { get; set; } = "Mindi";
 
+    [Column("art")]
+    public string Art { get; set; } = "mindi";   // "mindi", "fee" oder "drache"
+
+    
+    [Column("aktiv")]
+    public bool Aktiv { get; set; } = true;      // false = "Nein danke" bzw. im Profil ausgeschaltet
+
     [Column("punkte")]
     public int Punkte { get; set; }
 
@@ -234,4 +241,23 @@ public class Begleiter : BaseModel
 
     [Column("created_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
     public DateTime CreatedAt { get; set; }
+}
+
+[Table("begleiter_sammlung")]
+public class SammlungEintrag : BaseModel
+{
+    [PrimaryKey("id", false)]
+    public long Id { get; set; }
+
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+
+    [Column("art")]
+    public string Art { get; set; } = "mindi";
+
+    [Column("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [Column("abgeschlossen_at", ignoreOnInsert: true, ignoreOnUpdate: true)]
+    public DateTime AbgeschlossenAt { get; set; }
 }

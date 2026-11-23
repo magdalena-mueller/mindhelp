@@ -5,7 +5,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
   "mainAssemblyName": "MindHelp.Wasm",
   "applicationEnvironment": "Development",
   "resources": {
-    "hash": "sha256-ugx1oI2c3i0pZnR9H3NSkZJvyubr89LzQVpwJXT8kaA=",
+    "hash": "sha256-7S5uBIA/aXJrqFL8mIVxTYpyvViJfaEx9NjhFfODA/s=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.rjbmzc4jpg.js"
@@ -276,8 +276,8 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "MudBlazor.wasm",
-        "name": "MudBlazor.jyvbqv5lqd.wasm",
-        "hash": "sha256-izyRSqhg8TRSvcJxaeqHAWVUDtwGU2qFjC0HdaZvHJk=",
+        "name": "MudBlazor.w9ahiklhnu.wasm",
+        "hash": "sha256-RACcfOQkH1IYy4wzRmchuuo9tXlLa21P+VdM60zEvQI=",
         "cache": "force-cache"
       },
       {
@@ -1368,28 +1368,28 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "MindHelp.Shared.wasm",
-        "name": "MindHelp.Shared.9ylv42hpkd.wasm",
-        "hash": "sha256-H2OxKXtYTHS3x2xCw6l6SPYPXS2tNpjRJ7BBif36wdM=",
+        "name": "MindHelp.Shared.n6f6l1tc6e.wasm",
+        "hash": "sha256-Xzu3LLuQRWdIuNl3Dndx3xt2tyOSYCKM4Feu48ls4jY=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "MindHelp.Wasm.wasm",
-        "name": "MindHelp.Wasm.hun0p2uamy.wasm",
-        "hash": "sha256-udm2UzZ+ZNFnVi36+f1vmAOUH2jV4zZbzbB+HNAtoT0=",
+        "name": "MindHelp.Wasm.u7jidxsu6g.wasm",
+        "hash": "sha256-Nj1vxYAdvmnOwJgXl0aGFMHglFheS64JaFoggiEkf0c=",
         "cache": "force-cache"
       }
     ],
     "pdb": [
       {
         "virtualPath": "MindHelp.Shared.pdb",
-        "name": "MindHelp.Shared.3olpqisit5.pdb",
-        "hash": "sha256-DaSs4QVVHBaFPYOBEbCTcWXzfrhYTPbfiyZ22H61oeA=",
+        "name": "MindHelp.Shared.blr3sjrdf2.pdb",
+        "hash": "sha256-b2axqzs5Tz9BzQUNrUNTJJRiEBOukYAtdD92p7d0UbE=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "MindHelp.Wasm.pdb",
-        "name": "MindHelp.Wasm.1crk86haam.pdb",
-        "hash": "sha256-YTcMMurkS68C91ofGvYBTYFAXSgMBWFStxrTScBUmv0=",
+        "name": "MindHelp.Wasm.1l7h6q80jj.pdb",
+        "hash": "sha256-W9Gd6z12pEKcAqcfxCiC4vD8KbjBRaRh3StEQZv7zWg=",
         "cache": "force-cache"
       }
     ],

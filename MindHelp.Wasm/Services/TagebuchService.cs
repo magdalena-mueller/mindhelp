@@ -59,6 +59,21 @@ public class TagebuchService
         return antwort.Models.FirstOrDefault();
     }
 
+        // Für Hilfskräfte: die letzten geteilten Einträge einer Person – mit Notiz (im Chat aufklappbar)
+    public async Task<List<Stimmung>> GetGeteilteStimmungenAsync(Guid personId, int anzahl = 5)
+    {
+        var client = await _supabase.InitializeAsync();
+        var antwort = await client.From<Stimmung>()
+            .Filter("user_id", Operator.Equals, personId.ToString())
+            .Filter("geteilt", Operator.Equals, "true")
+            .Order("created_at", Ordering.Descending)
+            .Limit(anzahl)
+            .Get();
+        return antwort.Models;
+    }
+
+
+
     // ---------- Ziele ----------
 
     public async Task<List<Ziel>> GetZieleAsync()

@@ -1,0 +1,186 @@
+@* Zeichnet den Begleiter als SVG – je nach Art (Mindi, Fee, Drache) und Stufe (0 = Ei … 4 = Strahlend) *@
+<svg viewBox="0 0 200 200" class="@($"mh-mindi mh-mindi-stufe-{Stufe} {(Huepft ? "mh-mindi-huepft" : "")}")" aria-hidden="true">
+    <defs>
+        <radialGradient id="@($"mh-koerper-{Art}")" cx="40%" cy="35%" r="70%">
+            <stop offset="0" stop-color="@Farben.Hell" />
+            <stop offset="0.55" stop-color="@Farben.Mitte" />
+            <stop offset="1" stop-color="@Farben.Dunkel" />
+        </radialGradient>
+        <radialGradient id="@($"mh-ei-{Art}")" cx="40%" cy="30%" r="75%">
+            <stop offset="0" stop-color="#FFFFFF" />
+            <stop offset="1" stop-color="@Farben.Ei" />
+        </radialGradient>
+    </defs>
+
+    @if (Stufe == 0)
+    {
+        @* ---------- Ei (Farbe und Muster je nach Art) ---------- *@
+        <ellipse cx="100" cy="175" rx="40" ry="7" fill="rgba(78,64,160,.15)" />
+        <g class="mh-mindi-wackeln">
+            <ellipse cx="100" cy="110" rx="48" ry="62" fill="@($"url(#mh-ei-{Art})")" stroke="@Farben.Mitte" stroke-width="3" />
+            @if (Art == "fee")
+            {
+                <path d="M84 88 l3 6 6 3 -6 3 -3 6 -3 -6 -6 -3 6 -3z" fill="@Farben.Mitte" />
+                <path d="M118 120 l2.5 5 5 2.5 -5 2.5 -2.5 5 -2.5 -5 -5 -2.5 5 -2.5z" fill="@Farben.Mitte" />
+                <circle cx="112" cy="80" r="3" fill="@Farben.Mitte" />
+            }
+            else if (Art == "drache")
+            {
+                <path d="M72 96 q8 -8 16 0 M92 96 q8 -8 16 0 M112 96 q8 -8 16 0 M80 118 q8 -8 16 0 M100 118 q8 -8 16 0" fill="none" stroke="@Farben.Mitte" stroke-width="3" stroke-linecap="round" />
+            }
+            else
+            {
+                <circle cx="82" cy="92" r="6" fill="@Farben.Ei" />
+                <circle cx="116" cy="126" r="8" fill="@Farben.Ei" />
+                <circle cx="110" cy="80" r="4" fill="@Farben.Ei" />
+            }
+            @if (Punkte >= 10)
+            {
+                @* Kurz vor dem Schlüpfen: ein Riss *@
+                <path d="M62 112 l12 -8 l9 10 l11 -10 l10 9 l12 -9 l10 8" fill="none" stroke="@Farben.Dunkel" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            }
+        </g>
+    }
+    else
+    {
+        <ellipse cx="100" cy="180" rx="50" ry="8" fill="rgba(78,64,160,.15)" />
+
+        @if (Stufe >= 4)
+        {
+            @* Strahlend: Glanz und Sterne (bei allen Arten) *@
+            <circle cx="100" cy="115" r="80" fill="@Farben.Glanz" class="mh-mindi-glanz" />
+            <path class="mh-mindi-stern" d="M32 52 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4z" fill="#F3C969" />
+            <path class="mh-mindi-stern mh-stern-2" d="M168 70 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#F3A6DD" />
+            <path class="mh-mindi-stern mh-stern-3" d="M160 150 l3 6 6 3 -6 3 -3 6 -3 -6 -6 -3 6 -3z" fill="#7FB0F5" />
+        }
+
+        @if (Art == "fee")
+        {
+            @* ---------- Fee ---------- *@
+            @* Flügel hinter dem Körper – ab Stufe 2 groß *@
+            <g class="mh-fee-fluegel" style="@($"transform: scale({(Stufe >= 2 ? 1 : 0.65)}); transform-origin: 100px 110px;")">
+                <ellipse cx="58" cy="88" rx="32" ry="20" fill="rgba(205,232,255,.75)" stroke="#B9D8F5" stroke-width="2" transform="rotate(-30 58 88)" />
+                <ellipse cx="62" cy="128" rx="22" ry="14" fill="rgba(205,232,255,.75)" stroke="#B9D8F5" stroke-width="2" transform="rotate(25 62 128)" />
+                <ellipse cx="142" cy="88" rx="32" ry="20" fill="rgba(205,232,255,.75)" stroke="#B9D8F5" stroke-width="2" transform="rotate(30 142 88)" />
+                <ellipse cx="138" cy="128" rx="22" ry="14" fill="rgba(205,232,255,.75)" stroke="#B9D8F5" stroke-width="2" transform="rotate(-25 138 128)" />
+            </g>
+            @if (Stufe >= 2)
+            {
+                @* Fühler mit Sternchen *@
+                <path d="M90 76 Q84 60 78 50 M110 76 Q116 60 122 50" stroke="@Farben.Dunkel" stroke-width="3" stroke-linecap="round" fill="none" />
+                <path d="M78 42 l2.5 5 5 2.5 -5 2.5 -2.5 5 -2.5 -5 -5 -2.5 5 -2.5z" fill="#F3C969" />
+                <path d="M122 42 l2.5 5 5 2.5 -5 2.5 -2.5 5 -2.5 -5 -5 -2.5 5 -2.5z" fill="#F3C969" />
+            }
+            <ellipse cx="100" cy="122" rx="46" ry="50" fill="@($"url(#mh-koerper-{Art})")" />
+            @if (Stufe >= 3)
+            {
+                @* Blumenkranz *@
+                <circle cx="78" cy="82" r="7" fill="#FFFFFF" /><circle cx="78" cy="82" r="3" fill="#F3C969" />
+                <circle cx="100" cy="74" r="8" fill="#B9A3F2" /><circle cx="100" cy="74" r="3.5" fill="#F3C969" />
+                <circle cx="122" cy="82" r="7" fill="#FFFFFF" /><circle cx="122" cy="82" r="3" fill="#F3C969" />
+            }
+            @Gesicht(84, 116, 114, 136)
+        }
+        else if (Art == "drache")
+        {
+            @* ---------- Drache ---------- *@
+            @* Schwanz *@
+            <path d="M140 150 C178 158 186 126 170 112" stroke="@Farben.Mitte" stroke-width="14" stroke-linecap="round" fill="none" />
+            <path d="M164 104 l16 2 -8 14z" fill="#F3C969" />
+            @if (Stufe >= 2)
+            {
+                @* Flügel *@
+                <g class="mh-drache-fluegel">
+                    <path d="M58 104 L18 76 L30 102 L12 112 L50 126 Z" fill="@Farben.Dunkel" opacity=".9" />
+                    <path d="M142 104 L182 76 L170 102 L188 112 L150 126 Z" fill="@Farben.Dunkel" opacity=".9" />
+                </g>
+            }
+            @* Hörnchen – ab Stufe 3 größer *@
+            <path d="@(Stufe >= 3 ? "M74 76 L66 48 L88 70 Z" : "M78 74 L74 60 L88 70 Z")" fill="#F3C969" />
+            <path d="@(Stufe >= 3 ? "M126 76 L134 48 L112 70 Z" : "M122 74 L126 60 L112 70 Z")" fill="#F3C969" />
+            @if (Stufe >= 2)
+            {
+                <ellipse cx="78" cy="170" rx="14" ry="8" fill="@Farben.Dunkel" />
+                <ellipse cx="122" cy="170" rx="14" ry="8" fill="@Farben.Dunkel" />
+            }
+            <ellipse cx="100" cy="120" rx="56" ry="52" fill="@($"url(#mh-koerper-{Art})")" />
+            @* heller Bauch *@
+            <ellipse cx="100" cy="140" rx="32" ry="26" fill="#E2F8EF" opacity=".9" />
+            @if (Stufe >= 3)
+            {
+                @* Rückenzacken *@
+                <path d="M60 92 l8 -10 4 12 M140 92 l-8 -10 -4 12" stroke="@Farben.Dunkel" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            }
+            @Gesicht(80, 120, 106, 126)
+        }
+        else
+        {
+            @* ---------- Mindi ---------- *@
+            <path d="M100 66 C100 56 100 50 100 44" stroke="#5FAF7A" stroke-width="4" stroke-linecap="round" fill="none" />
+            <path d="M100 50 C88 38 76 42 74 48 C84 54 94 54 100 50Z" fill="#7CC793" />
+            @if (Stufe >= 2)
+            {
+                <path d="M100 46 C112 32 126 36 128 42 C118 50 106 50 100 46Z" fill="#7CC793" />
+            }
+            @if (Stufe >= 3)
+            {
+                <circle cx="100" cy="38" r="9" fill="#F3A6DD" />
+                <circle cx="100" cy="38" r="4" fill="#F3C969" />
+            }
+            @if (Stufe >= 2)
+            {
+                <ellipse cx="78" cy="170" rx="14" ry="8" fill="@Farben.Dunkel" />
+                <ellipse cx="122" cy="170" rx="14" ry="8" fill="@Farben.Dunkel" />
+                <ellipse cx="44" cy="122" rx="10" ry="16" fill="@Farben.Mitte" transform="rotate(-25 44 122)" />
+                <ellipse cx="156" cy="122" rx="10" ry="16" fill="@Farben.Mitte" transform="rotate(25 156 122)" class="mh-mindi-arm-rechts" />
+            }
+            <ellipse cx="100" cy="118" rx="58" ry="54" fill="@($"url(#mh-koerper-{Art})")" />
+            @Gesicht(80, 120, 108, 132)
+        }
+    }
+</svg>
+
+@code {
+    [Parameter] public string Art { get; set; } = "mindi";
+    [Parameter] public int Stufe { get; set; }
+    [Parameter] public int Punkte { get; set; }
+    [Parameter] public bool Schlaeft { get; set; }
+    [Parameter] public bool Huepft { get; set; }
+
+    // Farben je Art: hell → mitte → dunkel (Körper), Ei-Farbe und Glanz für Stufe 5
+    private (string Hell, string Mitte, string Dunkel, string Ei, string Glanz) Farben => Art switch
+    {
+        "fee" => ("#FFE0F1", "#F3A6DD", "#D47FBF", "#F9D2EC", "rgba(243,166,221,.25)"),
+        "drache" => ("#D4F5E8", "#7FD6B8", "#3FA585", "#C6EEDD", "rgba(127,214,184,.25)"),
+        _ => ("#D9C9FA", "#A78BEA", "#7E6FD8", "#D8CCF7", "rgba(185,163,242,.25)")
+    };
+
+    // Augen, Bäckchen und Mund – gleich für alle Arten, nur an anderer Stelle
+    private RenderFragment Gesicht(int augeLinks, int augeRechts, int augenHoehe, int mundHoehe) => __builder =>
+    {
+        if (Schlaeft)
+        {
+            <path d="@($"M{augeLinks - 10} {augenHoehe + 2} q10 8 20 0")" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
+            <path d="@($"M{augeRechts - 10} {augenHoehe + 2} q10 8 20 0")" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
+        }
+        else
+        {
+            <g class="mh-mindi-augen" style="@($"transform-origin: 100px {augenHoehe}px;")">
+                <ellipse cx="@augeLinks" cy="@augenHoehe" rx="9" ry="11" fill="#2E2A47" />
+                <ellipse cx="@augeRechts" cy="@augenHoehe" rx="9" ry="11" fill="#2E2A47" />
+                <circle cx="@(augeLinks + 3)" cy="@(augenHoehe - 4)" r="3.5" fill="#fff" />
+                <circle cx="@(augeRechts + 3)" cy="@(augenHoehe - 4)" r="3.5" fill="#fff" />
+            </g>
+        }
+        <ellipse cx="@(augeLinks - 14)" cy="@(augenHoehe + 20)" rx="9" ry="6" fill="#F3A6DD" opacity=".8" />
+        <ellipse cx="@(augeRechts + 14)" cy="@(augenHoehe + 20)" rx="9" ry="6" fill="#F3A6DD" opacity=".8" />
+        if (Huepft)
+        {
+            <path d="@($"M88 {mundHoehe - 2} q12 16 24 0 z")" fill="#2E2A47" />
+        }
+        else
+        {
+            <path d="@($"M90 {mundHoehe} q10 9 20 0")" stroke="#2E2A47" stroke-width="4" stroke-linecap="round" fill="none" />
+        }
+    };
+}

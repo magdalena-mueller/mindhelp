@@ -1,0 +1,95 @@
+@implements IDisposable
+@inject ChatService Chat
+@inject NavigationManager Nav
+
+@* Banner oben wie bei WhatsApp: Eine neue Nachricht kommt aus einem Chat, der gerade NICHT offen ist.
+   Antippen öffnet den Chat, nach 5 Sekunden verschwindet der Banner von selbst. *@
+@if (_anzeige is { } n)
+{
+    <div class="@($"mh-nachricht-banner {(n.Notfall ? "mh-nachricht-banner-notfall" : "")}")" role="status" @key="n.NachrichtId"
+         @onclick="Oeffnen">
+        <MudAvatar Class="@(n.Notfall ? "mh-avatar mh-avatar-notfall" : "mh-avatar")">@n.Anfang</MudAvatar>
+        <div class="flex-grow-1" style="min-width: 0;">
+            <MudText Typo="Typo.subtitle2" Class="mh-einzeilig" Style="font-weight: 700;">@n.Name</MudText>
+            <MudText Typo="Typo.body2" Class="mh-einzeilig mh-text-leise">@n.Text</MudText>
+        </div>
+        @* stopPropagation: Klick auf X soll nur schließen, nicht den Chat öffnen *@
+        <span @onclick:stopPropagation="true">
+            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" aria-label="Schließen" OnClick="Schliessen" />
+        </span>
+    </div>
+}
+
+@code {
+    // Was gerade im Banner steht
+    private record BannerInhalt(long NachrichtId, long UnterhaltungId, string Name, string Anfang, string Text, bool Notfall);
+
+    private BannerInhalt? _anzeige;
+    private Guid? _meineId;
+    private readonly Dictionary<Guid, string> _namen = [];
+    private CancellationTokenSource? _ausblenden;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _meineId = await Chat.GetMeineIdAsync();
+        Chat.NeueNachricht += BeiNeuerNachricht;
+    }
+
+    private void BeiNeuerNachricht(ChatMessage nachricht)
+    {
+        // Eigene Nachrichten und Nachrichten aus dem gerade offenen Chat → kein Banner
+        if (nachricht.SenderId == _meineId) return;
+        var seite = Nav.ToBaseRelativePath(Nav.Uri).Split('?', '#')[0].ToLowerInvariant();
+        if (seite == $"chat/{nachricht.ConversationId}") return;
+
+        _ = InvokeAsync(async () =>
+        {
+            if (!_namen.TryGetValue(nachricht.SenderId, out var name))
+            {
+                name = (await Chat.GetProfilAsync(nachricht.SenderId))?.VollerName ?? "Neue Nachricht";
+                _namen[nachricht.SenderId] = name;
+            }
+
+            _anzeige = new BannerInhalt(
+                nachricht.Id,
+                nachricht.ConversationId,
+                name,
+                string.IsNullOrEmpty(name) ? "?" : name[..1].ToUpper(),
+                nachricht.Content,
+                nachricht.Content.StartsWith("NOTRUF:"));
+            StateHasChanged();
+
+            // Nach 5 Sekunden wieder ausblenden (eine neuere Nachricht startet die Zeit neu)
+            _ausblenden?.Cancel();
+            _ausblenden = new CancellationTokenSource();
+            var token = _ausblenden.Token;
+            try
+            {
+                await Task.Delay(5000, token);
+                _anzeige = null;
+                StateHasChanged();
+            }
+            catch (TaskCanceledException) { /* neuere Nachricht oder geschlossen */ }
+        });
+    }
+
+    private void Oeffnen()
+    {
+        if (_anzeige == null) return;
+        var unterhaltung = _anzeige.UnterhaltungId;
+        Schliessen();
+        Nav.NavigateTo($"chat/{unterhaltung}");
+    }
+
+    private void Schliessen()
+    {
+        _ausblenden?.Cancel();
+        _anzeige = null;
+    }
+
+    public void Dispose()
+    {
+        Chat.NeueNachricht -= BeiNeuerNachricht;
+        _ausblenden?.Cancel();
+    }
+}

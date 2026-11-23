@@ -22,25 +22,33 @@ public class SupaBaseService
     // Wird ausgelöst, wenn sich jemand an- oder abmeldet (z. B. damit das Menü sich anpasst)
     public event Action? AnmeldungGeaendert;
 
-
     /// <summary>
     /// Erstellt den Client beim ersten Aufruf und verbindet mit Supabase.
     /// Weitere Aufrufe liefern denselben Client zurück.
     /// </summary>
-    public async Task<Supabase.Client> InitializeAsync()
+    public Task<Supabase.Client> InitializeAsync()
+    {
+        // Mehrere Seiten rufen das gleichzeitig auf (Layout, Menü, Startseite) –
+        // trotzdem soll nur EIN Client entstehen, deshalb merken wir uns die laufende Aufgabe.
+        return _initialisierung ??= ErstelleClientAsync();
+    }
+
+    private Task<Supabase.Client>? _initialisierung;
+
+    private async Task<Supabase.Client> ErstelleClientAsync()
     {
         if (_client == null)
         {
             var options = new Supabase.SupabaseOptions
             {
                 AutoRefreshToken = true,
-                AutoConnectRealtime = true //Live-Verbindung für den Chat
+                AutoConnectRealtime = false   // Live-Verbindung startet erst im Chat (ChatService)
             };
 
             var client = new Supabase.Client(SupabaseUrl, SupabaseKey, options);
             client.Auth.SetPersistence(new BrowserSessionPersistence(_js));
             await client.InitializeAsync();
-            
+
             // Eine gespeicherte Anmeldung (vom letzten Besuch) kann abgelaufen sein – nach ca. 1 Stunde.
             // Deshalb beim Start erneuern, sonst würde Supabase die Daten (z. B. das Profil) nicht herausgeben.
             if (client.Auth.CurrentSession != null)
@@ -90,19 +98,18 @@ public class SupaBaseService
 
     private async Task<bool> RegisterUserAsyncCore(string email, string password, Dictionary<string, object>? data)
     {
-        LetzterFehler = null; // Zurücksetzen der Fehlermeldung
-       
+        LetzterFehler = null;
 
         try
         {
-             var client = await InitializeAsync(); // Stellt sicher, dass der Client initialisiert ist (Mathias)
+            var client = await InitializeAsync(); // Stellt sicher, dass der Client initialisiert ist (Mathias)
             var options = new Supabase.Gotrue.SignUpOptions
             {
                 Data = data // Hier werden die zusätzlichen Daten übergeben (Mathias)
             };
             var response = await client.Auth.SignUp(email, password, options); // Legt einen neuen User an
 
-                        // Supabase-Trick gegen das Ausspionieren von E-Mail-Adressen: Ist die Adresse schon registriert,
+            // Supabase-Trick gegen das Ausspionieren von E-Mail-Adressen: Ist die Adresse schon registriert,
             // kommt trotzdem ein "User" zurück – aber ohne Identitäten, und es wird nichts gespeichert oder gemailt.
             if (response?.User != null && response.User.Identities is { Count: 0 })
             {
@@ -111,10 +118,10 @@ public class SupaBaseService
                 return false;
             }
 
-
             if (response?.User != null)
             {
                 Console.WriteLine($"User registered: {response.User.Email}");
+                AnmeldungGeaendert?.Invoke();   // ohne E-Mail-Bestätigung ist man jetzt schon angemeldet
                 return true;
             }
             else
@@ -124,6 +131,7 @@ public class SupaBaseService
         }
         catch (Exception ex)
         {
+            LetzterFehler = Uebersetze(ex.Message);
             Console.WriteLine($"Error registering user: {ex.Message}");
         }
 
@@ -133,8 +141,8 @@ public class SupaBaseService
     // Meldet einen User an. Supabase liefert dabei das JWT (AccessToken).
     public async Task<bool> LoginAsync(string email, string password)
     {
-        
-        LetzterFehler = null; // Zurücksetzen der Fehlermeldung
+        LetzterFehler = null;
+
         try
         {
             var client = await InitializeAsync();
@@ -145,7 +153,7 @@ public class SupaBaseService
         }
         catch (Exception ex)
         {
-            LetzterFehler = Uebersetze(ex.Message); // Übersetze die Fehlermeldung ins Deutsche
+            LetzterFehler = Uebersetze(ex.Message);
             Console.WriteLine($"Login fehlgeschlagen: {ex.Message}");
             return false;
         }
@@ -167,7 +175,6 @@ public class SupaBaseService
         return "Fehler: " + meldung;
     }
 
-
     /// <summary>
     /// Meldet den aktuellen Benutzer ab.
     /// </summary>
@@ -175,7 +182,15 @@ public class SupaBaseService
     {
         var client = await InitializeAsync();
         await client.Auth.SignOut();
-        AnmeldungGeaendert?.Invoke(); // Invoke heißt "aufrufen" – also das Event auslösen, dass sich die Anmeldung geändert hat
+        AnmeldungGeaendert?.Invoke();
+    }
+
+    // Gespeicherte Anmeldung im Browser löschen (z. B. nachdem das Konto gelöscht wurde).
+    // Danach die Seite mit forceLoad neu laden, damit die App ohne Anmeldung startet.
+    public async Task LokaleAnmeldungEntfernenAsync()
+    {
+        try { await _js.InvokeVoidAsync("localStorage.removeItem", "supabase.session"); }
+        catch { /* dann eben nicht */ }
     }
 
     /// <summary>
@@ -183,7 +198,7 @@ public class SupaBaseService
     /// </summary>
     public bool IsLoggedIn => _client?.Auth.CurrentSession != null;
 
-        /// <summary>
+    /// <summary>
     /// Baut die Live-Verbindung (Realtime) zu Supabase auf – nur einmal, egal wie oft es aufgerufen wird.
     /// Chat und Notruf brauchen sie beide.
     /// </summary>

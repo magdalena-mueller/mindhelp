@@ -1,0 +1,58 @@
+@inject ProfilService ProfilDienst
+
+@* Sicherheitsabfrage vor dem Löschen des Kontos – man muss LÖSCHEN eintippen *@
+<MudDialog>
+    <DialogContent>
+        <div class="d-flex flex-column align-center text-center pt-4">
+            <div class="mh-icon-kachel mh-icon-notfall mb-3"><MudIcon Icon="@Icons.Material.Filled.DeleteForever" /></div>
+            <MudText Typo="Typo.h6" Style="font-weight: 700;">Konto wirklich löschen?</MudText>
+            <MudText Typo="Typo.body2" Class="mh-text-leise mt-1">
+                Dabei werden <b>alle deine Daten</b> dauerhaft gelöscht: dein Profil, deine Chats und Nachrichten,
+                Stimmungen, Ziele, Kurz-Checks, dein Begleiter und hochgeladene Dateien.
+            </MudText>
+            <MudText Typo="Typo.body2" Class="mt-2 mb-3" Style="font-weight: 600;">Das kann nicht rückgängig gemacht werden.</MudText>
+        </div>
+
+        <MudTextField @bind-Value="_eingabe" Label="Zum Bestätigen LÖSCHEN eintippen" Variant="Variant.Outlined"
+                      Immediate="true" Disabled="_loescht" Class="mb-3" />
+
+        @if (!string.IsNullOrEmpty(_fehler))
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="mb-3">@_fehler</MudAlert>
+        }
+
+        <MudButton Variant="Variant.Filled" Color="Color.Error" FullWidth="true" Class="rounded-pill mb-2" Style="text-transform: none; font-weight: 600;"
+                   Disabled="@(!Bestaetigt || _loescht)" OnClick="Loeschen">
+            @(_loescht ? "Wird gelöscht …" : "Konto endgültig löschen")
+        </MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true" Class="rounded-pill mb-2" Style="text-transform: none; font-weight: 600;"
+                   Disabled="_loescht" OnClick="() => Dialog.Cancel()">Nein, Konto behalten</MudButton>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance Dialog { get; set; } = null!;
+
+    private string _eingabe = "";
+    private string _fehler = "";
+    private bool _loescht;
+
+    private bool Bestaetigt => _eingabe.Trim().Equals("LÖSCHEN", StringComparison.OrdinalIgnoreCase);
+
+    private async Task Loeschen()
+    {
+        _loescht = true;
+        _fehler = "";
+        try
+        {
+            await ProfilDienst.LoescheKontoAsync();
+            Dialog.Close(DialogResult.Ok(true));
+        }
+        catch (Exception ex)
+        {
+            _fehler = "Das Konto konnte nicht gelöscht werden: " + ex.Message;
+            _loescht = false;
+        }
+    }
+}

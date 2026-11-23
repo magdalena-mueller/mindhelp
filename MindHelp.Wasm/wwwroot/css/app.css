@@ -1352,3 +1352,138 @@ code {
         animation-duration: .01s;
     }
 }
+
+/* ---------- Banner bei neuer Nachricht aus einem anderen Chat ---------- */
+.mh-nachricht-banner {
+    position: fixed;
+    top: 72px;
+    left: 12px;
+    right: 12px;
+    max-width: 460px;
+    margin: 0 auto;
+    z-index: 1250;   /* unter dem Notruf-Banner (1300), über der Leiste (1200) */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px 10px 12px;
+    border-radius: 18px;
+    background: var(--mud-palette-surface);
+    border-left: 4px solid var(--mud-palette-primary);
+    box-shadow: 0 12px 32px rgba(46, 42, 71, 0.22);
+    cursor: pointer;
+    animation: mh-banner-rein .3s ease;
+}
+
+.mh-nachricht-banner-notfall {
+    border-left-color: var(--mud-palette-error);
+}
+
+@keyframes mh-banner-rein {
+    from { transform: translateY(-16px); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mh-nachricht-banner {
+        animation: none;
+    }
+}
+
+
+/* ---------- Begleiter: ganz gewachsen, neues Ei wählen, Sammlung ---------- */
+.mh-geschafft {
+    padding: 14px;
+    border-radius: 16px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(243, 201, 105, 0.22), rgba(243, 166, 221, 0.22), rgba(127, 176, 245, 0.22));
+    border: 1px solid rgba(243, 201, 105, 0.6);
+}
+
+.mh-ei-wahl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.mh-ei-option {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 10px 4px;
+    border-radius: 14px;
+    border: 1px solid var(--mud-palette-lines-default);
+    background: var(--mud-palette-surface);
+    color: var(--mud-palette-text-primary);
+    font: 13px var(--mud-typography-default-family);
+    cursor: pointer;
+    transition: transform .15s, border-color .15s;
+}
+
+.mh-ei-option:hover:not(:disabled) {
+    transform: translateY(-3px);
+    border-color: var(--mud-palette-primary);
+}
+
+.mh-ei-option small {
+    color: var(--mud-palette-text-secondary);
+    font-size: 11px;
+}
+
+.mh-ei-form {
+    width: 34px;
+    height: 44px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    margin-bottom: 4px;
+    box-shadow: inset -4px -6px 0 rgba(0, 0, 0, 0.06);
+}
+
+.mh-ei-mindi .mh-ei-form  { background: radial-gradient(circle at 40% 30%, #fff, #B9A3F2); }
+.mh-ei-fee .mh-ei-form    { background: radial-gradient(circle at 40% 30%, #fff, #F3A6DD); }
+.mh-ei-drache .mh-ei-form { background: radial-gradient(circle at 40% 30%, #fff, #7FD6B8); }
+
+.mh-sammlung-mindi  { color: #7E6FD8 !important; background: rgba(126, 111, 216, 0.12) !important; }
+.mh-sammlung-fee    { color: #C2649F !important; background: rgba(243, 166, 221, 0.20) !important; }
+.mh-sammlung-drache { color: #2F8F70 !important; background: rgba(127, 214, 184, 0.22) !important; }
+
+/* Flügel flattern */
+.mh-fee-fluegel {
+    animation: mh-fee-flattern 1.2s ease-in-out infinite;
+}
+
+@keyframes mh-fee-flattern {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: .7; }
+}
+
+.mh-drache-fluegel {
+    transform-origin: 100px 110px;
+    animation: mh-drache-flattern 2.2s ease-in-out infinite;
+}
+
+@keyframes mh-drache-flattern {
+    0%, 100% { transform: scaleY(1); }
+    50%      { transform: scaleY(0.85); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mh-fee-fluegel, .mh-drache-fluegel {
+        animation: none;
+    }
+}
+
+/* ---------- Profil: Bereich "Konto löschen" ---------- */
+.mh-gefahr {
+    border: 1px solid rgba(226, 68, 92, 0.35) !important;
+    background: rgba(226, 68, 92, 0.05) !important;
+}
+
+
+/* ---------- Chat: geteilte Stimmungen für Hilfskräfte ---------- */
+.mh-stimmung-karte {
+    max-height: 45vh;
+    overflow-y: auto;
+}
+
+.mh-stimmung-eintrag + .mh-stimmung-eintrag {
+    border-top: 1px solid var(--mud-palette-lines-default);
+}

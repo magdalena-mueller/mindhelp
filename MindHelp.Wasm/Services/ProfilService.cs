@@ -80,6 +80,36 @@ public class ProfilService
         return pfad;
     }
 
+    // Konto komplett löschen (DSGVO): zuerst die eigenen Dateien, dann das Konto selbst.
+    // Alle Daten in den Tabellen verschwinden in der Datenbank automatisch mit ("on delete cascade").
+    public async Task LoescheKontoAsync()
+    {
+        var client = await _supabase.InitializeAsync();
+        var meineId = client.Auth.CurrentUser?.Id ?? throw new InvalidOperationException("Nicht angemeldet.");
+
+        foreach (var bucket in new[] { "avatars", "proofs" })
+        {
+            try
+            {
+                var dateien = await client.Storage.From(bucket).List(meineId);
+                var pfade = dateien?.Where(d => !string.IsNullOrEmpty(d.Name)).Select(d => $"{meineId}/{d.Name}").ToList() ?? [];
+                if (pfade.Count > 0)
+                    await client.Storage.From(bucket).Remove(pfade);
+            }
+            catch (Exception ex)
+            {
+                // Dateien sind nicht so wichtig wie das Konto selbst – trotzdem weitermachen
+                Console.WriteLine($"Dateien in {bucket} konnten nicht gelöscht werden: {ex.Message}");
+            }
+        }
+
+        await client.Rpc("konto_loeschen", new Dictionary<string, object>());
+
+        // Abmelden – klappt das beim Server nicht mehr (Konto ist ja weg), die Anmeldung nur im Browser entfernen
+        try { await _supabase.LogoutAsync(); }
+        catch { await _supabase.LokaleAnmeldungEntfernenAsync(); }
+    }
+
     public async Task AenderePasswortAsync(string neuesPasswort)
     {
         var client = await _supabase.InitializeAsync();

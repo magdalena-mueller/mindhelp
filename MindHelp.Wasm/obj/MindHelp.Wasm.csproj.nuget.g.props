@@ -14,7 +14,7 @@
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)mudblazor\9.12.0\buildTransitive\MudBlazor.props" Condition="Exists('$(NuGetPackageRoot)mudblazor\9.12.0\buildTransitive\MudBlazor.props')" />
+    <Import Project="$(NuGetPackageRoot)mudblazor\9.14.0\buildTransitive\MudBlazor.props" Condition="Exists('$(NuGetPackageRoot)mudblazor\9.14.0\buildTransitive\MudBlazor.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.net.sdk.webassembly.pack\10.0.8\build\Microsoft.NET.Sdk.WebAssembly.Pack.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.sdk.webassembly.pack\10.0.8\build\Microsoft.NET.Sdk.WebAssembly.Pack.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.net.illink.tasks\10.0.6\build\Microsoft.NET.ILLink.Tasks.props" Condition="Exists('$(NuGetPackageRoot)microsoft.net.illink.tasks\10.0.6\build\Microsoft.NET.ILLink.Tasks.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.dotnet.hotreload.webassembly.browser\10.0.202\buildTransitive\Microsoft.DotNet.HotReload.WebAssembly.Browser.props" Condition="Exists('$(NuGetPackageRoot)microsoft.dotnet.hotreload.webassembly.browser\10.0.202\buildTransitive\Microsoft.DotNet.HotReload.WebAssembly.Browser.props')" />
